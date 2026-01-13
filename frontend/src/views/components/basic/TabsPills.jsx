@@ -1,8 +1,8 @@
 // project-imports
-import BasicTabs from 'sections/components/basic/tabs-pills/BasicTabs';
-import Pills from 'sections/components/basic/tabs-pills/BasicPills';
-import VerticalPills from 'sections/components/basic/tabs-pills/VerticalPills';
-import ReferenceHeader from 'components/ReferenceHeader';
+import BasicTabs from "sections/components/basic/tabs-pills/BasicTabs";
+import Pills from "sections/components/basic/tabs-pills/BasicPills";
+import VerticalPills from "sections/components/basic/tabs-pills/VerticalPills";
+import ReferenceHeader from "components/ReferenceHeader";
 
 // ==============================|| BASIC - TABS & PILLS ||============================== //
 

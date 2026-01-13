@@ -1,9 +1,9 @@
 // react-bootstrap
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
+import Breadcrumb from "react-bootstrap/Breadcrumb";
 
 // project-imports
-import Breadcrumbs from './Breadcrumbs';
-import MainCard from 'components/MainCard';
+import Breadcrumbs from "./Breadcrumbs";
+import MainCard from "components/MainCard";
 
 // ==============================|| BREADCRUMB - CHARACTER ||============================== //
 

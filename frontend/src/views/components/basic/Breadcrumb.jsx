@@ -1,13 +1,13 @@
 // react-bootstrap
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 // project-imports
-import BreadcrumbBasic from 'sections/components/basic/breadcrumb/BreadcrumbBasic';
-import BreadcrumbCharacter from 'sections/components/basic/breadcrumb/BreadcrumbCharacter';
-import BreadcrumbEmbedded from 'sections/components/basic/breadcrumb/BreadcrumbEmbedded';
-import BreadcrumbIcon from 'sections/components/basic/breadcrumb/BreadcrumbIcon';
-import ReferenceHeader from 'components/ReferenceHeader';
+import BreadcrumbBasic from "sections/components/basic/breadcrumb/BreadcrumbBasic";
+import BreadcrumbCharacter from "sections/components/basic/breadcrumb/BreadcrumbCharacter";
+import BreadcrumbEmbedded from "sections/components/basic/breadcrumb/BreadcrumbEmbedded";
+import BreadcrumbIcon from "sections/components/basic/breadcrumb/BreadcrumbIcon";
+import ReferenceHeader from "components/ReferenceHeader";
 
 // ==============================|| BASIC - BREADCRUMB ||============================== //
 

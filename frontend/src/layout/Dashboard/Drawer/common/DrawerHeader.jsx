@@ -1,13 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 // react-bootstrap
-import Image from 'react-bootstrap/Image';
+import Image from "react-bootstrap/Image";
 
 // project-import
-import { APP_DEFAULT_PATH } from 'config';
+import { APP_DEFAULT_PATH } from "config";
 
 // assets
-import logo from 'assets/images/logo-white.svg';
+import logo from "assets/images/logo-white.svg";
 
 export const DrawerHeader = () => {
   return (

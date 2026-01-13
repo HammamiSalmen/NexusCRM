@@ -1,31 +1,35 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
 // third-party
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate } from "swr";
 
 const initialState = {
   isDashboardDrawerOpened: false,
-  isComponentDrawerOpened: true
+  isComponentDrawerOpened: true,
 };
 
 export const endpoints = {
-  key: 'api/menu',
-  master: 'master'
+  key: "api/menu",
+  master: "master",
 };
 
 export function useGetMenuMaster() {
-  const { data, isLoading } = useSWR(endpoints.key + endpoints.master, () => initialState, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false
-  });
+  const { data, isLoading } = useSWR(
+    endpoints.key + endpoints.master,
+    () => initialState,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    },
+  );
 
   const memoizedValue = useMemo(
     () => ({
       menuMaster: data,
-      menuMasterLoading: isLoading
+      menuMasterLoading: isLoading,
     }),
-    [data, isLoading]
+    [data, isLoading],
   );
 
   return memoizedValue;
@@ -39,6 +43,6 @@ export function handlerDrawerOpen(isDashboardDrawerOpened) {
     (currentMenuMaster) => {
       return { ...currentMenuMaster, isDashboardDrawerOpened };
     },
-    false
+    false,
   );
 }

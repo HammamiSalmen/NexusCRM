@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // project-imports
-import { handlerDrawerOpen, useGetMenuMaster } from 'api/menu';
+import { handlerDrawerOpen, useGetMenuMaster } from "api/menu";
 
 // ==============================|| COMMON DRAWER LOGIC HOOK ||============================== //
 
@@ -10,7 +10,9 @@ export const useDrawerLogic = () => {
   const drawerOpen = menuMaster?.isDashboardDrawerOpened ?? false;
 
   const [selectedItems, setSelectedItems] = useState();
-  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 1024);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.innerWidth <= 1024,
+  );
 
   const overlayRef = useRef(null);
 
@@ -20,8 +22,8 @@ export const useDrawerLogic = () => {
       setIsMobile(window.innerWidth <= 1024);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   //  Close Drawer on Outside Click (only for mobile)
@@ -33,8 +35,9 @@ export const useDrawerLogic = () => {
 
   useEffect(() => {
     if (isMobile) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isMobile, handleClickOutside]);
 
@@ -43,6 +46,6 @@ export const useDrawerLogic = () => {
     selectedItems,
     setSelectedItems,
     isMobile,
-    overlayRef
+    overlayRef,
   };
 };

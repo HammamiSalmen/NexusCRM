@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
-import { useLocation, matchPath, Link } from 'react-router-dom';
+import PropTypes from "prop-types";
+import { useLocation, matchPath, Link } from "react-router-dom";
 
 // project-imports
-import { handlerDrawerOpen } from 'api/menu';
+import { handlerDrawerOpen } from "api/menu";
 
 // ==============================|| NAVIGATION - ITEM ||============================== //
 
@@ -10,8 +10,10 @@ export default function NavItem({ item }) {
   const { pathname } = useLocation();
 
   const itemPath = item?.link || item?.url;
-  const itemTarget = item?.target ? '_blank' : '_self';
-  const isSelected = itemPath ? !!matchPath({ path: itemPath, end: true }, pathname) : false;
+  const itemTarget = item?.target ? "_blank" : "_self";
+  const isSelected = itemPath
+    ? !!matchPath({ path: itemPath, end: true }, pathname)
+    : false;
   const isMobile = window.innerWidth <= 1024;
 
   const handleClick = () => {
@@ -27,8 +29,13 @@ export default function NavItem({ item }) {
     );
 
   return (
-    <li className={`pc-item ${isSelected ? 'active' : ''}`}>
-      <Link className="pc-link" to={item?.url || '#'} target={itemTarget} onClick={handleClick}>
+    <li className={`pc-item ${isSelected ? "active" : ""}`}>
+      <Link
+        className="pc-link"
+        to={item?.url || "#"}
+        target={itemTarget}
+        onClick={handleClick}
+      >
         {renderIcon()}
         {item.title}
       </Link>

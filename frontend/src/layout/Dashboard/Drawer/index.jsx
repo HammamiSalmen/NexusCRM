@@ -1,5 +1,5 @@
 // project-imports
-import { VerticalDrawer } from '../Drawer/vertical';
+import { VerticalDrawer } from "../Drawer/vertical";
 
 // ==============================|| MAIN LAYOUT - DRAWER ||============================== //
 

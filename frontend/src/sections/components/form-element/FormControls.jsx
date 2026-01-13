@@ -1,11 +1,11 @@
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
 
 // project-import
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // =============================|| FORM ELEMENT - FORM CONTROLS ||============================== //
 
@@ -19,7 +19,9 @@ export default function FormControls() {
             <Form.Group className="mb-3" controlId="formEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control type="email" placeholder="Enter email" />
-              <Form.Text className="text-muted">We'll never share your email with anyone else.</Form.Text>
+              <Form.Text className="text-muted">
+                We'll never share your email with anyone else.
+              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formPassword">
@@ -58,7 +60,11 @@ export default function FormControls() {
 
             <Form.Group className="mb-3" controlId="formTextarea">
               <Form.Label>Example textarea</Form.Label>
-              <Form.Control as="textarea" rows={3} placeholder="Enter your message..." />
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enter your message..."
+              />
             </Form.Group>
           </Form>
         </Col>

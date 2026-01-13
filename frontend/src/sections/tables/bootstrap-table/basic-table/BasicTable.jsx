@@ -1,8 +1,8 @@
 // react-bootstrap
-import Table from 'react-bootstrap/Table';
+import Table from "react-bootstrap/Table";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| BASIC TABLE ||============================== //
 

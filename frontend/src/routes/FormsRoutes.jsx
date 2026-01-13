@@ -1,33 +1,35 @@
-import { lazy } from 'react';
+import { lazy } from "react";
 
 // project-imports
-import DashboardLayout from 'layout/Dashboard';
-import Loadable from 'components/Loadable';
+import DashboardLayout from "layout/Dashboard";
+import Loadable from "components/Loadable";
 
 // render - forms element pages
-const FormBasic = Loadable(lazy(() => import('views/forms/form-element/FormBasic')));
+const FormBasic = Loadable(
+  lazy(() => import("views/forms/form-element/FormBasic")),
+);
 
 // ==============================|| FORMS ROUTING ||============================== //
 
 const FormsRoutes = {
-  path: '/',
+  path: "/",
   children: [
     {
-      path: '/',
+      path: "/",
       element: <DashboardLayout />,
       children: [
         {
-          path: 'forms',
+          path: "forms",
           children: [
             {
-              path: 'form-elements',
-              children: [{ path: 'basic', element: <FormBasic /> }]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              path: "form-elements",
+              children: [{ path: "basic", element: <FormBasic /> }],
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 export default FormsRoutes;

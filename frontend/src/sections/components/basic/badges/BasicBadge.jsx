@@ -1,8 +1,8 @@
 // react-bootstrap
-import Badge from 'react-bootstrap/Badge';
+import Badge from "react-bootstrap/Badge";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| BADGES - BASIC ||============================== //
 

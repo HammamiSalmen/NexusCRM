@@ -1,11 +1,11 @@
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // =============================|| HORIZONTAL FORM ||============================== //
 
@@ -41,9 +41,26 @@ export default function HorizontalForm() {
                 Radios
               </Form.Label>
               <Col sm={9}>
-                <Form.Check type="radio" label="First radio" name="formHorizontalRadios" id="radio1" defaultChecked />
-                <Form.Check type="radio" label="Second radio" name="formHorizontalRadios" id="radio2" />
-                <Form.Check type="radio" label="Third disabled" name="formHorizontalRadios" id="radio3" disabled />
+                <Form.Check
+                  type="radio"
+                  label="First radio"
+                  name="formHorizontalRadios"
+                  id="radio1"
+                  defaultChecked
+                />
+                <Form.Check
+                  type="radio"
+                  label="Second radio"
+                  name="formHorizontalRadios"
+                  id="radio2"
+                />
+                <Form.Check
+                  type="radio"
+                  label="Third disabled"
+                  name="formHorizontalRadios"
+                  id="radio3"
+                  disabled
+                />
               </Col>
             </Row>
 
@@ -52,7 +69,11 @@ export default function HorizontalForm() {
                 Checkbox
               </Form.Label>
               <Col sm={9}>
-                <Form.Check type="checkbox" label="Example checkbox" id="checkbox1" />
+                <Form.Check
+                  type="checkbox"
+                  label="Example checkbox"
+                  id="checkbox1"
+                />
               </Col>
             </Row>
 
@@ -68,7 +89,11 @@ export default function HorizontalForm() {
                 Email
               </Form.Label>
               <Col sm={10}>
-                <Form.Control type="email" size="sm" placeholder="col-form-label-sm" />
+                <Form.Control
+                  type="email"
+                  size="sm"
+                  placeholder="col-form-label-sm"
+                />
               </Col>
             </Row>
 
@@ -86,7 +111,11 @@ export default function HorizontalForm() {
                 Email
               </Form.Label>
               <Col sm={10}>
-                <Form.Control type="email" size="lg" placeholder="col-form-label-lg" />
+                <Form.Control
+                  type="email"
+                  size="lg"
+                  placeholder="col-form-label-lg"
+                />
               </Col>
             </Row>
           </Col>

@@ -1,25 +1,25 @@
 // ==============================|| MENU ITEMS - FORM ||============================== //
 
 const formComponents = {
-  id: 'forms',
-  title: 'Forms',
-  type: 'group',
+  id: "forms",
+  title: "Forms",
+  type: "group",
   children: [
     {
-      id: 'form-elements',
-      title: 'Form Elements',
-      type: 'collapse',
-      icon: 'ph ph-textbox',
+      id: "form-elements",
+      title: "Form Elements",
+      type: "collapse",
+      icon: "ph ph-textbox",
       children: [
         {
-          id: 'form-basic',
-          title: 'Form Basic',
-          type: 'item',
-          url: '/forms/form-elements/basic'
-        }
-      ]
-    }
-  ]
+          id: "form-basic",
+          title: "Form Basic",
+          type: "item",
+          url: "/forms/form-elements/basic",
+        },
+      ],
+    },
+  ],
 };
 
 export default formComponents;

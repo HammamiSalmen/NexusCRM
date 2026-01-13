@@ -1,9 +1,9 @@
 // react-bootstrap
-import Badge from 'react-bootstrap/Badge';
-import Stack from 'react-bootstrap/Stack';
+import Badge from "react-bootstrap/Badge";
+import Stack from "react-bootstrap/Stack";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| BADGES - LIGHT ||============================== //
 
@@ -20,7 +20,7 @@ export default function LightBadge() {
         <Badge bg="light-light" text="dark">
           Light
         </Badge>
-        <Badge bg="light-dark" text="light" style={{ background: '#13192033' }}>
+        <Badge bg="light-dark" text="light" style={{ background: "#13192033" }}>
           Dark
         </Badge>
       </Stack>

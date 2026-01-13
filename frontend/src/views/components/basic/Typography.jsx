@@ -1,18 +1,18 @@
 // react-bootstrap
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 // project-imports
-import Blockquotes from 'sections/components/basic/typography/Blockquotes';
-import ContextualTextColors from 'sections/components/basic/typography/ContextualTextColors';
-import DisplayHeading from 'sections/components/basic/typography/DisplayHeadings';
-import Heading from 'sections/components/basic/typography/Heading';
-import HorizontalDescription from 'sections/components/basic/typography/HorizontalDescription';
-import InlineTextElement from 'sections/components/basic/typography/InlineTextElement';
-import Ordered from 'sections/components/basic/typography/Ordered';
-import Unordered from 'sections/components/basic/typography/Unordered';
-import Unstyled from 'sections/components/basic/typography/Unstyled';
-import ReferenceHeader from 'components/ReferenceHeader';
+import Blockquotes from "sections/components/basic/typography/Blockquotes";
+import ContextualTextColors from "sections/components/basic/typography/ContextualTextColors";
+import DisplayHeading from "sections/components/basic/typography/DisplayHeadings";
+import Heading from "sections/components/basic/typography/Heading";
+import HorizontalDescription from "sections/components/basic/typography/HorizontalDescription";
+import InlineTextElement from "sections/components/basic/typography/InlineTextElement";
+import Ordered from "sections/components/basic/typography/Ordered";
+import Unordered from "sections/components/basic/typography/Unordered";
+import Unstyled from "sections/components/basic/typography/Unstyled";
+import ReferenceHeader from "components/ReferenceHeader";
 
 // ==============================|| BASIC - TYPOGRAPHY ||============================== //
 

@@ -1,5 +1,5 @@
 // project-imoports
-import AuthLoginForm from 'sections/auth/AuthLogin';
+import AuthLoginForm from "sections/auth/AuthLogin";
 
 // ===========================|| AUTH - LOGIN PAGE ||=========================== //
 

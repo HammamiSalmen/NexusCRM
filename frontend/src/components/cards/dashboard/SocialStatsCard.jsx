@@ -1,15 +1,21 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 // react-bootstrap
-import ProgressBar from 'react-bootstrap/ProgressBar';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import ProgressBar from "react-bootstrap/ProgressBar";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| SOCIAL STATS CARD ||============================== //
 
-export default function SocialStatsCard({ icon, count, percentage, color, stats }) {
+export default function SocialStatsCard({
+  icon,
+  count,
+  percentage,
+  color,
+  stats,
+}) {
   return (
     <MainCard content={false}>
       <MainCard className="card-social mb-0 border-bottom shadow-none">
@@ -28,7 +34,11 @@ export default function SocialStatsCard({ icon, count, percentage, color, stats 
       <MainCard className="shadow-none mb-0">
         <Row className="align-items-center justify-content-center card-active">
           {stats.map((item, index) => (
-            <Col xs={6} key={index} className={index !== stats.length - 1 ? 'border-end' : ''}>
+            <Col
+              xs={6}
+              key={index}
+              className={index !== stats.length - 1 ? "border-end" : ""}
+            >
               <h6 className="text-center m-b-10">
                 <span className="text-muted m-r-5">{item.label}:</span>
                 {item.value}
@@ -49,5 +59,5 @@ SocialStatsCard.propTypes = {
   count: PropTypes.string,
   percentage: PropTypes.string,
   color: PropTypes.string,
-  stats: PropTypes.array
+  stats: PropTypes.array,
 };

@@ -1,33 +1,33 @@
-import { lazy } from 'react';
+import { lazy } from "react";
 
 // project-imports
-import DashboardLayout from 'layout/Dashboard';
-import Loadable from 'components/Loadable';
+import DashboardLayout from "layout/Dashboard";
+import Loadable from "components/Loadable";
 
 // render - chart pages
-const ApexChart = Loadable(lazy(() => import('views/charts/ApexChart')));
+const ApexChart = Loadable(lazy(() => import("views/charts/ApexChart")));
 
 // ==============================|| CHART & MAP ROUTING ||============================== //
 
 const ChartMapRoutes = {
-  path: '/',
+  path: "/",
   children: [
     {
-      path: '/',
+      path: "/",
       element: <DashboardLayout />,
       children: [
         {
-          path: 'charts',
+          path: "charts",
           children: [
             {
-              path: 'apex-chart',
-              element: <ApexChart />
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              path: "apex-chart",
+              element: <ApexChart />,
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 export default ChartMapRoutes;

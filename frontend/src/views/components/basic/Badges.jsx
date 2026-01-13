@@ -1,14 +1,14 @@
 // react-bootstrap
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 // project-imports
-import BasicBadge from 'sections/components/basic/badges/BasicBadge';
-import ButtonBadge from 'sections/components/basic/badges/ButtonBadge';
-import ContextualBadge from 'sections/components/basic/badges/ContextualBadge';
-import LightBadge from 'sections/components/basic/badges/LightBadge';
-import PillBadge from 'sections/components/basic/badges/PillBadge';
-import ReferenceHeader from 'components/ReferenceHeader';
+import BasicBadge from "sections/components/basic/badges/BasicBadge";
+import ButtonBadge from "sections/components/basic/badges/ButtonBadge";
+import ContextualBadge from "sections/components/basic/badges/ContextualBadge";
+import LightBadge from "sections/components/basic/badges/LightBadge";
+import PillBadge from "sections/components/basic/badges/PillBadge";
+import ReferenceHeader from "components/ReferenceHeader";
 
 // ==============================|| BASIC - BADGES ||============================== //
 

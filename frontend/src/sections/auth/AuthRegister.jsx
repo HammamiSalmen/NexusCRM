@@ -1,25 +1,31 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from "prop-types";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Image from 'react-bootstrap/Image';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
-import Stack from 'react-bootstrap/Stack';
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Image from "react-bootstrap/Image";
+import InputGroup from "react-bootstrap/InputGroup";
+import Row from "react-bootstrap/Row";
+import Stack from "react-bootstrap/Stack";
 
 // third-party
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 
 // project-imports
-import MainCard from 'components/MainCard';
-import { confirmPasswordSchema, emailSchema, firstNameSchema, lastNameSchema, passwordSchema } from 'utils/validationSchema';
+import MainCard from "components/MainCard";
+import {
+  confirmPasswordSchema,
+  emailSchema,
+  firstNameSchema,
+  lastNameSchema,
+  passwordSchema,
+} from "utils/validationSchema";
 
 // assets
-import DarkLogo from 'assets/images/logo-dark.svg';
+import DarkLogo from "assets/images/logo-dark.svg";
 
 // ==============================|| AUTH REGISTER FORM ||============================== //
 
@@ -31,7 +37,7 @@ export default function AuthRegisterForm({ className, link }) {
     reset,
     formState: { errors },
     setError,
-    clearErrors
+    clearErrors,
   } = useForm();
 
   const togglePasswordVisibility = () => {
@@ -40,12 +46,12 @@ export default function AuthRegisterForm({ className, link }) {
 
   const onSubmit = (data) => {
     if (data.password !== data.confirmPassword) {
-      setError('confirmPassword', {
-        type: 'manual',
-        message: 'Both Password must be match!'
+      setError("confirmPassword", {
+        type: "manual",
+        message: "Both Password must be match!",
       });
     } else {
-      clearErrors('confirmPassword');
+      clearErrors("confirmPassword");
       reset();
     }
   };
@@ -58,18 +64,25 @@ export default function AuthRegisterForm({ className, link }) {
         </a>
       </div>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <h4 className={`text-center f-w-500 mt-4 mb-3 ${className}`}>Sign up</h4>
+        <h4 className={`text-center f-w-500 mt-4 mb-3 ${className}`}>
+          Sign up
+        </h4>
         <Row>
           <Col sm={6}>
             <Form.Group className="mb-3" controlId="formFirstName">
               <Form.Control
                 type="text"
                 placeholder="First Name"
-                {...register('firstName', firstNameSchema)}
+                {...register("firstName", firstNameSchema)}
                 isInvalid={!!errors.firstName}
-                className={className && 'bg-transparent border-white text-white border-opacity-25 '}
+                className={
+                  className &&
+                  "bg-transparent border-white text-white border-opacity-25 "
+                }
               />
-              <Form.Control.Feedback type="invalid">{errors.firstName?.message}</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                {errors.firstName?.message}
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
           <Col sm={6}>
@@ -77,11 +90,16 @@ export default function AuthRegisterForm({ className, link }) {
               <Form.Control
                 type="text"
                 placeholder="Last Name"
-                {...register('lastName', lastNameSchema)}
+                {...register("lastName", lastNameSchema)}
                 isInvalid={!!errors.email}
-                className={className && 'bg-transparent border-white text-white border-opacity-25 '}
+                className={
+                  className &&
+                  "bg-transparent border-white text-white border-opacity-25 "
+                }
               />
-              <Form.Control.Feedback type="invalid">{errors.lastName?.message}</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                {errors.lastName?.message}
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
         </Row>
@@ -89,36 +107,55 @@ export default function AuthRegisterForm({ className, link }) {
           <Form.Control
             type="email"
             placeholder="Email Address"
-            {...register('email', emailSchema)}
+            {...register("email", emailSchema)}
             isInvalid={!!errors.email}
-            className={className && 'bg-transparent border-white text-white border-opacity-25 '}
+            className={
+              className &&
+              "bg-transparent border-white text-white border-opacity-25 "
+            }
           />
-          <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            {errors.email?.message}
+          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formPassword">
           <InputGroup>
             <Form.Control
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
-              {...register('password', passwordSchema)}
+              {...register("password", passwordSchema)}
               isInvalid={!!errors.password}
-              className={className && 'bg-transparent border-white text-white border-opacity-25 '}
+              className={
+                className &&
+                "bg-transparent border-white text-white border-opacity-25 "
+              }
             />
             <Button onClick={togglePasswordVisibility}>
-              {showPassword ? <i className="ti ti-eye" /> : <i className="ti ti-eye-off" />}
+              {showPassword ? (
+                <i className="ti ti-eye" />
+              ) : (
+                <i className="ti ti-eye-off" />
+              )}
             </Button>
-            <Form.Control.Feedback type="invalid">{errors.password?.message}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">
+              {errors.password?.message}
+            </Form.Control.Feedback>
           </InputGroup>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formConfirmPassword">
           <Form.Control
             type="password"
             placeholder="Confirm Password"
-            {...register('confirmPassword', confirmPasswordSchema)}
+            {...register("confirmPassword", confirmPasswordSchema)}
             isInvalid={!!errors.confirmPassword}
-            className={className && 'bg-transparent border-white text-white border-opacity-25 '}
+            className={
+              className &&
+              "bg-transparent border-white text-white border-opacity-25 "
+            }
           />
-          <Form.Control.Feedback type="invalid">{errors.confirmPassword?.message}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            {errors.confirmPassword?.message}
+          </Form.Control.Feedback>
         </Form.Group>
         <Stack direction="horizontal" className="mt-1 justify-content-between">
           <Form.Group controlId="customCheckc1">
@@ -126,7 +163,7 @@ export default function AuthRegisterForm({ className, link }) {
               type="checkbox"
               label="I agree to all the Terms & Condition"
               defaultChecked
-              className={`input-primary ${className ? className : 'text-muted'} `}
+              className={`input-primary ${className ? className : "text-muted"} `}
             />
           </Form.Group>
         </Stack>
@@ -135,8 +172,13 @@ export default function AuthRegisterForm({ className, link }) {
             Sign up
           </Button>
         </div>
-        <Stack direction="horizontal" className="justify-content-between align-items-end mt-4">
-          <h6 className={`f-w-500 mb-0 ${className}`}>Already have an Account?</h6>
+        <Stack
+          direction="horizontal"
+          className="justify-content-between align-items-end mt-4"
+        >
+          <h6 className={`f-w-500 mb-0 ${className}`}>
+            Already have an Account?
+          </h6>
           <Link to={link} className="link-primary">
             Login
           </Link>
@@ -146,4 +188,7 @@ export default function AuthRegisterForm({ className, link }) {
   );
 }
 
-AuthRegisterForm.propTypes = { className: PropTypes.string, link: PropTypes.string };
+AuthRegisterForm.propTypes = {
+  className: PropTypes.string,
+  link: PropTypes.string,
+};

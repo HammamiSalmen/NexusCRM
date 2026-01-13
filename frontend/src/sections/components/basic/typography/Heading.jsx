@@ -1,5 +1,5 @@
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| TYPOGRAPHY - HEADINGS ||============================== //
 
@@ -9,8 +9,9 @@ export default function Heading() {
       title="Headings"
       subheader={
         <p className="mb-0">
-          .h1 through .h6 classes are also available, for when you want to match the font styling of a heading but cannot use the associated
-          HTML element.
+          .h1 through .h6 classes are also available, for when you want to match
+          the font styling of a heading but cannot use the associated HTML
+          element.
         </p>
       }
     >

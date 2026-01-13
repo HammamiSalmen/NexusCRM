@@ -1,9 +1,9 @@
 // react-bootstrap
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| TYPOGRAPHY - HORIZONTAL DESCRIPTION ||============================== //
 
@@ -22,7 +22,10 @@ export default function HorizontalDescription() {
           <dt>Euismod</dt>
         </Col>
         <Col sm={9}>
-          <dd>Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</dd>
+          <dd>
+            Vestibulum id ligula porta felis euismod semper eget lacinia odio
+            sem nec elit.
+          </dd>
         </Col>
 
         <Col sm={9}>
@@ -40,7 +43,10 @@ export default function HorizontalDescription() {
           <dt className="text-truncate">Truncated term is truncated</dt>
         </Col>
         <Col sm={9}>
-          <dd>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</dd>
+          <dd>
+            Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum
+            nibh, ut fermentum massa justo sit amet risus.
+          </dd>
         </Col>
       </Row>
     </MainCard>

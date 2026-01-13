@@ -1,33 +1,33 @@
-import { lazy } from 'react';
+import { lazy } from "react";
 
 // project-imports
-import Loadable from 'components/Loadable';
-import DashboardLayout from 'layout/Dashboard';
+import Loadable from "components/Loadable";
+import DashboardLayout from "layout/Dashboard";
 
 // render - other pages
-const OtherSamplePage = Loadable(lazy(() => import('views/SamplePage')));
+const OtherSamplePage = Loadable(lazy(() => import("views/SamplePage")));
 
 // ==============================|| OTHER ROUTING ||============================== //
 
 const OtherRoutes = {
-  path: '/',
+  path: "/",
   children: [
     {
-      path: '/',
+      path: "/",
       element: <DashboardLayout />,
       children: [
         {
-          path: 'other',
+          path: "other",
           children: [
             {
-              path: 'sample-page',
-              element: <OtherSamplePage />
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              path: "sample-page",
+              element: <OtherSamplePage />,
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 export default OtherRoutes;

@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Collapse from 'react-bootstrap/Collapse';
-import Stack from 'react-bootstrap/Stack';
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import Collapse from "react-bootstrap/Collapse";
+import Stack from "react-bootstrap/Stack";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| COLLAPSE - BASIC ||============================== //
 
@@ -48,8 +48,10 @@ export default function BasicCollapse() {
         <Collapse in={open}>
           <div>
             <Card.Body>
-              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica,
-              craft beer labore wes anderson cred nesciunt sapiente ea proident.
+              Anim pariatur cliche reprehenderit, enim eiusmod high life
+              accusamus terry richardson ad squid. Nihil anim keffiyeh
+              helvetica, craft beer labore wes anderson cred nesciunt sapiente
+              ea proident.
             </Card.Body>
           </div>
         </Collapse>

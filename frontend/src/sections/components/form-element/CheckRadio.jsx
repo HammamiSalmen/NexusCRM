@@ -1,10 +1,10 @@
 // react-bootstrap
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
 
 // project-import
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // =============================|| FORM ELEMENT - CHECKS AND RADIOS ||============================== //
 
@@ -35,13 +35,30 @@ export default function ChecksRadios() {
           <h5>Radios</h5>
           <hr />
           <Form.Check type="radio" name="radioGroup" label="Default radio" />
-          <Form.Check type="radio" name="radioGroup" label="Checked radio" defaultChecked />
+          <Form.Check
+            type="radio"
+            name="radioGroup"
+            label="Checked radio"
+            defaultChecked
+          />
 
           <h5 className="mt-3">Inline</h5>
           <hr />
           <Form.Check inline type="radio" name="inlineRadioGroup" label="1" />
-          <Form.Check inline type="radio" name="inlineRadioGroup" label="2" defaultChecked />
-          <Form.Check inline type="radio" name="inlineRadioGroup" label="3 (disabled)" disabled />
+          <Form.Check
+            inline
+            type="radio"
+            name="inlineRadioGroup"
+            label="2"
+            defaultChecked
+          />
+          <Form.Check
+            inline
+            type="radio"
+            name="inlineRadioGroup"
+            label="3 (disabled)"
+            disabled
+          />
         </Col>
 
         {/* Range Sliders */}

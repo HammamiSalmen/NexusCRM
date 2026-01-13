@@ -1,13 +1,13 @@
 // react-bootstrap
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 // project-imports
-import BasicTable from 'sections/tables/bootstrap-table/basic-table/BasicTable';
-import ContextualTable from 'sections/tables/bootstrap-table/basic-table/ContextualTable';
-import DarkTable from 'sections/tables/bootstrap-table/basic-table/DarkTable';
-import HoverTable from 'sections/tables/bootstrap-table/basic-table/HoverTable';
-import StripedTable from 'sections/tables/bootstrap-table/basic-table/StripedTable';
+import BasicTable from "sections/tables/bootstrap-table/basic-table/BasicTable";
+import ContextualTable from "sections/tables/bootstrap-table/basic-table/ContextualTable";
+import DarkTable from "sections/tables/bootstrap-table/basic-table/DarkTable";
+import HoverTable from "sections/tables/bootstrap-table/basic-table/HoverTable";
+import StripedTable from "sections/tables/bootstrap-table/basic-table/StripedTable";
 
 // ==============================|| BOOTSTRAP TABLE - BASIC TABLE ||============================== //
 

@@ -1,10 +1,10 @@
 // react-bootstrap
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Form from 'react-bootstrap/Form';
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Form from "react-bootstrap/Form";
 
 // project-import
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ============================|| FORM ELEMENT - FORM CONTROL STATE ||============================== //
 
@@ -22,7 +22,12 @@ export default function FormControlState() {
               Email
             </Form.Label>
             <Col sm={9}>
-              <Form.Control type="email" value="email@example.com" placeholder="Readonly input here…" readOnly />
+              <Form.Control
+                type="email"
+                value="email@example.com"
+                placeholder="Readonly input here…"
+                readOnly
+              />
             </Col>
           </Form.Group>
         </Col>
@@ -32,12 +37,22 @@ export default function FormControlState() {
           <h5>Readonly plain text</h5>
           <hr />
 
-          <Form.Group as={Row} className="mb-0" controlId="readonlyPlaintextEmail">
+          <Form.Group
+            as={Row}
+            className="mb-0"
+            controlId="readonlyPlaintextEmail"
+          >
             <Form.Label column sm={3}>
               Email
             </Form.Label>
             <Col sm={9}>
-              <Form.Control type="email" value="email@example.com" placeholder="Readonly input here…" readOnly plaintext />
+              <Form.Control
+                type="email"
+                value="email@example.com"
+                placeholder="Readonly input here…"
+                readOnly
+                plaintext
+              />
             </Col>
           </Form.Group>
         </Col>

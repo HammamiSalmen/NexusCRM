@@ -1,14 +1,14 @@
 // react-bootstrap
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 // project-imports
-import MainCard from 'components/MainCard';
-import BarChart from 'sections/charts/apex-charts/BarChart';
-import BarHorizontalChart from 'sections/charts/apex-charts/BarHorizontalChart';
-import BarHorizontalStackedChart from 'sections/charts/apex-charts/BarHorizontalStackedChart';
-import BarStackedChart from 'sections/charts/apex-charts/BarStackedChart';
-import ReferenceHeader from 'components/ReferenceHeader';
+import MainCard from "components/MainCard";
+import BarChart from "sections/charts/apex-charts/BarChart";
+import BarHorizontalChart from "sections/charts/apex-charts/BarHorizontalChart";
+import BarHorizontalStackedChart from "sections/charts/apex-charts/BarHorizontalStackedChart";
+import BarStackedChart from "sections/charts/apex-charts/BarStackedChart";
+import ReferenceHeader from "components/ReferenceHeader";
 
 // =============================|| CHARTS - APEX CHART ||============================== //
 

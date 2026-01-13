@@ -1,9 +1,9 @@
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import Stack from 'react-bootstrap/Stack';
+import Button from "react-bootstrap/Button";
+import Stack from "react-bootstrap/Stack";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| BUTTON - SHADOW ||============================== //
 

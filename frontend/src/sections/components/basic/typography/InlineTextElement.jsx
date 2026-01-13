@@ -1,5 +1,5 @@
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| TYPOGRAPHY - INLINE TEXT ELEMENT ||============================== //
 
@@ -11,7 +11,9 @@ export default function InlineTextElement() {
       <br />
       <del>This line of text is meant to be treated as deleted text.</del>
       <br />
-      <ins>This line of text is meant to be treated as an addition to the document.</ins>
+      <ins>
+        This line of text is meant to be treated as an addition to the document.
+      </ins>
       <br />
       <strong>rendered as bold text</strong>
       <br />

@@ -1,12 +1,12 @@
 // react-bootstrap
-import Col from 'react-bootstrap/Col';
+import Col from "react-bootstrap/Col";
 
 // project-imports
-import AccordionCollapse from 'sections/components/basic/collapse/Accordion';
-import AccordionFlush from 'sections/components/basic/collapse/AccordionFlush';
-import BasicCollapse from 'sections/components/basic/collapse/BasicCollapse';
-import MultipleTargets from 'sections/components/basic/collapse/MultipleTargets';
-import ReferenceHeader from 'components/ReferenceHeader';
+import AccordionCollapse from "sections/components/basic/collapse/Accordion";
+import AccordionFlush from "sections/components/basic/collapse/AccordionFlush";
+import BasicCollapse from "sections/components/basic/collapse/BasicCollapse";
+import MultipleTargets from "sections/components/basic/collapse/MultipleTargets";
+import ReferenceHeader from "components/ReferenceHeader";
 
 // ==============================|| BASIC - COLLAPSE ||============================== //
 

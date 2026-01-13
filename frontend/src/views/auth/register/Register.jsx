@@ -1,5 +1,5 @@
 // project-imports
-import AuthRegisterForm from 'sections/auth/AuthRegister';
+import AuthRegisterForm from "sections/auth/AuthRegister";
 
 // ===========================|| AUTH - REGISTER PAGE ||=========================== //
 

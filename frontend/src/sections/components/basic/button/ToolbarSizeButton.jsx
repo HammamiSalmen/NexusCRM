@@ -1,11 +1,11 @@
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| BUTTON - TOOLBAR SIZE ||============================== //
 
@@ -15,7 +15,8 @@ export default function ToolbarSizeButton() {
       title="Button Toolbar Size"
       subheader={
         <p>
-          Use <code>.btn-group-lg</code> in class <code>.btn-group</code> class to get large buttons.
+          Use <code>.btn-group-lg</code> in class <code>.btn-group</code> class
+          to get large buttons.
         </p>
       }
     >

@@ -1,14 +1,14 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import Collapse from 'react-bootstrap/Collapse';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Stack from 'react-bootstrap/Stack';
+import Button from "react-bootstrap/Button";
+import Collapse from "react-bootstrap/Collapse";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Stack from "react-bootstrap/Stack";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| COLLAPSE - MULTITARGETS ||============================== //
 
@@ -62,8 +62,10 @@ export default function MultipleTargets() {
           <Collapse in={openFirst}>
             <div id="multiCollapseExample1">
               <MainCard content={openFirst} className="mt-2">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh
-                helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                Anim pariatur cliche reprehenderit, enim eiusmod high life
+                accusamus terry richardson ad squid. Nihil anim keffiyeh
+                helvetica, craft beer labore wes anderson cred nesciunt sapiente
+                ea proident.
               </MainCard>
             </div>
           </Collapse>
@@ -72,8 +74,10 @@ export default function MultipleTargets() {
           <Collapse in={openSecond}>
             <div id="multiCollapseExample2">
               <MainCard content={openSecond} className="mt-2">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh
-                helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                Anim pariatur cliche reprehenderit, enim eiusmod high life
+                accusamus terry richardson ad squid. Nihil anim keffiyeh
+                helvetica, craft beer labore wes anderson cred nesciunt sapiente
+                ea proident.
               </MainCard>
             </div>
           </Collapse>

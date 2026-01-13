@@ -1,19 +1,27 @@
-import PropTypes from 'prop-types';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, matchPath, useLocation, useNavigate } from 'react-router-dom';
+import PropTypes from "prop-types";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, matchPath, useLocation, useNavigate } from "react-router-dom";
 
 // react-bootstrap
-import Badge from 'react-bootstrap/Badge';
-import Collapse from 'react-bootstrap/Collapse';
-import ListGroup from 'react-bootstrap/ListGroup';
+import Badge from "react-bootstrap/Badge";
+import Collapse from "react-bootstrap/Collapse";
+import ListGroup from "react-bootstrap/ListGroup";
 
 // project-imports
-import NavItem from './NavItem';
-import { useGetMenuMaster } from 'api/menu';
+import NavItem from "./NavItem";
+import { useGetMenuMaster } from "api/menu";
 
 // ==============================|| NAVIGATION - COLLAPSE ||============================== //
 
-export default function NavCollapse({ menu, level, parentId, setSelectedItems, selectedItems, setSelectedLevel, selectedLevel }) {
+export default function NavCollapse({
+  menu,
+  level,
+  parentId,
+  setSelectedItems,
+  selectedItems,
+  setSelectedLevel,
+  selectedLevel,
+}) {
   const { menuMaster } = useGetMenuMaster();
   const navigation = useNavigate();
   const drawerOpen = menuMaster?.isDashboardDrawerOpened;
@@ -23,10 +31,10 @@ export default function NavCollapse({ menu, level, parentId, setSelectedItems, s
   const { pathname } = useLocation();
 
   const isMenuActive = useCallback((menu, currentPath) => {
-    if (menu.type === 'item') {
+    if (menu.type === "item") {
       return menu.url === currentPath;
     }
-    if (menu.type === 'collapse' && Array.isArray(menu.children)) {
+    if (menu.type === "collapse" && Array.isArray(menu.children)) {
       return menu.children.some((child) => isMenuActive(child, currentPath));
     }
     return false;
@@ -72,7 +80,7 @@ export default function NavCollapse({ menu, level, parentId, setSelectedItems, s
         }
       });
     },
-    [pathname]
+    [pathname],
   );
 
   // menu collapse for sub-levels
@@ -109,7 +117,7 @@ export default function NavCollapse({ menu, level, parentId, setSelectedItems, s
     () =>
       menu.children?.map((item) => {
         switch (item.type) {
-          case 'collapse':
+          case "collapse":
             return (
               <NavCollapse
                 key={item.id}
@@ -122,7 +130,7 @@ export default function NavCollapse({ menu, level, parentId, setSelectedItems, s
                 parentId={parentId}
               />
             );
-          case 'item':
+          case "item":
             return <NavItem key={item.id} item={item} level={level + 1} />;
           default:
             return (
@@ -132,11 +140,19 @@ export default function NavCollapse({ menu, level, parentId, setSelectedItems, s
             );
         }
       }) ?? [],
-    [menu.children, setSelectedItems, setSelectedLevel, selectedLevel, selectedItems, level, parentId]
+    [
+      menu.children,
+      setSelectedItems,
+      setSelectedLevel,
+      selectedLevel,
+      selectedItems,
+      level,
+      parentId,
+    ],
   );
 
   return (
-    <ListGroup className={`pc-item pc-hasmenu ${open ? 'pc-trigger' : ''}`}>
+    <ListGroup className={`pc-item pc-hasmenu ${open ? "pc-trigger" : ""}`}>
       <Link className="pc-link" to="#!" onClick={() => handleClick(true)}>
         {menu.icon && (
           <span className="pc-micon">
@@ -165,5 +181,5 @@ NavCollapse.propTypes = {
   setSelectedItems: PropTypes.oneOfType([PropTypes.func, PropTypes.any]),
   selectedItems: PropTypes.any,
   setSelectedLevel: PropTypes.func,
-  selectedLevel: PropTypes.number
+  selectedLevel: PropTypes.number,
 };

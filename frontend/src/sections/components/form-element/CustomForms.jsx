@@ -1,12 +1,12 @@
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
+import Row from "react-bootstrap/Row";
 
 // project-import
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| FORM ELEMENT - CUSTOM FORMS ||============================== //
 
@@ -22,7 +22,10 @@ export default function CustomForms() {
           {/* Select with label prefix */}
           <InputGroup className="mb-3">
             <InputGroup.Text id="inputGroupSelect01">Option</InputGroup.Text>
-            <Form.Select aria-label="Select with prefix" aria-describedby="inputGroupSelect01">
+            <Form.Select
+              aria-label="Select with prefix"
+              aria-describedby="inputGroupSelect01"
+            >
               <option>Choose...</option>
               <option value="1">One</option>
               <option value="2">Two</option>
@@ -84,12 +87,18 @@ export default function CustomForms() {
           {/* File input with button prefix */}
           <InputGroup className="mb-3">
             <Button variant="outline-secondary">Button</Button>
-            <Form.Control type="file" aria-label="File input with button prefix" />
+            <Form.Control
+              type="file"
+              aria-label="File input with button prefix"
+            />
           </InputGroup>
 
           {/* File input with button suffix */}
           <InputGroup className="mb-3">
-            <Form.Control type="file" aria-label="File input with button suffix" />
+            <Form.Control
+              type="file"
+              aria-label="File input with button suffix"
+            />
             <Button variant="outline-secondary">Button</Button>
           </InputGroup>
         </Col>

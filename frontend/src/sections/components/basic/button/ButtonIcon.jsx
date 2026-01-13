@@ -1,11 +1,11 @@
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Stack from 'react-bootstrap/Stack';
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Stack from "react-bootstrap/Stack";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| BUTTON - ICON ||============================== //
 
@@ -107,7 +107,11 @@ export default function ButtonIcon() {
         </Col>
         <Col lg={6}>
           <h5>Size</h5>
-          <Stack direction="horizontal" gap={2} className="flex-wrap align-items-start">
+          <Stack
+            direction="horizontal"
+            gap={2}
+            className="flex-wrap align-items-start"
+          >
             <Button className="btn-icon avatar-xl">A</Button>
             <Button className="btn-icon avatar-l">A</Button>
             <Button className="btn-icon">A</Button>

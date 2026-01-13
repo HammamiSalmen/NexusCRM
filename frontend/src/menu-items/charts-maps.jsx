@@ -1,39 +1,39 @@
 // ==============================|| MENU ITEMS - CHARTS & MAPS ||============================== //
 
 const chartsMaps = {
-  id: 'charts-maps',
-  title: 'Charts-maps',
-  type: 'group',
+  id: "charts-maps",
+  title: "Charts-maps",
+  type: "group",
   children: [
     {
-      id: 'charts',
-      title: 'Charts',
-      type: 'collapse',
-      icon: 'ph ph-chart-donut',
+      id: "charts",
+      title: "Charts",
+      type: "collapse",
+      icon: "ph ph-chart-donut",
       children: [
         {
-          id: 'apex-chart',
-          title: 'Apex chart',
-          type: 'item',
-          url: '/charts/apex-chart'
-        }
-      ]
+          id: "apex-chart",
+          title: "Apex chart",
+          type: "item",
+          url: "/charts/apex-chart",
+        },
+      ],
     },
     {
-      id: 'map',
-      title: 'Map',
-      type: 'collapse',
-      icon: 'ph ph-map-trifold',
+      id: "map",
+      title: "Map",
+      type: "collapse",
+      icon: "ph ph-map-trifold",
       children: [
         {
-          id: 'google-map',
-          title: 'Google map',
-          type: 'item',
-          url: ''
-        }
-      ]
-    }
-  ]
+          id: "google-map",
+          title: "Google map",
+          type: "item",
+          url: "",
+        },
+      ],
+    },
+  ],
 };
 
 export default chartsMaps;

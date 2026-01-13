@@ -1,15 +1,15 @@
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
-import SplitButton from 'react-bootstrap/SplitButton';
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
+import Row from "react-bootstrap/Row";
+import SplitButton from "react-bootstrap/SplitButton";
 
 // project-import
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // =============================|| FORM ELEMENT - INPUT GROUP ||============================== //
 
@@ -18,17 +18,27 @@ export default function CustomInputGroup() {
     <MainCard title="Input Group">
       <InputGroup className="mb-3">
         <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
-        <Form.Control placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" />
+        <Form.Control
+          placeholder="Username"
+          aria-label="Username"
+          aria-describedby="basic-addon1"
+        />
       </InputGroup>
 
       <InputGroup className="mb-3">
-        <Form.Control placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+        <Form.Control
+          placeholder="Recipient's username"
+          aria-label="Recipient's username"
+          aria-describedby="basic-addon2"
+        />
         <InputGroup.Text id="basic-addon2">@example.com</InputGroup.Text>
       </InputGroup>
 
       <Form.Label htmlFor="basic-url">Your vanity URL</Form.Label>
       <InputGroup className="mb-3">
-        <InputGroup.Text id="basic-addon3">https://example.com/users/</InputGroup.Text>
+        <InputGroup.Text id="basic-addon3">
+          https://example.com/users/
+        </InputGroup.Text>
         <Form.Control id="basic-url" aria-describedby="basic-addon3" />
       </InputGroup>
 
@@ -49,15 +59,26 @@ export default function CustomInputGroup() {
           <hr />
           <InputGroup size="sm" className="mb-3">
             <InputGroup.Text id="inputGroup-sizing-sm">Small</InputGroup.Text>
-            <Form.Control aria-label="Small" aria-describedby="inputGroup-sizing-sm" />
+            <Form.Control
+              aria-label="Small"
+              aria-describedby="inputGroup-sizing-sm"
+            />
           </InputGroup>
           <InputGroup className="mb-3">
-            <InputGroup.Text id="inputGroup-sizing-default">Default</InputGroup.Text>
-            <Form.Control aria-label="Default" aria-describedby="inputGroup-sizing-default" />
+            <InputGroup.Text id="inputGroup-sizing-default">
+              Default
+            </InputGroup.Text>
+            <Form.Control
+              aria-label="Default"
+              aria-describedby="inputGroup-sizing-default"
+            />
           </InputGroup>
           <InputGroup size="lg">
             <InputGroup.Text id="inputGroup-sizing-lg">Large</InputGroup.Text>
-            <Form.Control aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
+            <Form.Control
+              aria-label="Large"
+              aria-describedby="inputGroup-sizing-sm"
+            />
           </InputGroup>
         </Col>
 
@@ -65,11 +86,17 @@ export default function CustomInputGroup() {
           <h5 className="mt-4">Checkboxes and radios</h5>
           <hr />
           <InputGroup className="mb-3">
-            <InputGroup.Checkbox aria-label="Checkbox for following text input" defaultChecked />
+            <InputGroup.Checkbox
+              aria-label="Checkbox for following text input"
+              defaultChecked
+            />
             <Form.Control aria-label="Text input with checkbox" />
           </InputGroup>
           <InputGroup>
-            <InputGroup.Radio aria-label="Radio button for following text input" defaultChecked />
+            <InputGroup.Radio
+              aria-label="Radio button for following text input"
+              defaultChecked
+            />
             <Form.Control aria-label="Text input with radio button" />
           </InputGroup>
         </Col>
@@ -107,11 +134,18 @@ export default function CustomInputGroup() {
             <Button variant="outline-secondary" id="button-addon1">
               Button
             </Button>
-            <Form.Control aria-label="Example text with button addon" aria-describedby="basic-addon1" />
+            <Form.Control
+              aria-label="Example text with button addon"
+              aria-describedby="basic-addon1"
+            />
           </InputGroup>
 
           <InputGroup className="mb-3">
-            <Form.Control placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+            <Form.Control
+              placeholder="Recipient's username"
+              aria-label="Recipient's username"
+              aria-describedby="basic-addon2"
+            />
             <Button variant="outline-secondary" id="button-addon2">
               Button
             </Button>
@@ -125,7 +159,10 @@ export default function CustomInputGroup() {
           </InputGroup>
 
           <InputGroup>
-            <Form.Control placeholder="Recipient's username" aria-label="Recipient's username with two button addons" />
+            <Form.Control
+              placeholder="Recipient's username"
+              aria-label="Recipient's username with two button addons"
+            />
             <Button variant="secondary">Button</Button>
             <Button variant="outline-secondary">Button</Button>
           </InputGroup>
@@ -135,7 +172,11 @@ export default function CustomInputGroup() {
           <h5 className="mt-3">Buttons With Dropdowns</h5>
           <hr />
           <InputGroup className="mb-3">
-            <DropdownButton variant="success" title="Dropdown" id="input-group-dropdown-1">
+            <DropdownButton
+              variant="success"
+              title="Dropdown"
+              id="input-group-dropdown-1"
+            >
               <Dropdown.Item href="#">Action</Dropdown.Item>
               <Dropdown.Item href="#">Another action</Dropdown.Item>
               <Dropdown.Item href="#">Something else here</Dropdown.Item>
@@ -148,7 +189,12 @@ export default function CustomInputGroup() {
           <InputGroup className="mb-3">
             <Form.Control aria-label="Text input with dropdown button" />
 
-            <DropdownButton variant="outline-success" title="Dropdown" id="input-group-dropdown-2" align="end">
+            <DropdownButton
+              variant="outline-success"
+              title="Dropdown"
+              id="input-group-dropdown-2"
+              align="end"
+            >
               <Dropdown.Item href="#">Action</Dropdown.Item>
               <Dropdown.Item href="#">Another action</Dropdown.Item>
               <Dropdown.Item href="#">Something else here</Dropdown.Item>
@@ -158,7 +204,11 @@ export default function CustomInputGroup() {
           </InputGroup>
 
           <InputGroup>
-            <DropdownButton variant="secondary" title="Dropdown" id="input-group-dropdown-3">
+            <DropdownButton
+              variant="secondary"
+              title="Dropdown"
+              id="input-group-dropdown-3"
+            >
               <Dropdown.Item href="#">Action</Dropdown.Item>
               <Dropdown.Item href="#">Another action</Dropdown.Item>
               <Dropdown.Item href="#">Something else here</Dropdown.Item>
@@ -166,7 +216,12 @@ export default function CustomInputGroup() {
               <Dropdown.Item href="#">Separated link</Dropdown.Item>
             </DropdownButton>
             <Form.Control aria-label="Text input with 2 dropdown buttons" />
-            <DropdownButton variant="secondary" title="Dropdown" id="input-group-dropdown-4" align="end">
+            <DropdownButton
+              variant="secondary"
+              title="Dropdown"
+              id="input-group-dropdown-4"
+              align="end"
+            >
               <Dropdown.Item href="#">Action</Dropdown.Item>
               <Dropdown.Item href="#">Another action</Dropdown.Item>
               <Dropdown.Item href="#">Something else here</Dropdown.Item>
@@ -180,7 +235,11 @@ export default function CustomInputGroup() {
           <h5 className="mt-3">Segmented Buttons</h5>
           <hr />
           <InputGroup className="mb-3">
-            <SplitButton variant="outline-secondary" title="Action" id="segmented-button-dropdown-1">
+            <SplitButton
+              variant="outline-secondary"
+              title="Action"
+              id="segmented-button-dropdown-1"
+            >
               <Dropdown.Item href="#">Action</Dropdown.Item>
               <Dropdown.Item href="#">Another action</Dropdown.Item>
               <Dropdown.Item href="#">Something else here</Dropdown.Item>
@@ -192,7 +251,12 @@ export default function CustomInputGroup() {
 
           <InputGroup className="mb-3">
             <Form.Control aria-label="Text input with dropdown button" />
-            <SplitButton variant="outline-secondary" title="Action" id="segmented-button-dropdown-2" align="end">
+            <SplitButton
+              variant="outline-secondary"
+              title="Action"
+              id="segmented-button-dropdown-2"
+              align="end"
+            >
               <Dropdown.Item href="#">Action</Dropdown.Item>
               <Dropdown.Item href="#">Another action</Dropdown.Item>
               <Dropdown.Item href="#">Something else here</Dropdown.Item>

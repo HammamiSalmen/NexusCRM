@@ -1,23 +1,23 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from "prop-types";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Image from 'react-bootstrap/Image';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Stack from 'react-bootstrap/Stack';
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import Image from "react-bootstrap/Image";
+import InputGroup from "react-bootstrap/InputGroup";
+import Stack from "react-bootstrap/Stack";
 
 // third-party
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 
 // project-imports
-import MainCard from 'components/MainCard';
-import { emailSchema, passwordSchema } from 'utils/validationSchema';
+import MainCard from "components/MainCard";
+import { emailSchema, passwordSchema } from "utils/validationSchema";
 
 // assets
-import DarkLogo from 'assets/images/logo-dark.svg';
+import DarkLogo from "assets/images/logo-dark.svg";
 
 // ==============================|| AUTH LOGIN FORM ||============================== //
 
@@ -28,7 +28,7 @@ export default function AuthLoginForm({ className, link }) {
     register,
     handleSubmit,
     reset,
-    formState: { errors }
+    formState: { errors },
   } = useForm();
 
   const togglePasswordVisibility = () => {
@@ -52,35 +52,52 @@ export default function AuthLoginForm({ className, link }) {
           <Form.Control
             type="email"
             placeholder="Email Address"
-            {...register('email', emailSchema)}
+            {...register("email", emailSchema)}
             isInvalid={!!errors.email}
-            className={className && 'bg-transparent border-white text-white border-opacity-25 '}
+            className={
+              className &&
+              "bg-transparent border-white text-white border-opacity-25 "
+            }
           />
-          <Form.Control.Feedback type="invalid">{errors.email?.message}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            {errors.email?.message}
+          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formPassword">
           <InputGroup>
             <Form.Control
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
-              {...register('password', passwordSchema)}
+              {...register("password", passwordSchema)}
               isInvalid={!!errors.password}
-              className={className && 'bg-transparent border-white text-white border-opacity-25 '}
+              className={
+                className &&
+                "bg-transparent border-white text-white border-opacity-25 "
+              }
             />
             <Button onClick={togglePasswordVisibility}>
-              {showPassword ? <i className="ti ti-eye" /> : <i className="ti ti-eye-off" />}
+              {showPassword ? (
+                <i className="ti ti-eye" />
+              ) : (
+                <i className="ti ti-eye-off" />
+              )}
             </Button>
-            <Form.Control.Feedback type="invalid">{errors.password?.message}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">
+              {errors.password?.message}
+            </Form.Control.Feedback>
           </InputGroup>
         </Form.Group>
 
-        <Stack direction="horizontal" className="mt-1 justify-content-between align-items-center">
+        <Stack
+          direction="horizontal"
+          className="mt-1 justify-content-between align-items-center"
+        >
           <Form.Group controlId="customCheckc1">
             <Form.Check
               type="checkbox"
               label="Remember me?"
               defaultChecked
-              className={`input-primary ${className ? className : 'text-muted'} `}
+              className={`input-primary ${className ? className : "text-muted"} `}
             />
           </Form.Group>
           <Link to="#!" className={`text-secondary f-w-400 mb-0  ${className}`}>
@@ -92,8 +109,13 @@ export default function AuthLoginForm({ className, link }) {
             Login
           </Button>
         </div>
-        <Stack direction="horizontal" className="justify-content-between align-items-end mt-4">
-          <h6 className={`f-w-500 mb-0 ${className}`}>Don't have an Account?</h6>
+        <Stack
+          direction="horizontal"
+          className="justify-content-between align-items-end mt-4"
+        >
+          <h6 className={`f-w-500 mb-0 ${className}`}>
+            Don't have an Account?
+          </h6>
           <Link to={link} className="link-primary">
             Create Account
           </Link>
@@ -103,4 +125,7 @@ export default function AuthLoginForm({ className, link }) {
   );
 }
 
-AuthLoginForm.propTypes = { className: PropTypes.string, link: PropTypes.string };
+AuthLoginForm.propTypes = {
+  className: PropTypes.string,
+  link: PropTypes.string,
+};

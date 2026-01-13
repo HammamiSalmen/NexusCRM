@@ -1,76 +1,78 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 // third-party
-import ReactApexChart from 'react-apexcharts';
+import ReactApexChart from "react-apexcharts";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // chart-options
 const earningChartOptions = {
   chart: {
     toolbar: {
-      show: false
-    }
+      show: false,
+    },
   },
   dataLabels: {
-    enabled: false
+    enabled: false,
   },
   markers: {
     size: 6,
     hover: {
-      size: 5
-    }
+      size: 5,
+    },
   },
   stroke: {
-    curve: 'straight',
-    width: 6
+    curve: "straight",
+    width: 6,
   },
 
   grid: {
     xaxis: {
       lines: {
-        show: false
-      }
+        show: false,
+      },
     },
     yaxis: {
       lines: {
-        show: false
-      }
-    }
+        show: false,
+      },
+    },
   },
 
   tooltip: {
     x: {
-      show: false
+      show: false,
     },
 
     marker: {
-      show: false
-    }
+      show: false,
+    },
   },
 
   yaxis: {
     labels: {
-      show: false
-    }
+      show: false,
+    },
   },
 
   xaxis: {
-    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     axisTicks: {
-      show: false
+      show: false,
     },
     axisBorder: {
-      show: false
-    }
-  }
+      show: false,
+    },
+  },
 };
 
 // =============================|| DEFAULT - EARNING CHART ||============================== //
 
 export default function EarningChart() {
-  const [series] = useState([{ name: 'Market Days ', data: [10, 60, 45, 72, 45, 86], color: '#fff' }]);
+  const [series] = useState([
+    { name: "Market Days ", data: [10, 60, 45, 72, 45, 86], color: "#fff" },
+  ]);
 
   const [options, setOptions] = useState(earningChartOptions);
 
@@ -78,7 +80,10 @@ export default function EarningChart() {
     setOptions({
       ...earningChartOptions,
       chart: { ...earningChartOptions.chart },
-      xaxis: { ...earningChartOptions.xaxis, labels: { style: { colors: '#fff' } } }
+      xaxis: {
+        ...earningChartOptions.xaxis,
+        labels: { style: { colors: "#fff" } },
+      },
     });
   }, []);
 
@@ -93,9 +98,16 @@ export default function EarningChart() {
         <h3 className="mb-2 text-white f-w-300">
           $4295.36 <i className="ph ph-arrow-up" />
         </h3>
-        <span className="text-uppercase text-white d-block">Total Earnings</span>
+        <span className="text-uppercase text-white d-block">
+          Total Earnings
+        </span>
       </div>
-      <ReactApexChart options={options} series={series} type="line" height={210} />
+      <ReactApexChart
+        options={options}
+        series={series}
+        type="line"
+        height={210}
+      />
     </MainCard>
   );
 }

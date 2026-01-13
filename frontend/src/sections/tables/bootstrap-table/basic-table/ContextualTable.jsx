@@ -1,8 +1,8 @@
 // react-bootstrap
-import Table from 'react-bootstrap/Table';
+import Table from "react-bootstrap/Table";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| BASIC TABLE - CONTEXTUAL TABLE ||============================== //
 
@@ -13,8 +13,9 @@ export default function ContextualTable() {
       className="table-card"
       subheader={
         <p className="mb-0">
-          For Make row Contextual add Contextual class like <code>.table-success</code> in <code>tr tag</code> and For cell add Contextual
-          class in <code>td or th tag</code> .
+          For Make row Contextual add Contextual class like{" "}
+          <code>.table-success</code> in <code>tr tag</code> and For cell add
+          Contextual class in <code>td or th tag</code> .
         </p>
       }
     >

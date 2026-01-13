@@ -1,12 +1,12 @@
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
+import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import ButtonToolbar from "react-bootstrap/ButtonToolbar";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
 
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| BUTTON - TOOLBAR INPUT ||============================== //
 
@@ -34,7 +34,12 @@ export default function ToolbarInputButton() {
         </ButtonGroup>
         <InputGroup className="my-1">
           <InputGroup.Text id="btnGroupAddon2">@</InputGroup.Text>
-          <Form.Control type="text" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon2" />
+          <Form.Control
+            type="text"
+            placeholder="Input group example"
+            aria-label="Input group example"
+            aria-describedby="btnGroupAddon2"
+          />
         </InputGroup>
       </ButtonToolbar>
     </MainCard>

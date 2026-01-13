@@ -1,5 +1,5 @@
 // project-imports
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // ==============================|| TYPOGRAPHY - UNORDERED ||============================== //
 

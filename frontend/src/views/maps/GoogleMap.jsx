@@ -1,10 +1,10 @@
 // react bootstrap
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 // project-imports
-import ReferenceHeader from 'components/ReferenceHeader';
-import BasicGMap from 'sections/maps/google-maps/BasicMap';
+import ReferenceHeader from "components/ReferenceHeader";
+import BasicGMap from "sections/maps/google-maps/BasicMap";
 
 // ===============================|| MAPS - GOOGLE MAP ||============================== //
 

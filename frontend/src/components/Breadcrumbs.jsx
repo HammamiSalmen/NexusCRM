@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState, useEffect, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 
 // react-bootstrap
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import Breadcrumb from "react-bootstrap/Breadcrumb";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 // project-imports
-import { APP_DEFAULT_PATH } from 'config';
-import navigation from 'menu-items';
+import { APP_DEFAULT_PATH } from "config";
+import navigation from "menu-items";
 
 // ==============================|| MAIN BREADCRUMB ||============================== //
 
@@ -22,30 +22,34 @@ export default function Breadcrumbs() {
     (item) => {
       if (item.children) {
         item.children.forEach((collapse) => {
-          if (collapse.type === 'collapse') {
+          if (collapse.type === "collapse") {
             getCollapse(collapse);
-          } else if (collapse.type === 'item' && location.pathname === collapse.url) {
+          } else if (
+            collapse.type === "item" &&
+            location.pathname === collapse.url
+          ) {
             setMain((prev) => ({
               ...prev,
-              type: 'collapse', // Add this
-              title: typeof item.title === 'string' ? item.title : undefined
+              type: "collapse", // Add this
+              title: typeof item.title === "string" ? item.title : undefined,
             }));
             setItem((prev) => ({
               ...prev,
-              type: 'item', // Add this
-              title: typeof collapse.title === 'string' ? collapse.title : undefined,
-              breadcrumbs: collapse.breadcrumbs !== false
+              type: "item", // Add this
+              title:
+                typeof collapse.title === "string" ? collapse.title : undefined,
+              breadcrumbs: collapse.breadcrumbs !== false,
             }));
           }
         });
       }
     },
-    [location.pathname]
+    [location.pathname],
   );
 
   useEffect(() => {
     navigation.items.forEach((navItem) => {
-      if (navItem.type === 'group') {
+      if (navItem.type === "group") {
         getCollapse(navItem);
       }
     });
@@ -54,9 +58,9 @@ export default function Breadcrumbs() {
   let mainContent;
   let itemContent;
   let breadcrumbContent;
-  let title = '';
+  let title = "";
 
-  if (main?.type === 'collapse') {
+  if (main?.type === "collapse") {
     mainContent = (
       <Breadcrumb.Item href="#" className="text-capitalize">
         {main.title}
@@ -64,8 +68,8 @@ export default function Breadcrumbs() {
     );
   }
 
-  if (item?.type === 'item') {
-    title = item.title ?? '';
+  if (item?.type === "item") {
+    title = item.title ?? "";
     itemContent = (
       <Breadcrumb.Item href="#" className="text-capitalize">
         {title}
@@ -82,7 +86,9 @@ export default function Breadcrumbs() {
               </Col>
               <Col md={12}>
                 <Breadcrumb listProps={{ style: { marginBottom: 0 } }}>
-                  <Breadcrumb.Item href={APP_DEFAULT_PATH}>Home</Breadcrumb.Item>
+                  <Breadcrumb.Item href={APP_DEFAULT_PATH}>
+                    Home
+                  </Breadcrumb.Item>
                   {mainContent}
                   {itemContent}
                 </Breadcrumb>

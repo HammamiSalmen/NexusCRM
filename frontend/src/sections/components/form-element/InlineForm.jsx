@@ -1,12 +1,12 @@
 // react-bootstrap
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import InputGroup from 'react-bootstrap/InputGroup';
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import InputGroup from "react-bootstrap/InputGroup";
 
 // project-import
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // =============================|| FORM ELEMENT - INLINE FORM ||============================== //
 
@@ -22,7 +22,11 @@ export default function InlineForm() {
           <Col xs={12}>
             <InputGroup>
               <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
-              <Form.Control placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" />
+              <Form.Control
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+              />
             </InputGroup>
           </Col>
 

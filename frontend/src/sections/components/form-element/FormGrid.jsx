@@ -1,12 +1,12 @@
 // react-bootstrap
-import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
+import Alert from "react-bootstrap/Alert";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
 
 // project-import
-import MainCard from 'components/MainCard';
+import MainCard from "components/MainCard";
 
 // =============================|| FORM ELEMENT - FORM GRID ||============================== //
 
@@ -17,9 +17,13 @@ export default function FormGrid() {
         {/* Info Alert */}
         <Row>
           <Col xs={12}>
-            <Alert variant="primary" className="d-flex align-items-center gap-2">
+            <Alert
+              variant="primary"
+              className="d-flex align-items-center gap-2"
+            >
               <i className="ti ti-info-circle-filled f-24" />
-              When working with the Bootstrap grid system, place form elements within column classes.
+              When working with the Bootstrap grid system, place form elements
+              within column classes.
             </Alert>
           </Col>
         </Row>
