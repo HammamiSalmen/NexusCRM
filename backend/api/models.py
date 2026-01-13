@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Client(models.Model):
     TYPE_CLIENT = [
         ("PARTICULIER", "Particulier"),
@@ -16,6 +17,7 @@ class Client(models.Model):
     def __str__(self):
         return self.nomClient
 
+
 class Contact(models.Model):
     nomContact = models.CharField(max_length=100)
     prenomContact = models.CharField(max_length=100)
@@ -23,7 +25,7 @@ class Contact(models.Model):
     telContact = models.CharField(max_length=20)
     adresseContact = models.TextField()
     posteContact = models.CharField(max_length=100)
-    # au lieu de one to one un client peut maintenant avoir plusieurs contacts
+    # un client peut avoir plusieurs contacts
     client = models.ForeignKey(
         Client, on_delete=models.CASCADE, related_name="contacts"
     )

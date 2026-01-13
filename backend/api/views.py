@@ -19,13 +19,16 @@ class RegisterAdminView(generics.CreateAPIView):
         # rôle admin (employé)
         serializer.save(is_staff=True, is_superuser=False)
 
+
 class CreateAdminBySuperAdminView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
         if not self.request.user.is_superuser:
-            raise permissions.PermissionDenied("Seuls les superadmins peuvent créer des admins")
+            raise permissions.PermissionDenied(
+                "Seuls les superadmins peuvent créer des admins"
+            )
 
         serializer.save(is_staff=True, is_superuser=False)
 
@@ -36,7 +39,9 @@ class CreateSuperAdminView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         if not self.request.user.is_superuser:
-            raise permissions.PermissionDenied("Seuls les superadmins peuvent créer des superadmins")
+            raise permissions.PermissionDenied(
+                "Seuls les superadmins peuvent créer des superadmins"
+            )
 
         serializer.save(is_staff=True, is_superuser=True)
 
@@ -53,6 +58,7 @@ class ClientViewSet(viewsets.ModelViewSet):
         # assignation d'un client a un admin
         serializer.save(user=self.request.user)
 
+
 class ContactViewSet(viewsets.ModelViewSet):
     serializer_class = ContactSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -60,6 +66,7 @@ class ContactViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # contacts liés au admin
         return Contact.objects.filter(client__user=self.request.user)
+
 
 class InteractionViewSet(viewsets.ModelViewSet):
     serializer_class = InteractionSerializer
