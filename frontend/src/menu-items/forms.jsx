@@ -1,4 +1,4 @@
-const formComponents = {
+/* const formComponents = {
   id: "forms",
   title: "Forms",
   type: "group",
@@ -21,3 +21,4 @@ const formComponents = {
 };
 
 export default formComponents;
+ */

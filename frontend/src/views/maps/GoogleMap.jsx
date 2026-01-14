@@ -1,4 +1,4 @@
-import Col from "react-bootstrap/Col";
+/* import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import ReferenceHeader from "components/ReferenceHeader";
 import BasicGMap from "sections/maps/google-maps/BasicMap";
@@ -18,3 +18,4 @@ export default function GoogleMapPage() {
     </>
   );
 }
+ */

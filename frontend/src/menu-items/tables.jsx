@@ -4,18 +4,18 @@ const tableComponents = {
   type: "group",
   children: [
     {
-      id: "bootstrap-table",
-      title: "Bootstrap table",
-      type: "collapse",
+      id: "clients-table",
+      title: "Clients",
+      type: "item",
       icon: "ph ph-table",
-      children: [
-        {
-          id: "basic-table",
-          title: "Basic table",
-          type: "item",
-          url: "/tables/bootstrap-table/basic-table",
-        },
-      ],
+      url: "/tables/clients-table",
+    },
+    {
+      id: "employes-table",
+      title: "Employés",
+      type: "item",
+      icon: "ph ph-table",
+      url: "/tables/employes-table",
     },
   ],
 };

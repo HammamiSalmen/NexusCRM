@@ -1,4 +1,4 @@
-const uiComponents = {
+/* const uiComponents = {
   id: "group-ui-components",
   title: "Ui Components",
   type: "group",
@@ -51,3 +51,4 @@ const uiComponents = {
 };
 
 export default uiComponents;
+ */

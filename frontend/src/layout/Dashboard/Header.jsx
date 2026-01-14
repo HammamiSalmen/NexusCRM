@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -69,6 +69,11 @@ const notifications = [
 export default function Header() {
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster?.isDashboardDrawerOpened;
+  const navigate = useNavigate();
+
+  const handleLogoutClick = () => {
+    navigate("/logout");
+  };
 
   return (
     <header className="pc-header">
@@ -253,7 +258,7 @@ export default function Header() {
                       Change Password
                     </Dropdown.Item>
                     <div className="d-grid my-2">
-                      <Button>
+                      <Button onClick={handleLogoutClick} variant="primary">
                         <i className="ph ph-sign-out align-middle me-2" />
                         Logout
                       </Button>

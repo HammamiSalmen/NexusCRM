@@ -1,4 +1,4 @@
-import MainCard from "components/MainCard";
+/* import MainCard from "components/MainCard";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 const containerStyle = {
@@ -25,3 +25,4 @@ export default function BasicGMap() {
     </MainCard>
   );
 }
+ */

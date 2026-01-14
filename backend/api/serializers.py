@@ -6,7 +6,16 @@ from .models import Client, Contact, Interaction
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "password", "is_staff", "is_superuser"]
+        fields = [
+            "id",
+            "username",
+            "password",
+            "email",
+            "first_name",
+            "last_name",
+            "is_staff",
+            "is_superuser",
+        ]
         extra_kwargs = {
             "password": {"write_only": True},
             "is_staff": {"default": True},

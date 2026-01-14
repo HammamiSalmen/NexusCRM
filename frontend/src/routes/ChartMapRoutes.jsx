@@ -3,11 +3,16 @@ import { lazy } from "react";
 import Loadable from "components/Loadable";
 
 const ApexChart = Loadable(lazy(() => import("views/charts/ApexChart")));
+const Kanban = Loadable(lazy(() => import("views/KanbanBoard/Kanban")));
 const ChartMapRoutes = {
-  path: "charts",
+  path: "informations", // Parent
   children: [
     {
-      path: "apex-chart",
+      path: "to-do/kanban",
+      element: <Kanban />,
+    },
+    {
+      path: "statistiques/graphs",
       element: <ApexChart />,
     },
   ],

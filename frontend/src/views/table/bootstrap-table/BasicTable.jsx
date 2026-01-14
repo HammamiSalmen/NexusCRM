@@ -1,4 +1,4 @@
-import Col from "react-bootstrap/Col";
+/* import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import BasicTable from "sections/tables/bootstrap-table/basic-table/BasicTable";
 import ContextualTable from "sections/tables/bootstrap-table/basic-table/ContextualTable";
@@ -9,21 +9,10 @@ import StripedTable from "sections/tables/bootstrap-table/basic-table/StripedTab
 export default function BasicTablePage() {
   return (
     <Row>
-      <Col sm={6}>
-        <BasicTable />
-      </Col>
-      <Col sm={6}>
+      <Col sm={12}>
         <HoverTable />
-      </Col>
-      <Col sm={6}>
-        <DarkTable />
-      </Col>
-      <Col sm={6}>
-        <StripedTable />
-      </Col>
-      <Col>
-        <ContextualTable />
       </Col>
     </Row>
   );
 }
+ */

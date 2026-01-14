@@ -12,12 +12,12 @@ export default function Footer() {
           <Col xs="auto" className="my-1">
             <p className="m-0">
               <a
-                href="https://codedthemes.com/"
-                target="_blank"
+                href="#"
+                target="_top"
                 rel="noopener noreferrer"
                 className="text-primary"
               >
-                CodedThemes
+                NexusCRM
               </a>
             </p>
           </Col>
@@ -35,8 +35,8 @@ export default function Footer() {
               <Nav.Link
                 className="p-0"
                 as="a"
-                href="https://codedthemes.gitbook.io/datta"
-                target="_blank"
+                href="#"
+                target="_top"
                 rel="noopener noreferrer"
               >
                 Documentation
@@ -44,8 +44,8 @@ export default function Footer() {
               <Nav.Link
                 className="p-0"
                 as="a"
-                href="https://codedthemes.support-hub.io/"
-                target="_blank"
+                href="#"
+                target="_top"
                 rel="noopener noreferrer"
               >
                 Support

@@ -22,14 +22,18 @@ import {
 } from "utils/validationSchema";
 
 import DarkLogo from "assets/images/logo-dark.svg";
+import { useNavigate } from "react-router-dom";
+import api from "../../api/api";
+import toast from "react-hot-toast";
 
 export default function AuthRegisterForm({ className, link }) {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
     clearErrors,
   } = useForm();
@@ -38,15 +42,38 @@ export default function AuthRegisterForm({ className, link }) {
     setShowPassword((prevState) => !prevState);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.password !== data.confirmPassword) {
       setError("confirmPassword", {
         type: "manual",
-        message: "Both Password must be match!",
+        message: "Les mots de passe ne correspondent pas !",
       });
-    } else {
-      clearErrors("confirmPassword");
+      return;
+    }
+    clearErrors("confirmPassword");
+
+    try {
+      await api.post("/api/auth/register/", {
+        username: data.username,
+        password: data.password,
+        email: data.email,
+        first_name: data.firstName,
+        last_name: data.lastName,
+      });
+
+      toast.success("Compte créé avec succès !");
       reset();
+
+      navigate("/"); // navigate("/login");
+    } catch (error) {
+      console.error(error);
+      if (error.response && error.response.data) {
+        const msg =
+          error.response.data.username || "Erreur lors de l'inscription.";
+        toast.error(msg.toString());
+      } else {
+        toast.error("Impossible de contacter le serveur.");
+      }
     }
   };
 
@@ -59,7 +86,7 @@ export default function AuthRegisterForm({ className, link }) {
       </div>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <h4 className={`text-center f-w-500 mt-4 mb-3 ${className}`}>
-          Sign up
+          Inscription
         </h4>
         <Row>
           <Col sm={6}>
@@ -85,7 +112,7 @@ export default function AuthRegisterForm({ className, link }) {
                 type="text"
                 placeholder="Last Name"
                 {...register("lastName", lastNameSchema)}
-                isInvalid={!!errors.email}
+                isInvalid={!!errors.lastName}
                 className={
                   className &&
                   "bg-transparent border-white text-white border-opacity-25 "
@@ -97,6 +124,23 @@ export default function AuthRegisterForm({ className, link }) {
             </Form.Group>
           </Col>
         </Row>
+        <Form.Group className="mb-3" controlId="formUsername">
+          <Form.Control
+            type="text"
+            placeholder="Nom d'utilisateur"
+            {...register("username", {
+              required: "Le nom d'utilisateur est requis",
+            })}
+            isInvalid={!!errors.username}
+            className={
+              className &&
+              "bg-transparent border-white text-white border-opacity-25"
+            }
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.username?.message}
+          </Form.Control.Feedback>
+        </Form.Group>
         <Form.Group className="mb-3" controlId="formEmail">
           <Form.Control
             type="email"
@@ -162,19 +206,21 @@ export default function AuthRegisterForm({ className, link }) {
           </Form.Group>
         </Stack>
         <div className="text-center mt-4">
-          <Button type="submit" className="shadow px-sm-4">
-            Sign up
+          <Button
+            type="submit"
+            className="shadow px-sm-4"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Création..." : "S'inscrire"}
           </Button>
         </div>
         <Stack
           direction="horizontal"
           className="justify-content-between align-items-end mt-4"
         >
-          <h6 className={`f-w-500 mb-0 ${className}`}>
-            Already have an Account?
-          </h6>
+          <h6 className={`f-w-500 mb-0 ${className}`}>Déjà Inscrit ?</h6>
           <Link to={link} className="link-primary">
-            Login
+            Se connecter
           </Link>
         </Stack>
       </Form>

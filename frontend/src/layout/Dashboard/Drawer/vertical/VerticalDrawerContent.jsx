@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import SimpleBarScroll from "components/third-party/SimpleBar";
 import Navigation from "../DrawerContent";
+// import Profile from "../Profile";
 
 export default function VerticalDrawerContent({
   selectedItems,
@@ -12,6 +13,7 @@ export default function VerticalDrawerContent({
         selectedItems={selectedItems}
         setSelectedItems={setSelectedItems}
       />
+      {/* <Profile /> */}
     </SimpleBarScroll>
   );
 }

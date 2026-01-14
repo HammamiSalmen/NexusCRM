@@ -1,22 +1,22 @@
 import Table from "react-bootstrap/Table";
 import MainCard from "components/MainCard";
 
-export default function HoverTable() {
+export default function EmployesTable() {
   return (
     <MainCard
       className="table-card"
-      title="Hover Table"
-      subheader={
+      title="Liste des Employes"
+      /*       subheader={
         <p className="mb-0">
           use class <code>table-hover</code> inside table element
         </p>
-      }
+      } */
     >
       <Table responsive hover className="mb-0">
         <thead>
           <tr>
             <th>#</th>
-            <th>First Name</th>
+            <th>First Employes Name</th>
             <th>Last Name</th>
             <th>Username</th>
           </tr>
