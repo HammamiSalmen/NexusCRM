@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics, viewsets, permissions
+from rest_framework.exceptions import PermissionDenied
 from .serializers import (
     UserSerializer,
     ClientSerializer,
@@ -51,12 +52,27 @@ class ClientViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # admin voit les clients qu'il a crées seulement
-        return Client.objects.filter(user=self.request.user)
+        user = self.request.user
+        if user.is_superuser:
+            return Client.objects.all()
+        return Client.objects.filter(user=user)
 
     def perform_create(self, serializer):
-        # assignation d'un client a un admin
         serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        client = self.get_object()
+
+        if not self.request.user.is_superuser and client.user != self.request.user:
+            raise PermissionDenied("Vous ne pouvez pas modifier ce client")
+
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        if not self.request.user.is_superuser and instance.user != self.request.user:
+            raise PermissionDenied("Vous ne pouvez pas supprimer ce client")
+
+        instance.delete()
 
 
 class ContactViewSet(viewsets.ModelViewSet):
