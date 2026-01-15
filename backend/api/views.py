@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics, viewsets, permissions
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from .serializers import (
     UserSerializer,
     ClientSerializer,
@@ -62,16 +62,16 @@ class ClientViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         client = self.get_object()
-
-        if not self.request.user.is_superuser and client.user != self.request.user:
+        if (
+            not self.request.user.is_superuser
+            and self.get_object().user != self.request.user
+        ):
             raise PermissionDenied("Vous ne pouvez pas modifier ce client")
-
         serializer.save()
 
     def perform_destroy(self, instance):
         if not self.request.user.is_superuser and instance.user != self.request.user:
             raise PermissionDenied("Vous ne pouvez pas supprimer ce client")
-
         instance.delete()
 
 
@@ -79,9 +79,39 @@ class ContactViewSet(viewsets.ModelViewSet):
     serializer_class = ContactSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        # contacts liés au admin
-        return Contact.objects.filter(client__user=self.request.user)
+    def get_queryset(self):  # contacts liés au admin
+        """
+        L'utilisateur ne voit que les contacts des clients qu'il a créés.
+        """
+        user = self.request.user
+        if user.is_superuser:
+            return Contact.objects.all()
+        # Filtre magique : on remonte la relation FK vers client -> user
+        return Contact.objects.filter(client__user=user)
+
+    def perform_create(self, serializer):
+        """
+        Sécurité CRITIQUE : Vérifier que le client auquel on attache ce contact
+        appartient bien à l'utilisateur connecté.
+        """
+        # On récupère l'objet Client envoyé dans le JSON (ex: "client": 12)
+        client_target = serializer.validated_data.get("client")
+
+        # Si l'utilisateur n'est pas le propriétaire du client (et pas admin)
+        if (
+            client_target.user != self.request.user
+            and not self.request.user.is_superuser
+        ):
+            raise ValidationError(
+                {
+                    "client": "Vous ne pouvez pas ajouter de contact à un client qui ne vous appartient pas."
+                }
+            )
+
+        serializer.save()
+        # Note : Pour update et destroy, get_queryset filtre déjà les contacts.
+        # Si un utilisateur essaie de modifier un contact ID 5 qui ne lui appartient pas,
+        # get_queryset renverra 404 Not Found, donc c'est sécurisé par défaut.
 
 
 class InteractionViewSet(viewsets.ModelViewSet):

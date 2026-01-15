@@ -1,6 +1,6 @@
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import EmployesTable from "sections/tables/bootstrap-table/basic-table/EmployesTable";
+import EmployesTable from "@/sections/employes/EmployesTable";
 
 export default function BasicTablePage() {
   return (

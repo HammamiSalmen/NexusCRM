@@ -79,6 +79,10 @@
     }
   }
 }
+
+.no-caret::after {
+  display: none !important;
+}
 // ============================
 //   14. Dropdown css end
 // ============================
