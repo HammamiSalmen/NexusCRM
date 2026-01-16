@@ -30,7 +30,6 @@ class CreateAdminBySuperAdminView(generics.CreateAPIView):
             raise permissions.PermissionDenied(
                 "Seuls les superadmins peuvent créer des admins"
             )
-
         serializer.save(is_staff=True, is_superuser=False)
 
 
@@ -43,7 +42,6 @@ class CreateSuperAdminView(generics.CreateAPIView):
             raise permissions.PermissionDenied(
                 "Seuls les superadmins peuvent créer des superadmins"
             )
-
         serializer.save(is_staff=True, is_superuser=True)
 
 
@@ -80,24 +78,13 @@ class ContactViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):  # contacts liés au admin
-        """
-        L'utilisateur ne voit que les contacts des clients qu'il a créés.
-        """
         user = self.request.user
         if user.is_superuser:
             return Contact.objects.all()
-        # Filtre magique : on remonte la relation FK vers client -> user
         return Contact.objects.filter(client__user=user)
 
     def perform_create(self, serializer):
-        """
-        Sécurité CRITIQUE : Vérifier que le client auquel on attache ce contact
-        appartient bien à l'utilisateur connecté.
-        """
-        # On récupère l'objet Client envoyé dans le JSON (ex: "client": 12)
         client_target = serializer.validated_data.get("client")
-
-        # Si l'utilisateur n'est pas le propriétaire du client (et pas admin)
         if (
             client_target.user != self.request.user
             and not self.request.user.is_superuser
@@ -107,11 +94,24 @@ class ContactViewSet(viewsets.ModelViewSet):
                     "client": "Vous ne pouvez pas ajouter de contact à un client qui ne vous appartient pas."
                 }
             )
-
         serializer.save()
-        # Note : Pour update et destroy, get_queryset filtre déjà les contacts.
-        # Si un utilisateur essaie de modifier un contact ID 5 qui ne lui appartient pas,
-        # get_queryset renverra 404 Not Found, donc c'est sécurisé par défaut.
+
+    def perform_update(self, serializer):
+        contact = self.get_object()
+        if (
+            not self.request.user.is_superuser
+            and contact.client.user != self.request.user
+        ):
+            raise PermissionDenied("Vous n'avez pas le droit de modifier ce contact.")
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        if (
+            not self.request.user.is_superuser
+            and instance.client.user != self.request.user
+        ):
+            raise PermissionDenied("Vous n'avez pas le droit de supprimer ce contact.")
+        instance.delete()
 
 
 class InteractionViewSet(viewsets.ModelViewSet):

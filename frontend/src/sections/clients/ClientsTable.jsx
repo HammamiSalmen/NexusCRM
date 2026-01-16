@@ -1,33 +1,65 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
-import { Table, Button, Stack, Image } from "react-bootstrap";
-import { useNavigate, Link } from "react-router-dom";
+import { Table, Button, Pagination, Stack } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import api from "api/api";
 import toast from "react-hot-toast";
 import MainCard from "components/MainCard";
-import avatar1 from "assets/images/user/avatar-1.png";
-import avatar2 from "assets/images/user/avatar-2.png";
-import avatar3 from "assets/images/user/avatar-3.png";
-import avatar4 from "assets/images/user/avatar-4.png";
-import avatar5 from "assets/images/user/avatar-5.png";
-
-const avatars = [avatar1, avatar2, avatar3, avatar4, avatar5];
 
 export default function ClientsTable() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
+
   const navigate = useNavigate();
-  const getRandomAvatar = () =>
-    avatars[Math.floor(Math.random() * avatars.length)];
+
+  const getAvatarColor = (name) => {
+    const colors = [
+      "#1abc9c",
+      "#2ecc71",
+      "#3498db",
+      "#9b59b6",
+      "#34495e",
+      "#e67e22",
+      "#e74c3c",
+      "#95a5a6",
+    ];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash % colors.length);
+    return colors[index];
+  };
+
+  const getInitials = (name) => {
+    if (!name) return "";
+    const names = name.trim().split(" ");
+    if (names.length === 1) return names[0].charAt(0).toUpperCase();
+    return (
+      names[0].charAt(0) + names[names.length - 1].charAt(0)
+    ).toUpperCase();
+  };
+
+  const InitialsAvatar = ({ name }) => (
+    <div
+      className="d-flex align-items-center justify-content-center rounded-circle text-white fw-bold shadow-sm"
+      style={{
+        width: "35px",
+        height: "35px",
+        backgroundColor: getAvatarColor(name),
+        fontSize: "14px",
+        letterSpacing: "-1px",
+      }}
+    >
+      {getInitials(name)}
+    </div>
+  );
 
   const fetchClients = async () => {
     try {
       const response = await api.get("/api/clients/");
-      const clientsWithAvatars = response.data.map((client) => ({
-        ...client,
-        avatar: getRandomAvatar(),
-      }));
-      setClients(clientsWithAvatars);
+      setClients(response.data);
     } catch (error) {
       toast.error("Erreur lors du chargement des clients");
     } finally {
@@ -38,6 +70,14 @@ export default function ClientsTable() {
   useEffect(() => {
     fetchClients();
   }, []);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentClients = clients.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(clients.length / itemsPerPage);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <>
@@ -53,7 +93,7 @@ export default function ClientsTable() {
         <Table responsive hover className="mb-0">
           <thead>
             <tr>
-              <th></th>
+              <th width="60"></th>
               <th>Nom Client</th>
               <th>Type Client</th>
               <th>Date de création</th>
@@ -61,7 +101,7 @@ export default function ClientsTable() {
           </thead>
           <tbody>
             {!loading &&
-              clients.map((client) => (
+              currentClients.map((client) => (
                 <tr
                   key={client.id}
                   onClick={() =>
@@ -71,24 +111,63 @@ export default function ClientsTable() {
                   style={{ cursor: "pointer" }}
                 >
                   <td>
-                    <Image
-                      src={client.avatar || defaultAvatar}
-                      roundedCircle
-                      width="35"
-                      height="35"
-                    />
+                    <InitialsAvatar name={client.nomClient} />
                   </td>
                   <td>
                     <span className="h6">{client.nomClient}</span>
                   </td>
-                  <td>{client.typeClient}</td>
+                  <td>
+                    <span
+                      className={`badge ${client.typeClient === "ENTREPRISE" ? "bg-light-primary text-primary" : "bg-light-success text-success"}`}
+                    >
+                      {client.typeClient}
+                    </span>
+                  </td>
                   <td>
                     {new Date(client.dateCreationClient).toLocaleDateString()}
                   </td>
                 </tr>
               ))}
+            {!loading && clients.length === 0 && (
+              <tr>
+                <td colSpan="4" className="text-center py-4">
+                  Aucun client trouvé
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
+        {clients.length > itemsPerPage && (
+          <div className="d-flex justify-content-end p-3 border-top">
+            <Pagination className="mb-0">
+              <Pagination.First
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1}
+              />
+              <Pagination.Prev
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              />
+              {[...Array(totalPages)].map((_, index) => (
+                <Pagination.Item
+                  key={index + 1}
+                  active={index + 1 === currentPage}
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </Pagination.Item>
+              ))}
+              <Pagination.Next
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              />
+              <Pagination.Last
+                onClick={() => handlePageChange(totalPages)}
+                disabled={currentPage === totalPages}
+              />
+            </Pagination>
+          </div>
+        )}
       </MainCard>
     </>
   );

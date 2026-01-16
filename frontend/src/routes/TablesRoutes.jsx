@@ -4,10 +4,10 @@ import Loadable from "components/Loadable";
 
 const ClientsTable = Loadable(lazy(() => import("views/table/ClientsTable")));
 const CreerClient = Loadable(
-  lazy(() => import("@/sections/clients/CreerClient"))
+  lazy(() => import("@/sections/clients/CreerClient")),
 );
 const DetailsClient = Loadable(
-  lazy(() => import("sections/clients/DetailsClient"))
+  lazy(() => import("sections/clients/DetailsClient")),
 );
 const EmployesTable = Loadable(lazy(() => import("views/table/EmployesTable")));
 
