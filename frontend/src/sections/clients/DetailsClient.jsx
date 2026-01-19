@@ -1,30 +1,55 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import {
-  Row,
-  Col,
-  Button,
-  Dropdown,
-  Modal,
-  Form,
-  Image,
-  Stack,
-} from "react-bootstrap";
+import { Row, Col, Button, Modal, Form, Pagination } from "react-bootstrap";
 import MainCard from "components/MainCard";
 import Breadcrumbs from "components/Breadcrumbs";
 import api from "api/api";
 import Swal from "sweetalert2";
 import toast, { Toaster } from "react-hot-toast";
+import PosteSelect from "components/PosteSelect";
+import { registerPosteUsage } from "utils/postesManager";
 
-import avatar1 from "assets/images/user/avatar-1.png";
-import avatar2 from "assets/images/user/avatar-2.png";
-import avatar3 from "assets/images/user/avatar-3.png";
-import avatar4 from "assets/images/user/avatar-4.png";
-import avatar5 from "assets/images/user/avatar-5.png";
-import defaultAvatar from "assets/images/user/avatar-1.png";
+const getAvatarColor = (name = "") => {
+  const colors = [
+    "#1abc9c",
+    "#2ecc71",
+    "#3498db",
+    "#9b59b6",
+    "#34495e",
+    "#e67e22",
+    "#e74c3c",
+    "#95a5a6",
+  ];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash % colors.length)];
+};
 
-const avatars = [avatar1, avatar2, avatar3, avatar4, avatar5];
+const getInitials = (name = "") => {
+  if (!name) return "?";
+  const names = name.trim().split(" ");
+  if (names.length === 1) return names[0].charAt(0).toUpperCase();
+  return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+};
+
+const AvatarPro = ({ name, size = "35px", fontSize = "14px" }) => (
+  <div
+    className="d-flex align-items-center justify-content-center rounded-circle text-white fw-bold shadow-sm"
+    style={{
+      width: size,
+      height: size,
+      minWidth: size,
+      backgroundColor: getAvatarColor(name),
+      fontSize: fontSize,
+    }}
+  >
+    {getInitials(name)}
+  </div>
+);
 
 const DetailsClient = () => {
   const { id } = useParams();
@@ -36,33 +61,50 @@ const DetailsClient = () => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const getConsistentAvatar = (clientId) => {
-    if (!clientId) return defaultAvatar;
-    return avatars[clientId % avatars.length];
-  };
-
   const {
-    register: registerClient,
-    handleSubmit: handleSubmitClient,
-    setValue: setValueClient,
-    formState: { errors: errorsClient },
+    register: regClient,
+    handleSubmit: handleSubClient,
+    setValue: setValClient,
+    formState: { errors: errClient },
   } = useForm();
 
   const {
-    register: registerContact,
-    handleSubmit: handleSubmitContact,
-    setValue: setValueContact,
+    register: regContact,
+    handleSubmit: handleSubContact,
+    setValue: setValContact,
     reset: resetContact,
+    watch: watchContact,
     formState: { errors: errorsContact },
   } = useForm();
 
   const fetchClientData = async () => {
     try {
       const res = await api.get(`/api/clients/${id}/`);
-      setClient({ ...res.data, avatar: getConsistentAvatar(res.data.id) });
+      const contacts = res.data.contacts || [];
+      const savedMainIndex = localStorage.getItem(
+        `client:${id}:mainContactIndex`,
+      );
+      let normalizedContacts = [...contacts];
+      if (savedMainIndex !== null && normalizedContacts[savedMainIndex]) {
+        normalizedContacts = normalizedContacts.map((c, idx) => ({
+          ...c,
+          isPrincipal: idx === Number(savedMainIndex),
+        }));
+      } else if (
+        normalizedContacts.length > 0 &&
+        !normalizedContacts.some((c) => c.isPrincipal === true)
+      ) {
+        normalizedContacts[0] = {
+          ...normalizedContacts[0],
+          isPrincipal: true,
+        };
+      }
+      setClient({
+        ...res.data,
+        contacts: normalizedContacts,
+      });
       setLoading(false);
     } catch (err) {
-      console.error(err);
       toast.error("Impossible de charger le client");
       navigate("/tables/clients-table");
     }
@@ -70,12 +112,11 @@ const DetailsClient = () => {
 
   useEffect(() => {
     fetchClientData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const openEditClientModal = () => {
-    setValueClient("nomClient", client.nomClient);
-    setValueClient("typeClient", client.typeClient);
+    setValClient("nomClient", client.nomClient);
+    setValClient("typeClient", client.typeClient);
     setShowClientModal(true);
   };
 
@@ -83,11 +124,11 @@ const DetailsClient = () => {
     setIsSubmitting(true);
     try {
       await api.patch(`/api/clients/${id}/`, data);
-      toast.success("Client modifié avec succès");
+      toast.success("Informations client mises à jour");
       setShowClientModal(false);
       fetchClientData();
     } catch (error) {
-      toast.error("Erreur lors de la modification");
+      toast.error("Erreur de mise à jour");
     } finally {
       setIsSubmitting(false);
     }
@@ -95,17 +136,17 @@ const DetailsClient = () => {
 
   const handleDeleteClient = () => {
     Swal.fire({
-      title: "Supprimer ce client ?",
-      text: "Tous les contacts associés seront aussi supprimés.",
+      title: "Supprimer le client ?",
+      text: `Cela supprimera ${client.nomClient} et tous ses contacts de façon définitive.`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
+      confirmButtonColor: "#e74c3c",
       confirmButtonText: "Oui, supprimer",
       cancelButtonText: "Annuler",
     }).then((result) => {
       if (result.isConfirmed) {
         api.delete(`/api/clients/${id}/`).then(() => {
-          Swal.fire("Supprimé !", "Le client a été supprimé.", "success");
+          toast.success("Client supprimé");
           navigate("/tables/clients-table");
         });
       }
@@ -115,12 +156,7 @@ const DetailsClient = () => {
   const openContactModal = (contact = null) => {
     setSelectedContact(contact);
     if (contact) {
-      setValueContact("nomContact", contact.nomContact);
-      setValueContact("prenomContact", contact.prenomContact);
-      setValueContact("emailContact", contact.emailContact);
-      setValueContact("telContact", contact.telContact);
-      setValueContact("posteContact", contact.posteContact);
-      setValueContact("adresseContact", contact.adresseContact);
+      Object.keys(contact).forEach((key) => setValContact(key, contact[key]));
     } else {
       resetContact();
     }
@@ -131,34 +167,68 @@ const DetailsClient = () => {
     setIsSubmitting(true);
     try {
       const payload = { ...data, client: id };
+      let updatedContacts = [...(client.contacts || [])];
+      if (data.isPrincipal) {
+        updatedContacts = updatedContacts.map((c) => ({
+          ...c,
+          isPrincipal: false,
+        }));
+      }
       if (selectedContact) {
         await api.put(`/api/contacts/${selectedContact.id}/`, payload);
-        toast.success("Contact mis à jour");
+        updatedContacts = updatedContacts.map((c) =>
+          c.id === selectedContact.id ? { ...c, ...payload } : c,
+        );
+        toast.success("Contact modifié");
       } else {
-        await api.post(`/api/contacts/`, payload);
-        toast.success("Nouveau contact ajouté");
+        const res = await api.post(`/api/contacts/`, payload);
+        if (data.isPrincipal) {
+          localStorage.setItem(`client:${id}:mainContact`, res.data.id);
+        }
+        const newContact = {
+          ...res.data,
+          isPrincipal: data.isPrincipal === true,
+        };
+        updatedContacts.push(newContact);
+        toast.success("Contact ajouté");
       }
+      if (data.isPrincipal) {
+        localStorage.setItem(
+          `client:${id}:mainContact`,
+          selectedContact?.id ?? "NEW",
+        );
+      }
+      if (data.posteContact) {
+        registerPosteUsage(data.posteContact);
+      }
+      if (!updatedContacts.some((c) => c.isPrincipal)) {
+        updatedContacts[0].isPrincipal = true;
+        toast.error("Minimum un contact principal doit être spécifié");
+      }
+      setClient((prev) => ({
+        ...prev,
+        contacts: updatedContacts,
+      }));
       setShowContactModal(false);
-      fetchClientData();
     } catch (error) {
-      toast.error("Erreur lors de l'enregistrement");
+      toast.error("Erreur d'enregistrement");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleDeleteContact = (contactId) => {
+  const handleDeleteContact = (contact) => {
     Swal.fire({
-      title: "Retirer ce contact ?",
+      title: "Supprimer ce contact ?",
+      text: `${contact.prenomContact} ${contact.nomContact} sera retiré.`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      confirmButtonText: "Oui",
-      cancelButtonText: "Annuler",
+      confirmButtonColor: "#e74c3c",
+      confirmButtonText: "Supprimer",
     }).then((result) => {
       if (result.isConfirmed) {
-        api.delete(`/api/contacts/${contactId}/`).then(() => {
-          toast.success("Contact retiré.");
+        api.delete(`/api/contacts/${contact.id}/`).then(() => {
+          toast.success("Contact supprimé");
           fetchClientData();
         });
       }
@@ -167,143 +237,184 @@ const DetailsClient = () => {
 
   if (loading || !client) return null;
 
+  const contacts = client.contacts || [];
+  const mainContact = contacts.find((c) => c.isPrincipal);
+  const otherContacts = contacts.slice(1);
+
+  const setAsPrincipal = (indexToSet) => {
+    const updated = contacts.map((c, idx) => ({
+      ...c,
+      isPrincipal: idx === indexToSet,
+    }));
+    localStorage.setItem(`client:${id}:mainContactIndex`, indexToSet);
+    setClient((prev) => ({
+      ...prev,
+      contacts: updated,
+    }));
+    toast.success(
+      `${updated[indexToSet].prenomContact} est maintenant le contact principal`,
+    );
+  };
+
   return (
     <>
       <Toaster position="top-right" />
       <Breadcrumbs
-        title="Détails du client"
+        title="Fiche Client"
         links={[
           { title: "Clients", to: "/tables/clients-table" },
           { title: client.nomClient },
         ]}
       />
-      <Row className="justify-content-center mb-4">
+      <Row className="mb-4">
         <Col md={12}>
-          <MainCard className="position-relative shadow-sm border-0">
-            <div className="d-flex justify-content-between align-items-start">
+          <MainCard className="border-0 shadow-sm">
+            <div className="d-flex justify-content-between align-items-center mb-4">
               <div className="d-flex align-items-center">
-                <Image
-                  src={client.avatar}
-                  roundedCircle
-                  style={{ width: "80px", height: "80px", objectFit: "cover" }}
-                  className="me-4 shadow-sm"
+                <AvatarPro
+                  name={client.nomClient}
+                  size="80px"
+                  fontSize="28px"
                 />
-                <div>
-                  <h3 className="mb-0">{client.nomClient}</h3>
-                  <span className="badge bg-light-primary text-primary mt-2">
+                <div className="ms-4">
+                  <h2 className="mb-1 fw-bold">{client.nomClient}</h2>
+                  <span
+                    className={`badge ${client.typeClient === "ENTREPRISE" ? "bg-light-primary text-primary" : "bg-light-success text-success"}`}
+                  >
                     {client.typeClient}
                   </span>
+                  {mainContact && (
+                    <div className="mt-2 text-muted small">
+                      <i className="ti ti-user-star me-1 text-warning" />
+                      Contact principal :{" "}
+                      <strong>
+                        {mainContact.prenomContact} {mainContact.nomContact}
+                      </strong>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="d-flex gap-2">
-                <Button
-                  variant="light"
-                  className="border"
-                  onClick={openEditClientModal}
-                >
-                  <i className="ti ti-pencil text-primary" />
+                <Button variant="outline-primary" onClick={openEditClientModal}>
+                  <i className="ti ti-pencil" />
                 </Button>
-                <Button
-                  variant="light"
-                  className="border"
-                  onClick={handleDeleteClient}
-                >
-                  <i className="ti ti-trash me-2 text-danger" />
+                <Button variant="outline-danger" onClick={handleDeleteClient}>
+                  <i className="ti ti-trash" />
                 </Button>
               </div>
             </div>
-            <Row>
-              <Col md={12}>
-                <br />
-                <br />
-                <div className="d-flex align-items-center justify-content-between mb-3">
-                  <h4>
-                    Contacts associés (
-                    {client.contacts ? client.contacts.length : 0})
-                  </h4>
-                </div>
-                <Row className="g-3">
-                  {client.contacts &&
-                    client.contacts.map((contact) => (
-                      <Col key={contact.id} xs={12} sm={6} md={4} lg={3}>
-                        <MainCard className="h-100 position-relative text-center shadow-sm border">
-                          <Button
-                            variant="link"
-                            className="position-absolute text-danger p-0"
-                            style={{
-                              top: "10px",
-                              right: "10px",
-                              lineHeight: 1,
-                            }}
-                            onClick={() => handleDeleteContact(contact.id)}
-                          >
-                            <i className="ti ti-x fs-5" />
-                          </Button>
-                          <div className="pt-2 d-flex flex-column align-items-center">
-                            <Image
-                              src={defaultAvatar}
-                              roundedCircle
-                              width="60"
-                              className="mb-3"
-                            />
-                            <h5
-                              className="mb-1 text-truncate w-100"
-                              title={`${contact.prenomContact} ${contact.nomContact}`}
-                            >
-                              {contact.prenomContact} {contact.nomContact}
-                            </h5>
-                            <p className="text-muted small mb-3">
-                              {contact.posteContact || "Poste inconnu"}
-                            </p>
-                            <div className="w-100 bg-light p-2 rounded mb-3 text-start small">
-                              <div className="d-flex align-items-center mb-1 text-truncate">
-                                <i className="ti ti-mail me-2 text-primary opacity-50" />
-                                <span className="text-truncate">
-                                  {contact.emailContact}
-                                </span>
-                              </div>
-                              <div className="d-flex align-items-center text-truncate">
-                                <i className="ti ti-phone me-2 text-primary opacity-50" />
-                                <span>{contact.telContact || "-"}</span>
-                              </div>
-                            </div>
-                            <Button
-                              variant="outline-primary"
-                              size="sm"
-                              className="w-100 mt-auto"
-                              onClick={() => openContactModal(contact)}
-                            >
-                              Modifier
-                            </Button>
-                          </div>
-                        </MainCard>
-                      </Col>
-                    ))}
-                  <Col xs={12} sm={6} md={4} lg={3}>
+            <hr className="my-4 opacity-10" />
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4 className="mb-0">Contacts ({contacts.length})</h4>
+            </div>
+            <Row className="g-3">
+              {contacts.map((contact) => (
+                <Col key={contact.id} xs={12} sm={6} md={4} lg={3}>
+                  <MainCard
+                    className={`h-100 border text-center p-3 position-relative hover-shadow transition ${
+                      contact.isPrincipal
+                        ? "border-primary bg-light-primary"
+                        : ""
+                    }`}
+                  >
+                    {contact.isPrincipal ? (
+                      <div
+                        className="position-absolute"
+                        style={{
+                          top: "-10px",
+                          left: "50%",
+                          transform: "translateX(-50%)",
+                          zIndex: 11,
+                        }}
+                      >
+                        <span className="badge rounded-pill bg-primary shadow-sm px-3">
+                          <i className="ti ti-star-filled me-1" /> Contact
+                          principal
+                        </span>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="outline-secondary"
+                        size="sm"
+                        className="position-absolute rounded-pill"
+                        style={{
+                          top: "10px",
+                          left: "10px",
+                          fontSize: "0.7rem",
+                          zIndex: 10,
+                        }}
+                        onClick={() =>
+                          setAsPrincipal(contacts.indexOf(contact))
+                        }
+                      >
+                        <i className="ti ti-star-filled" />
+                      </Button>
+                    )}
                     <div
-                      className="d-flex align-items-center justify-content-center border rounded h-100"
-                      style={{
-                        minHeight: "280px",
-                        cursor: "pointer",
-                        backgroundColor: "#f4fcf7",
-                        borderStyle: "dashed",
-                        borderWidth: "2px",
-                        borderColor: "#28a745",
-                      }}
-                      onClick={() => openContactModal(null)}
+                      className="position-absolute"
+                      style={{ top: "10px", right: "10px" }}
                     >
-                      <div className="text-center">
-                        <i
-                          className="ti ti-plus text-success"
-                          style={{ fontSize: "3rem" }}
-                        />
-                        <h6 className="mt-2 text-success">Ajouter contact</h6>
+                      <Button
+                        variant="link"
+                        className="text-danger p-0"
+                        onClick={() => handleDeleteContact(contact)}
+                      >
+                        <i className="ti ti-x fs-5" />
+                      </Button>
+                    </div>
+                    <div className="d-flex justify-content-center mb-3">
+                      <AvatarPro
+                        name={`${contact.prenomContact} ${contact.nomContact}`}
+                        size="60px"
+                        fontSize="20px"
+                      />
+                    </div>
+                    <h6 className="mb-1">
+                      {contact.prenomContact} {contact.nomContact}
+                    </h6>
+                    <p className="text-muted small mb-3 text-truncate">
+                      {contact.posteContact || "Aucun poste"}
+                    </p>
+                    <div className="bg-light p-2 rounded text-start mb-3">
+                      <div className="small text-truncate mb-1">
+                        <i className="ti ti-mail me-2 text-primary" />
+                        {contact.emailContact}
+                      </div>
+                      <div className="small">
+                        <i className="ti ti-phone me-2 text-primary" />
+                        {contact.telContact || "-"}
                       </div>
                     </div>
-                  </Col>
-                </Row>
+                    <Button
+                      variant="light"
+                      size="sm"
+                      className="w-100 border"
+                      onClick={() => openContactModal(contact)}
+                    >
+                      Détails / Modifier
+                    </Button>
+                  </MainCard>
+                </Col>
+              ))}
+              <Col xs={12} sm={6} md={4} lg={3}>
+                <div
+                  className="d-flex flex-column align-items-center justify-content-center border rounded h-100 bg-light-success"
+                  style={{
+                    minHeight: "220px",
+                    cursor: "pointer",
+                    borderStyle: "dashed",
+                    borderWidth: "2px",
+                    borderColor: "#28a745",
+                  }}
+                  onClick={() => openContactModal(null)}
+                >
+                  <i className="ti ti-plus fs-1 text-success mb-2" />
+                  <span className="fw-bold text-success text-uppercase small">
+                    Nouveau Contact
+                  </span>
+                </div>
               </Col>
-            </Row>{" "}
+            </Row>
           </MainCard>
         </Col>
       </Row>
@@ -311,53 +422,33 @@ const DetailsClient = () => {
         show={showClientModal}
         onHide={() => setShowClientModal(false)}
         centered
-        backdrop="static"
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Modifier le Client</Modal.Title>
+        <Modal.Header closeButton className="bg-light">
+          <Modal.Title>Modifier le profil client</Modal.Title>
         </Modal.Header>
-        <Form onSubmit={handleSubmitClient(onUpdateClient)}>
-          <Modal.Body>
-            <Row>
-              <Col md={12}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Nom client</Form.Label>
-                  <Form.Control
-                    {...registerClient("nomClient", {
-                      required: "Nom Client requis",
-                    })}
-                    isInvalid={!!errorsClient.nomClient}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errorsClient.nomClient?.message}
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
-              <Col md={12}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Type</Form.Label>
-                  <Form.Select {...registerClient("typeClient")}>
-                    <option value="PARTICULIER">Particulier</option>
-                    <option value="ENTREPRISE">Entreprise</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-            </Row>
+        <Form onSubmit={handleSubClient(onUpdateClient)}>
+          <Modal.Body className="p-4">
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-bold small">NOM DU CLIENT</Form.Label>
+              <Form.Control
+                {...regClient("nomClient", { required: true })}
+                isInvalid={!!errClient.nomClient}
+              />
+            </Form.Group>
+            <Form.Group className="mb-0">
+              <Form.Label className="fw-bold small">TYPE DE CLIENT</Form.Label>
+              <Form.Select {...regClient("typeClient")}>
+                <option value="PARTICULIER">Particulier</option>
+                <option value="ENTREPRISE">Entreprise</option>
+              </Form.Select>
+            </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={() => setShowClientModal(false)}
-            >
+            <Button variant="link" onClick={() => setShowClientModal(false)}>
               Annuler
             </Button>
-            <Button
-              variant="info"
-              type="submit"
-              className="text-white"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Enregistrement..." : "Sauvegarder"}
+            <Button variant="primary" type="submit" disabled={isSubmitting}>
+              Enregistrer les modifications
             </Button>
           </Modal.Footer>
         </Form>
@@ -367,23 +458,24 @@ const DetailsClient = () => {
         onHide={() => setShowContactModal(false)}
         size="lg"
         centered
-        backdrop="static"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-light">
           <Modal.Title>
-            {selectedContact ? "Modifier le contact" : "Nouveau contact"}
+            {selectedContact
+              ? "Éditer le contact"
+              : "Nouveau contact pour " + client.nomClient}
           </Modal.Title>
         </Modal.Header>
-        <Form onSubmit={handleSubmitContact(onSaveContact)}>
+        <Form onSubmit={handleSubContact(onSaveContact)}>
           <Modal.Body>
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Nom</Form.Label>
+                  <Form.Label>
+                    Nom <span className="text-danger">*</span>
+                  </Form.Label>
                   <Form.Control
-                    {...registerContact("nomContact", {
-                      required: "Nom requis",
-                    })}
+                    {...regContact("nomContact", { required: "Nom requis" })}
                     isInvalid={!!errorsContact.nomContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -393,9 +485,11 @@ const DetailsClient = () => {
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Prénom</Form.Label>
+                  <Form.Label>
+                    Prénom <span className="text-danger">*</span>
+                  </Form.Label>
                   <Form.Control
-                    {...registerContact("prenomContact", {
+                    {...regContact("prenomContact", {
                       required: "Prénom requis",
                     })}
                     isInvalid={!!errorsContact.prenomContact}
@@ -407,10 +501,12 @@ const DetailsClient = () => {
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Adresse E-mail</Form.Label>
+                  <Form.Label>
+                    Adresse E-mail <span className="text-danger">*</span>
+                  </Form.Label>
                   <Form.Control
                     type="email"
-                    {...registerContact("emailContact", {
+                    {...regContact("emailContact", {
                       required: "Email requis",
                       pattern: {
                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -426,29 +522,65 @@ const DetailsClient = () => {
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Téléphone</Form.Label>
-                  <Form.Control {...registerContact("telContact")} />
+                  <Form.Label>
+                    Téléphone <span className="text-danger">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    {...regContact("telContact", {
+                      required: "Téléphone requis",
+                    })}
+                    isInvalid={!!errorsContact.telContact}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errorsContact.telContact?.message}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={12}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Adresse</Form.Label>
-                  <Form.Control {...registerContact("adresseContact")} />
+                  <Form.Label>
+                    Adresse <span className="text-danger">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    {...regContact("adresseContact", {
+                      required: "Adresse requis",
+                    })}
+                    isInvalid={!!errorsContact.adresseContact}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errorsContact.adresseContact?.message}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={12}>
+                <PosteSelect
+                  register={regContact}
+                  error={errorsContact?.posteContact}
+                  setValue={setValContact}
+                  watch={watchContact}
+                />
+              </Col>
+              <Col md={12}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Poste / Fonction</Form.Label>
-                  <Form.Control {...registerContact("posteContact")} />
+                  <Form.Check
+                    type="checkbox"
+                    id="isPrincipal"
+                    label="Définir comme contact principal"
+                    {...regContact("isPrincipal")}
+                    className="fw-bold text-primary"
+                  />
+                  {watchContact("isPrincipal") && (
+                    <Form.Text className="text-info d-block animate__animated animate__fadeIn">
+                      <i className="ti ti-info-circle me-1" />
+                      Ce contact sera mis en avant sur la fiche client.
+                    </Form.Text>
+                  )}
                 </Form.Group>
               </Col>
             </Row>
           </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={() => setShowContactModal(false)}
-            >
+          <Modal.Footer className="border-0">
+            <Button variant="link" onClick={() => setShowContactModal(false)}>
               Annuler
             </Button>
             <Button
@@ -457,11 +589,7 @@ const DetailsClient = () => {
               className="text-white"
               disabled={isSubmitting}
             >
-              {isSubmitting
-                ? "Enregistrement..."
-                : selectedContact
-                  ? "Mettre à jour"
-                  : "Ajouter"}
+              {selectedContact ? "Mettre à jour" : "Ajouter au client"}
             </Button>
           </Modal.Footer>
         </Form>
@@ -469,4 +597,5 @@ const DetailsClient = () => {
     </>
   );
 };
+
 export default DetailsClient;

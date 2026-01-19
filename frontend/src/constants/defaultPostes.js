@@ -1,4 +1,3 @@
-// src/constants/defaultPostes.js
 const defaultPostes = [
   "Directeur",
   "Gérant",

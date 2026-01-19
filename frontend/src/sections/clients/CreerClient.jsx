@@ -6,7 +6,6 @@ import api from "api/api";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import defaultAvatar from "assets/images/user/avatar-1.png";
 import PosteSelect from "components/PosteSelect";
 import { registerPosteUsage } from "utils/postesManager";
 
@@ -36,6 +35,47 @@ export default function CreerClient() {
 
   const nomClientWatch = watch("nomClient");
 
+  const getAvatarColor = (name = "") => {
+    const colors = [
+      "#1abc9c",
+      "#2ecc71",
+      "#3498db",
+      "#9b59b6",
+      "#34495e",
+      "#e67e22",
+      "#e74c3c",
+      "#95a5a6",
+    ];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash % colors.length)];
+  };
+
+  const getInitials = (name = "") => {
+    if (!name) return "?";
+    const names = name.trim().split(" ");
+    if (names.length === 1) return names[0].charAt(0).toUpperCase();
+    return (
+      names[0].charAt(0) + names[names.length - 1].charAt(0)
+    ).toUpperCase();
+  };
+
+  const AvatarPro = ({ name, size = "50px", fontSize = "16px" }) => (
+    <div
+      className="d-flex align-items-center justify-content-center rounded-circle text-white fw-bold shadow-sm mx-auto mb-2"
+      style={{
+        width: size,
+        height: size,
+        backgroundColor: getAvatarColor(name),
+        fontSize,
+      }}
+    >
+      {getInitials(name)}
+    </div>
+  );
+
   const handleOpenCreate = async () => {
     if (await trigger("nomClient")) {
       setEditingIndex(null);
@@ -54,17 +94,17 @@ export default function CreerClient() {
       setShowContactModal(true);
     } else {
       toast.error(
-        "Veuillez saisir le nom du client avant de modifier un contact."
+        "Veuillez saisir le nom du client avant de modifier un contact.",
       );
     }
   };
 
   const setAsPrincipal = (indexToSet) => {
     setContacts(
-      contacts.map((c, idx) => ({ ...c, isPrincipal: idx === indexToSet }))
+      contacts.map((c, idx) => ({ ...c, isPrincipal: idx === indexToSet })),
     );
     toast.success(
-      `${contacts[indexToSet].prenomContact} est maintenant le contact principal`
+      `${contacts[indexToSet].prenomContact} est maintenant le contact principal`,
     );
   };
 
@@ -88,7 +128,6 @@ export default function CreerClient() {
 
   const onSaveContact = async (data, action) => {
     let newContacts = [...contacts];
-
     if (editingIndex !== null) {
       newContacts[editingIndex] = data;
       toast.success("Contact modifié");
@@ -96,11 +135,9 @@ export default function CreerClient() {
       newContacts.push(data);
       toast.success("Contact ajouté");
     }
-
     if (data.posteContact) registerPosteUsage(data.posteContact);
     const isFirstContact = contacts.length === 0;
     const currentIsPrincipal = data.isPrincipal || isFirstContact;
-
     newContacts = newContacts.map((c, idx) => {
       const targetIndex =
         editingIndex !== null ? editingIndex : newContacts.length - 1;
@@ -110,11 +147,9 @@ export default function CreerClient() {
       }
       return currentIsPrincipal ? { ...c, isPrincipal: false } : c;
     });
-
     setContacts(newContacts);
     resetContact();
     setEditingIndex(null);
-
     if (action === "close") {
       setShowContactModal(false);
     } else {
@@ -127,19 +162,23 @@ export default function CreerClient() {
       return toast.error("Veuillez ajouter au moins un contact.");
     if (!contacts.some((c) => c.isPrincipal))
       return toast.error("Veuillez désigner un contact principal.");
-
     try {
       setIsSubmitting(true);
       const {
         data: { id: clientId },
       } = await api.post("/api/clients/", clientData);
-
       await Promise.all(
         contacts.map((c) =>
-          api.post("/api/contacts/", { ...c, client: clientId })
-        )
+          api.post("/api/contacts/", { ...c, client: clientId }),
+        ),
       );
-
+      const mainContact = contacts.find((c) => c.isPrincipal);
+      if (mainContact) {
+        localStorage.setItem(
+          `client:${clientId}:mainContactIndex`,
+          contacts.indexOf(mainContact),
+        );
+      }
       toast.success("Client et contacts enregistrés avec succès !");
       navigate("/tables/clients-table");
     } catch (error) {
@@ -163,7 +202,7 @@ export default function CreerClient() {
           <MainCard title="Création d'un client">
             <Form
               onSubmit={handleSubmit(onSubmitAll, () =>
-                toast.error("Veuillez remplir les champs obligatoires.")
+                toast.error("Veuillez remplir les champs obligatoires."),
               )}
             >
               <Row>
@@ -195,7 +234,6 @@ export default function CreerClient() {
                   </Form.Group>
                 </Col>
               </Row>
-
               <h5 className="mt-4 mb-3">Contacts associés</h5>
               <Row className="g-3">
                 {contacts.map((c, idx) => (
@@ -244,11 +282,9 @@ export default function CreerClient() {
                         <i className="ti ti-x" style={{ fontSize: "1.2rem" }} />
                       </Button>
                       <div className="pt-3">
-                        <Image
-                          src={defaultAvatar}
-                          roundedCircle
-                          width="50"
-                          className={`mb-2 border ${c.isPrincipal ? "border-primary" : ""}`}
+                        <AvatarPro
+                          name={`${c.prenomContact} ${c.nomContact}`}
+                          size="50px"
                         />
                         <h6 className="mb-1 text-truncate">
                           {c.prenomContact} {c.nomContact}
@@ -310,7 +346,6 @@ export default function CreerClient() {
           </MainCard>
         </Stack>
       </div>
-
       <Modal
         show={showContactModal}
         onHide={() => setShowContactModal(false)}
@@ -447,7 +482,7 @@ export default function CreerClient() {
               <Button
                 variant="primary"
                 onClick={handleContactSubmit((data) =>
-                  onSaveContact(data, "create")
+                  onSaveContact(data, "create"),
                 )}
               >
                 Ajouter
@@ -457,7 +492,7 @@ export default function CreerClient() {
               variant="info"
               className="text-white"
               onClick={handleContactSubmit((data) =>
-                onSaveContact(data, "close")
+                onSaveContact(data, "close"),
               )}
             >
               Terminer

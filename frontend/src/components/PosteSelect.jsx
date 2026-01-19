@@ -8,7 +8,6 @@ export default function PosteSelect({ register, error, setValue, watch }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const containerRef = useRef(null);
 
-  // On surveille la valeur pour filtrer la liste
   const currentValue = watch("posteContact") || "";
 
   useEffect(() => {
@@ -17,7 +16,6 @@ export default function PosteSelect({ register, error, setValue, watch }) {
     setSuggestions(all);
     setFiltered(all);
 
-    // Fermer la liste si on clique ailleurs
     const handleClickOutside = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
         setShowDropdown(false);
@@ -27,7 +25,6 @@ export default function PosteSelect({ register, error, setValue, watch }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Filtrage en temps réel
   useEffect(() => {
     const search = currentValue.toLowerCase();
     setFiltered(suggestions.filter((p) => p.toLowerCase().includes(search)));
@@ -43,7 +40,6 @@ export default function PosteSelect({ register, error, setValue, watch }) {
       <Form.Label className="fw-bold small text-uppercase text-muted">
         Poste / Fonction <span className="text-danger">*</span>
       </Form.Label>
-
       <InputGroup hasValidation>
         <InputGroup.Text className="bg-white border-end-0">
           <i className="ti ti-briefcase text-primary" />
@@ -60,8 +56,6 @@ export default function PosteSelect({ register, error, setValue, watch }) {
           {error?.message}
         </Form.Control.Feedback>
       </InputGroup>
-
-      {/* Liste déroulante personnalisée */}
       {showDropdown && (filtered.length > 0 || currentValue.length > 0) && (
         <ListGroup
           className="position-absolute w-100 shadow-lg"
@@ -82,7 +76,6 @@ export default function PosteSelect({ register, error, setValue, watch }) {
               <i className="ti ti-history me-2 text-muted" /> {p}
             </ListGroup.Item>
           ))}
-          {/* Option si la saisie est nouvelle */}
           {!suggestions.includes(currentValue) && currentValue.length > 0 && (
             <ListGroup.Item
               action
