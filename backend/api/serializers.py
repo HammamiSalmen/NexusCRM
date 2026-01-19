@@ -15,16 +15,26 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "is_staff",
             "is_superuser",
+            "is_active",
+            "date_joined",
         ]
         extra_kwargs = {
-            "password": {"write_only": True},
-            "is_staff": {"default": True},
-            "is_superuser": {"default": False},
+            "password": {"write_only": True, "required": False},
+            "date_joined": {"read_only": True},
+            "is_active": {"default": True},
         }
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
+        return User.objects.create_user(**validated_data)
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password", None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        if password:
+            instance.set_password(password)
+        instance.save()
+        return instance
 
 
 class ContactSerializer(serializers.ModelSerializer):

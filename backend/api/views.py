@@ -11,6 +11,31 @@ from .serializers import (
 from .models import Client, Contact, Interaction
 
 
+class IsSuperUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(
+            request.user and request.user.is_authenticated and request.user.is_superuser
+        )
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all().order_by("-date_joined")
+    serializer_class = UserSerializer
+    permission_classes = [IsSuperUser]
+
+    def perform_destroy(self, instance):
+        if instance == self.request.user:
+            raise PermissionDenied("Vous ne pouvez pas désactiver votre propre compte.")
+        instance.is_active = False
+        instance.save()
+
+
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all().order_by("-date_joined")
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperUser]
+
+
 class RegisterAdminView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -119,7 +144,42 @@ class InteractionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Interaction.objects.filter(user=self.request.user)
+        user = self.request.user
+        if user.is_superuser:
+            queryset = Interaction.objects.all()
+        else:
+            queryset = Interaction.objects.filter(client__user=user)
+        client_id = self.request.query_params.get("client_id")
+        if client_id:
+            queryset = queryset.filter(client_id=client_id)
+
+        return queryset
 
     def perform_create(self, serializer):
+        client = serializer.validated_data.get("client")
+        if not self.request.user.is_superuser and client.user != self.request.user:
+            raise PermissionDenied(
+                "Vous ne pouvez pas créer d'interaction pour un client qui ne vous appartient pas."
+            )
         serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        interaction = self.get_object()
+        if (
+            not self.request.user.is_superuser
+            and interaction.client.user != self.request.user
+        ):
+            raise PermissionDenied(
+                "Vous n'avez pas le droit de modifier cette interaction."
+            )
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        if (
+            not self.request.user.is_superuser
+            and instance.client.user != self.request.user
+        ):
+            raise PermissionDenied(
+                "Vous n'avez pas le droit de supprimer cette interaction."
+            )
+        instance.delete()

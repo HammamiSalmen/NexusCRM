@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import toast, { Toaster } from "react-hot-toast";
 import PosteSelect from "components/PosteSelect";
 import { registerPosteUsage } from "utils/postesManager";
+import InteractionsClient from "./InteractionsClient";
 
 const getAvatarColor = (name = "") => {
   const colors = [
@@ -60,6 +61,8 @@ const DetailsClient = () => {
   const [showContactModal, setShowContactModal] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showInteractionsModal, setShowInteractionsModal] = useState(false);
+  const [defaultContactId, setDefaultContactId] = useState("");
 
   const {
     register: regClient,
@@ -76,6 +79,16 @@ const DetailsClient = () => {
     watch: watchContact,
     formState: { errors: errorsContact },
   } = useForm();
+
+  const openInteractionsGlobal = () => {
+    setDefaultContactId("");
+    setShowInteractionsModal(true);
+  };
+
+  const openInteractionsForContact = (contactId) => {
+    setDefaultContactId(contactId);
+    setShowInteractionsModal(true);
+  };
 
   const fetchClientData = async () => {
     try {
@@ -258,7 +271,6 @@ const DetailsClient = () => {
 
   return (
     <>
-      <Toaster position="top-right" />
       <Breadcrumbs
         title="Fiche Client"
         links={[
@@ -295,6 +307,9 @@ const DetailsClient = () => {
                 </div>
               </div>
               <div className="d-flex gap-2">
+                <Button variant="outline-info" onClick={openInteractionsGlobal}>
+                  <i className="ti ti-history me-1" /> Interactions
+                </Button>
                 <Button variant="outline-primary" onClick={openEditClientModal}>
                   <i className="ti ti-pencil" />
                 </Button>
@@ -385,14 +400,27 @@ const DetailsClient = () => {
                         {contact.telContact || "-"}
                       </div>
                     </div>
-                    <Button
-                      variant="light"
-                      size="sm"
-                      className="w-100 border"
-                      onClick={() => openContactModal(contact)}
-                    >
-                      Détails / Modifier
-                    </Button>
+                    <div className="d-flex gap-2 mt-2">
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        className="w-100 py-2 shadow-sm"
+                        onClick={() => openInteractionsForContact(contact.id)}
+                      >
+                        <i className="ti ti-message-dots fs-5" />
+                        <div className="small fw-bold">Interagir</div>
+                      </Button>
+
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="w-100 py-2 shadow-sm"
+                        onClick={() => openContactModal(contact)}
+                      >
+                        <i className="ti ti-info-circle fs-5" />
+                        <div className="small fw-bold">Détails</div>
+                      </Button>
+                    </div>
                   </MainCard>
                 </Col>
               ))}
@@ -422,6 +450,7 @@ const DetailsClient = () => {
         show={showClientModal}
         onHide={() => setShowClientModal(false)}
         centered
+        backdrop="static"
       >
         <Modal.Header closeButton className="bg-light">
           <Modal.Title>Modifier le profil client</Modal.Title>
@@ -458,6 +487,7 @@ const DetailsClient = () => {
         onHide={() => setShowContactModal(false)}
         size="lg"
         centered
+        backdrop="static"
       >
         <Modal.Header closeButton className="bg-light">
           <Modal.Title>
@@ -594,6 +624,14 @@ const DetailsClient = () => {
           </Modal.Footer>
         </Form>
       </Modal>
+      <InteractionsClient
+        show={showInteractionsModal}
+        onHide={() => setShowInteractionsModal(false)}
+        clientId={id}
+        clientName={client.nomClient}
+        allContacts={client.contacts || []}
+        initialContactId={defaultContactId}
+      />
     </>
   );
 };

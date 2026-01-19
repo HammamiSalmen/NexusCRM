@@ -72,3 +72,14 @@
     transform: scale(0.998);
   }
 }
+
+body.modal-open .pc-container,
+body.modal-open .pc-header {
+  filter: blur(5px);
+  transition: filter 0.3s ease;
+  pointer-events: none;
+}
+
+.react-hot-toast {
+  z-index: 9999 !important;
+}
