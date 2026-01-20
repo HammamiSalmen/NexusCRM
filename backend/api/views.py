@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics, viewsets, permissions
 from rest_framework.exceptions import PermissionDenied, ValidationError
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from .serializers import (
     UserSerializer,
     ClientSerializer,
@@ -27,7 +29,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
         data["user"] = {
+            "id": self.user.id,
             "username": self.user.username,
+            "email": self.user.email,
             "is_superuser": self.user.is_superuser,
             "first_name": self.user.first_name,
             "last_name": self.user.last_name,
@@ -56,6 +60,24 @@ class UserViewSet(viewsets.ModelViewSet):
             raise PermissionDenied("Vous ne pouvez pas désactiver votre propre compte.")
         instance.is_active = False
         instance.save()
+
+    def get_permissions(self):
+        if self.action == "me":
+            return [permissions.IsAuthenticated()]
+        return [IsSuperUser()]
+
+    @action(detail=False, methods=["get", "patch"])
+    def me(self, request):
+        if request.method == "GET":
+            serializer = self.get_serializer(request.user)
+            return Response(serializer.data)
+        if request.method == "PATCH":
+            serializer = self.get_serializer(
+                request.user, data=request.data, partial=True
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
 
 
 """ class UserListView(generics.ListAPIView):

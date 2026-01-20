@@ -7,6 +7,7 @@ import OtherRoutes from "./OtherRoutes";
 import PagesRoutes from "./PagesRoutes";
 import NavigationRoutes from "./NavigationRoutes";
 import TablesRoutes from "./TablesRoutes";
+import ProfileRoutes from "./ProfileRoutes";
 
 import ProtectedRoute from "components/ProtectedRoute";
 import DashboardLayout from "layout/Dashboard";
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
         TablesRoutes,
         ChartMapRoutes,
         ComponentsRoutes,
+        ProfileRoutes,
         OtherRoutes,
       ],
     },

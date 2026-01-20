@@ -1,16 +1,11 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-import Button from "react-bootstrap/Button";
-import Dropdown from "react-bootstrap/Dropdown";
-import Form from "react-bootstrap/Form";
-import Image from "react-bootstrap/Image";
-import Nav from "react-bootstrap/Nav";
-import Stack from "react-bootstrap/Stack";
+import { Button, Dropdown, Nav, Stack, Image, Form } from "react-bootstrap";
+import { handlerDrawerOpen, useGetMenuMaster } from "api/menu";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 
 import MainCard from "components/MainCard";
 import SimpleBarScroll from "components/third-party/SimpleBar";
-import { handlerDrawerOpen, useGetMenuMaster } from "api/menu";
 
 import Img1 from "assets/images/user/avatar-1.png";
 import Img2 from "assets/images/user/avatar-2.png";
@@ -66,13 +61,46 @@ const notifications = [
   },
 ];
 
+const getAvatarColor = (name = "") => {
+  const colors = [
+    "#1abc9c",
+    "#2ecc71",
+    "#3498db",
+    "#9b59b6",
+    "#34495e",
+    "#e67e22",
+    "#e74c3c",
+    "#95a5a6",
+  ];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++)
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return colors[Math.abs(hash % colors.length)];
+};
+
+const getInitials = (name = "") => {
+  if (!name) return "?";
+  const names = name.trim().split(" ");
+  if (names.length === 1) return names[0].charAt(0).toUpperCase();
+  return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+};
+
 export default function Header() {
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster?.isDashboardDrawerOpened;
   const navigate = useNavigate();
 
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const fullName =
+    `${user.first_name || ""} ${user.last_name || ""}`.trim() ||
+    user.username ||
+    "Utilisateur";
+
   const handleLogoutClick = () => {
-    navigate("/logout");
+    localStorage.removeItem(ACCESS_TOKEN);
+    localStorage.removeItem(REFRESH_TOKEN);
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   return (
@@ -197,32 +225,46 @@ export default function Header() {
                 </div>
               </Dropdown.Menu>
             </Dropdown>
+
             <Dropdown className="pc-h-item" align="end">
               <Dropdown.Toggle
-                className="pc-head-link arrow-none me-0"
+                className="btn btn-link arrow-none me-0 border-0 p-0 shadow-none bg-transparent"
                 variant="link"
                 id="user-profile-dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
               >
-                <i className="ph ph-user-circle" />
+                <div
+                  className="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-sm"
+                  style={{
+                    margin: 12,
+                    width: "35px",
+                    height: "35px",
+                    backgroundColor: getAvatarColor(fullName),
+                    fontSize: "12px",
+                  }}
+                >
+                  {getInitials(fullName)}
+                </div>
               </Dropdown.Toggle>
 
               <Dropdown.Menu className="dropdown-user-profile pc-h-dropdown p-0 overflow-hidden">
                 <Dropdown.Header className="bg-primary">
                   <Stack direction="horizontal" gap={3} className="my-2">
                     <div className="flex-shrink-0">
-                      <Image
-                        src={Img2}
-                        alt="user-avatar"
-                        className="user-avatar wid-35"
-                        roundedCircle
-                      />
+                      <div
+                        className="rounded-circle d-flex align-items-center justify-content-center text-primary bg-white fw-bold shadow-sm"
+                        style={{
+                          width: "45px",
+                          height: "45px",
+                          fontSize: "16px",
+                        }}
+                      >
+                        {getInitials(fullName)}
+                      </div>
                     </div>
                     <Stack gap={1}>
-                      <h6 className="text-white mb-0">Carson Darrin 🖖</h6>
-                      <span className="text-white text-opacity-75">
-                        carson.darrin@company.io
+                      <h6 className="text-white mb-0">{fullName}</h6>
+                      <span className="text-white text-opacity-75 small">
+                        {user.email || ""}
                       </span>
                     </Stack>
                   </Stack>
@@ -235,32 +277,20 @@ export default function Header() {
                   >
                     <Dropdown.Item
                       as={Link}
-                      to="#"
-                      className="justify-content-start"
+                      to="/profile"
+                      className="justify-content-start py-2"
                     >
-                      <i className="ph ph-gear me-2" />
-                      Settings
+                      <i className="ti ti-user me-2 fs-5" /> Mon Profil
                     </Dropdown.Item>
-                    <Dropdown.Item
-                      as={Link}
-                      to="#"
-                      className="justify-content-start"
-                    >
-                      <i className="ph ph-share-network me-2" />
-                      Share
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      as={Link}
-                      to="#"
-                      className="justify-content-start"
-                    >
-                      <i className="ph ph-lock-key me-2" />
-                      Change Password
-                    </Dropdown.Item>
-                    <div className="d-grid my-2">
-                      <Button onClick={handleLogoutClick} variant="primary">
-                        <i className="ph ph-sign-out align-middle me-2" />
-                        Logout
+
+                    <div className="d-grid my-2 px-3">
+                      <Button
+                        onClick={handleLogoutClick}
+                        variant="outline-danger"
+                        size="sm"
+                        className="d-flex align-items-center justify-content-center"
+                      >
+                        <i className="ti ti-logout me-2" /> Déconnexion
                       </Button>
                     </div>
                   </div>
