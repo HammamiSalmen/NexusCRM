@@ -9,7 +9,7 @@ export default function ClientsTable() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 7;
+  const itemsPerPage = 6;
 
   const navigate = useNavigate();
 
@@ -68,6 +68,7 @@ export default function ClientsTable() {
   };
 
   useEffect(() => {
+    setCurrentPage(1);
     fetchClients();
   }, []);
 
@@ -87,16 +88,16 @@ export default function ClientsTable() {
         className="mb-4"
         onClick={() => navigate("/tables/creer-client")}
       >
-        <i className="ph ph-plus-circle me-1" /> Créer nouveau client
+        <i className="ph ph-plus-circle me-1" /> Créer un nouveau client
       </Button>
       <MainCard title={<h4 className="mb-0">Liste des clients</h4>}>
         <Table responsive hover className="mb-0">
           <thead>
             <tr>
               <th width="60"></th>
-              <th>Nom Client</th>
-              <th>Type Client</th>
-              <th>Date de création</th>
+              <th className="text-center">Nom</th>
+              <th className="text-center">Type</th>
+              <th className="text-center">Date de création</th>
             </tr>
           </thead>
           <tbody>
@@ -107,7 +108,7 @@ export default function ClientsTable() {
                   onClick={() =>
                     navigate(`/tables/details-client/${client.id}`)
                   }
-                  className="table-clickable-row"
+                  className="table-clickable-row text-center"
                   style={{ cursor: "pointer" }}
                 >
                   <td>
@@ -138,7 +139,12 @@ export default function ClientsTable() {
           </tbody>
         </Table>
         {clients.length > itemsPerPage && (
-          <div className="d-flex justify-content-end p-3 border-top">
+          <div className="d-flex justify-content-between align-items-center p-3 border-top">
+            <div className="text-muted small">
+              Affichage de {indexOfFirstItem + 1} à{" "}
+              {Math.min(indexOfLastItem, clients.length)} sur {clients.length}{" "}
+              clients
+            </div>
             <Pagination className="mb-0">
               <Pagination.First
                 onClick={() => handlePageChange(1)}

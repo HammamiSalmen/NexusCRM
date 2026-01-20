@@ -27,7 +27,9 @@ export default function AuthLoginForm({ className, link }) {
       });
       localStorage.setItem(ACCESS_TOKEN, res.data.access);
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-      toast.success("Connexion réussie !");
+      const user = res.data.user;
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      toast.success(`Bienvenue, ${user.username} !`);
       navigate("/");
     } catch (error) {
       toast.error("Identifiants invalides ou erreur serveur.");

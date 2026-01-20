@@ -6,8 +6,9 @@ from .views import (
     CreateAdminBySuperAdminView,
     CreateSuperAdminView,
     InteractionViewSet,
+    MyTokenObtainPairView,
     RegisterAdminView,
-    UserListView,
+    # UserListView,
     UserViewSet,
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -20,10 +21,10 @@ router.register(r"users", UserViewSet, basename="user")
 
 urlpatterns = [
     path("auth/register/", RegisterAdminView.as_view(), name="register"),
-    path("users/", UserListView.as_view(), name="user-list"),
+    # path("users/", UserListView.as_view(), name="user-list"),
     path("auth/create-admin/", CreateAdminBySuperAdminView.as_view()),
     path("auth/create-superadmin/", CreateSuperAdminView.as_view()),
-    path("token/", TokenObtainPairView.as_view(), name="get_token"),
+    path("token/", MyTokenObtainPairView.as_view(), name="get_token"),
     path("token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("", include(router.urls)),
 ]

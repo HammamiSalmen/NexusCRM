@@ -56,7 +56,6 @@ class ClientSerializer(serializers.ModelSerializer):
             "user",
             "contacts",
         ]  # contactes est un champ virtuel pour assusrer one to many sinon si __all__ il recupere juste ID.
-        extra_kwargs = {"user": {"read_only": True}}
 
 
 class InteractionSerializer(serializers.ModelSerializer):

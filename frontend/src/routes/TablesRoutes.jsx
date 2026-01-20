@@ -10,6 +10,12 @@ const DetailsClient = Loadable(
   lazy(() => import("sections/clients/DetailsClient")),
 );
 const EmployesTable = Loadable(lazy(() => import("views/table/EmployesTable")));
+const CreerEmploye = Loadable(
+  lazy(() => import("@/sections/employes/CreerEmploye")),
+);
+const DetailsEmploye = Loadable(
+  lazy(() => import("sections/employes/DetailsEmploye")),
+);
 
 const TablesRoutes = {
   path: "tables",
@@ -30,6 +36,14 @@ const TablesRoutes = {
     {
       path: "employes-table",
       element: <EmployesTable />,
+    },
+    {
+      path: "creer-employe",
+      element: <CreerEmploye />,
+    },
+    {
+      path: "details-employe/:id",
+      element: <DetailsEmploye />,
     },
   ],
 };

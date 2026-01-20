@@ -9,6 +9,34 @@ from .serializers import (
     InteractionSerializer,
 )
 from .models import Client, Contact, Interaction
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token["username"] = user.username
+        token["is_superuser"] = user.is_superuser
+        token["first_name"] = user.first_name
+        token["last_name"] = user.last_name
+
+        return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data["user"] = {
+            "username": self.user.username,
+            "is_superuser": self.user.is_superuser,
+            "first_name": self.user.first_name,
+            "last_name": self.user.last_name,
+        }
+        return data
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 
 class IsSuperUser(permissions.BasePermission):
@@ -30,10 +58,10 @@ class UserViewSet(viewsets.ModelViewSet):
         instance.save()
 
 
-class UserListView(generics.ListAPIView):
+""" class UserListView(generics.ListAPIView):
     queryset = User.objects.all().order_by("-date_joined")
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated, IsSuperUser]
+    permission_classes = [permissions.IsAuthenticated, IsSuperUser] """
 
 
 class RegisterAdminView(generics.CreateAPIView):
@@ -85,11 +113,10 @@ class ClientViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         client = self.get_object()
-        if (
-            not self.request.user.is_superuser
-            and self.get_object().user != self.request.user
-        ):
+        if not self.request.user.is_superuser and client.user != self.request.user:
             raise PermissionDenied("Vous ne pouvez pas modifier ce client")
+        if "user" in serializer.validated_data and not self.request.user.is_superuser:
+            serializer.validated_data.pop("user")
         serializer.save()
 
     def perform_destroy(self, instance):

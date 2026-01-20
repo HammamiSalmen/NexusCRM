@@ -33,7 +33,10 @@ const InteractionsClient = ({
         params: { client_id: clientId },
       });
       const data = Array.isArray(res.data) ? res.data : res.data.results || [];
-      setInteractions(data);
+      const sortedData = data.sort(
+        (a, b) => new Date(b.dateInteraction) - new Date(a.dateInteraction),
+      );
+      setInteractions(sortedData);
     } catch (error) {
       toast.error("Erreur de chargement");
     } finally {
@@ -45,11 +48,13 @@ const InteractionsClient = ({
     if (show) {
       fetchInteractions();
       setEditingId(null);
+      const principalContact = allContacts.find((c) => c.isPrincipal);
+      const defaultContactId = initialContactId || principalContact?.id || "";
       reset({
         dateInteraction: new Date().toISOString().slice(0, 16),
         typeInteraction: "APPEL",
         commInteraction: "",
-        selectedContactId: initialContactId || "",
+        selectedContactId: String(defaultContactId),
       });
     }
   }, [show, clientId, initialContactId]);
@@ -79,11 +84,13 @@ const InteractionsClient = ({
         toast.success("Ajouté avec succès");
       }
       setEditingId(null);
+      const principalContact = allContacts.find((c) => c.isPrincipal);
+      const defaultContactId = initialContactId || principalContact?.id || "";
       reset({
         dateInteraction: new Date().toISOString().slice(0, 16),
         typeInteraction: "APPEL",
         commInteraction: "",
-        selectedContactId: "",
+        selectedContactId: String(defaultContactId),
       });
       fetchInteractions();
     } catch (error) {
@@ -181,10 +188,15 @@ const InteractionsClient = ({
                 </Form.Select>
               </Col>
               <Col md={3}>
-                <Form.Select size="sm" {...register("selectedContactId")}>
-                  <option value="">-- Sans contact --</option>
+                <Form.Select
+                  size="sm"
+                  {...register("selectedContactId", {
+                    required: "Contact obligatoire",
+                  })}
+                  isInvalid={!!errors.selectedContactId}
+                >
                   {allContacts.map((c) => (
-                    <option key={c.id} value={c.id}>
+                    <option key={c.id} value={String(c.id)}>
                       {c.prenomContact} {c.nomContact}
                     </option>
                   ))}

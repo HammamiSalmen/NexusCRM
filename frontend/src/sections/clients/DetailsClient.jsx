@@ -3,6 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Row, Col, Button, Modal, Form, Pagination } from "react-bootstrap";
+import {
+  emailSchema,
+  firstNameSchema,
+  lastNameSchema,
+  phoneSchema,
+} from "@/utils/validationSchema";
 import MainCard from "components/MainCard";
 import Breadcrumbs from "components/Breadcrumbs";
 import api from "api/api";
@@ -460,7 +466,9 @@ const DetailsClient = () => {
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold small">NOM DU CLIENT</Form.Label>
               <Form.Control
-                {...regClient("nomClient", { required: true })}
+                {...regClient("nomClient", {
+                  required: "Nom du client est requis",
+                })}
                 isInvalid={!!errClient.nomClient}
               />
             </Form.Group>
@@ -505,7 +513,7 @@ const DetailsClient = () => {
                     Nom <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
-                    {...regContact("nomContact", { required: "Nom requis" })}
+                    {...regContact("nomContact", lastNameSchema)}
                     isInvalid={!!errorsContact.nomContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -519,9 +527,7 @@ const DetailsClient = () => {
                     Prénom <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
-                    {...regContact("prenomContact", {
-                      required: "Prénom requis",
-                    })}
+                    {...regContact("prenomContact", firstNameSchema)}
                     isInvalid={!!errorsContact.prenomContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -536,13 +542,7 @@ const DetailsClient = () => {
                   </Form.Label>
                   <Form.Control
                     type="email"
-                    {...regContact("emailContact", {
-                      required: "Email requis",
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Adresse email invalide",
-                      },
-                    })}
+                    {...regContact("emailContact", emailSchema)}
                     isInvalid={!!errorsContact.emailContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -556,9 +556,7 @@ const DetailsClient = () => {
                     Téléphone <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
-                    {...regContact("telContact", {
-                      required: "Téléphone requis",
-                    })}
+                    {...regContact("telContact", phoneSchema)}
                     isInvalid={!!errorsContact.telContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -573,7 +571,7 @@ const DetailsClient = () => {
                   </Form.Label>
                   <Form.Control
                     {...regContact("adresseContact", {
-                      required: "Adresse requis",
+                      required: "Adresse est requis",
                     })}
                     isInvalid={!!errorsContact.adresseContact}
                   />

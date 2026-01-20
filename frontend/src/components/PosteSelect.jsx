@@ -45,7 +45,7 @@ export default function PosteSelect({ register, error, setValue, watch }) {
           <i className="ti ti-briefcase text-primary" />
         </InputGroup.Text>
         <Form.Control
-          {...register("posteContact", { required: "Le poste est requis" })}
+          {...register("posteContact", { required: "Poste est requis" })}
           placeholder="Saisir ou choisir un poste..."
           className="border-start-0 ps-0"
           autoComplete="off"

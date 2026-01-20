@@ -7,7 +7,7 @@ const informations = {
       id: "to-do",
       title: "To Do List",
       type: "collapse",
-      icon: "ph ph-map-trifold",
+      icon: "ph ph-list-checks",
       children: [
         {
           id: "kanban",
@@ -21,7 +21,7 @@ const informations = {
       id: "statistiques",
       title: "Statistiques",
       type: "collapse",
-      icon: "ph ph-chart-donut",
+      icon: "ph ph-chart-line",
       children: [
         {
           id: "graphs",

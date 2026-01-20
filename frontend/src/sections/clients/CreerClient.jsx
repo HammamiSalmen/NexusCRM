@@ -8,6 +8,12 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import PosteSelect from "components/PosteSelect";
 import { registerPosteUsage } from "utils/postesManager";
+import {
+  emailSchema,
+  firstNameSchema,
+  lastNameSchema,
+  phoneSchema,
+} from "@/utils/validationSchema";
 
 export default function CreerClient() {
   const navigate = useNavigate();
@@ -367,7 +373,7 @@ export default function CreerClient() {
                     Nom <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
-                    {...regContact("nomContact", { required: "Nom requis" })}
+                    {...regContact("nomContact", lastNameSchema)}
                     isInvalid={!!errorsContact.nomContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -381,9 +387,7 @@ export default function CreerClient() {
                     Prénom <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
-                    {...regContact("prenomContact", {
-                      required: "Prénom requis",
-                    })}
+                    {...regContact("prenomContact", firstNameSchema)}
                     isInvalid={!!errorsContact.prenomContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -398,13 +402,7 @@ export default function CreerClient() {
                   </Form.Label>
                   <Form.Control
                     type="email"
-                    {...regContact("emailContact", {
-                      required: "Email requis",
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Adresse email invalide",
-                      },
-                    })}
+                    {...regContact("emailContact", emailSchema)}
                     isInvalid={!!errorsContact.emailContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -418,9 +416,7 @@ export default function CreerClient() {
                     Téléphone <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
-                    {...regContact("telContact", {
-                      required: "Téléphone requis",
-                    })}
+                    {...regContact("telContact", phoneSchema)}
                     isInvalid={!!errorsContact.telContact}
                   />
                   <Form.Control.Feedback type="invalid">
