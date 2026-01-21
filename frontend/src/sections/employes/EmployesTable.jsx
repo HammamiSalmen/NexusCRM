@@ -1,6 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
-import { Table, Button, Pagination, Badge } from "react-bootstrap";
+import {
+  Table,
+  Button,
+  Pagination,
+  Badge,
+  Form,
+  Row,
+  Col,
+  Stack,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import api from "api/api";
 import toast from "react-hot-toast";
@@ -18,17 +27,17 @@ const getAvatarColor = (name = "") => {
     "#95a5a6",
   ];
   let hash = 0;
-  for (let i = 0; i < name.length; i++) {
+  for (let i = 0; i < name.length; i++)
     hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
   return colors[Math.abs(hash % colors.length)];
 };
 
 const getInitials = (name = "") => {
   if (!name) return "";
   const names = name.trim().split(" ");
-  if (names.length === 1) return names[0].charAt(0).toUpperCase();
-  return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+  return names.length === 1
+    ? names[0].charAt(0).toUpperCase()
+    : (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
 };
 
 const AvatarPro = ({ name }) => (
@@ -49,6 +58,9 @@ export default function EmployesTable() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortType, setSortType] = useState("name-asc");
+  const [roleFilter, setRoleFilter] = useState("all");
+
   const itemsPerPage = 6;
   const navigate = useNavigate();
 
@@ -69,14 +81,46 @@ export default function EmployesTable() {
   };
 
   useEffect(() => {
-    setCurrentPage(1);
     fetchEmployees();
   }, []);
 
+  const getProcessedEmployees = () => {
+    let filtered = [...employees];
+    if (roleFilter === "admin") {
+      filtered = filtered.filter((emp) => emp.is_superuser);
+    } else if (roleFilter === "staff") {
+      filtered = filtered.filter((emp) => !emp.is_superuser);
+    }
+    filtered.sort((a, b) => {
+      const nameA = `${a.first_name} ${a.last_name}`.toLowerCase();
+      const nameB = `${b.first_name} ${b.last_name}`.toLowerCase();
+      switch (sortType) {
+        case "name-asc":
+          return nameA.localeCompare(nameB);
+        case "name-desc":
+          return nameB.localeCompare(nameA);
+        case "date-asc":
+          return new Date(a.date_joined) - new Date(b.date_joined);
+        case "date-desc":
+          return new Date(b.date_joined) - new Date(a.date_joined);
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  };
+
+  const processedEmployees = getProcessedEmployees();
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentEmployees = employees.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(employees.length / itemsPerPage);
+  const currentEmployees = processedEmployees.slice(
+    indexOfFirstItem,
+    indexOfLastItem,
+  );
+  const totalPages = Math.ceil(processedEmployees.length / itemsPerPage);
+
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
@@ -89,16 +133,56 @@ export default function EmployesTable() {
       >
         <i className="ph ph-plus-circle me-1" /> Créer un nouvel employé
       </Button>
-
-      <MainCard title={<h4 className="mb-0">Liste des employés</h4>}>
+      <MainCard
+        title={
+          <Row className="align-items-center g-3">
+            <Col md={4}>
+              <h4 className="mb-0">Liste des employés</h4>
+            </Col>
+            <Col md={8}>
+              <Row className="justify-content-end g-2">
+                <Col md={3}>
+                  <Form.Select
+                    size="sm"
+                    value={roleFilter}
+                    onChange={(e) => {
+                      setRoleFilter(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <option value="all">Tous les rôles</option>
+                    <option value="admin">Administrateurs</option>
+                    <option value="staff">Employés</option>
+                  </Form.Select>
+                </Col>
+                <Col md={3}>
+                  <Form.Select
+                    size="sm"
+                    value={sortType}
+                    onChange={(e) => {
+                      setSortType(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <option value="name-asc">Nom (A-Z)</option>
+                    <option value="name-desc">Nom (Z-A)</option>
+                    <option value="date-desc">Plus récent</option>
+                    <option value="date-asc">Plus ancien</option>
+                  </Form.Select>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        }
+      >
         <Table responsive hover className="mb-0">
           <thead>
             <tr>
               <th width="60"></th>
-              <th style={{ textAlign: "center" }}>Nom</th>
-              <th style={{ textAlign: "center" }}>Rôle</th>
-              <th style={{ textAlign: "center" }}>Statut</th>
-              <th style={{ textAlign: "center" }}>Date de création</th>
+              <th className="text-center">Nom</th>
+              <th className="text-center">Rôle</th>
+              <th className="text-center">Statut</th>
+              <th className="text-center">Date de création</th>
             </tr>
           </thead>
           <tbody>
@@ -153,17 +237,20 @@ export default function EmployesTable() {
                   <td>{new Date(emp.date_joined).toLocaleDateString()}</td>
                 </tr>
               ))}
-            {!loading && employees.length === 0 && (
+            {!loading && processedEmployees.length === 0 && (
               <tr>
-                <td colSpan="6" className="text-center py-4">
+                <td colSpan="5" className="text-center py-4">
                   Aucun employé trouvé
                 </td>
               </tr>
             )}
           </tbody>
         </Table>
-        {employees.length > itemsPerPage && (
-          <div className="d-flex justify-content-end p-3 border-top">
+        {processedEmployees.length > itemsPerPage && (
+          <div className="d-flex justify-content-between align-items-center p-3 border-top">
+            <div className="text-muted small">
+              {processedEmployees.length} employé(s) trouvé(s)
+            </div>
             <Pagination className="mb-0">
               <Pagination.First
                 onClick={() => handlePageChange(1)}
