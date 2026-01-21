@@ -1,6 +1,7 @@
 import { lazy } from "react";
 // import DashboardLayout from "layout/Dashboard";
 import Loadable from "components/Loadable";
+import AdminRoute from "components/AdminRoute";
 
 const ClientsTable = Loadable(lazy(() => import("views/table/ClientsTable")));
 const CreerClient = Loadable(
@@ -34,16 +35,12 @@ const TablesRoutes = {
       element: <DetailsClient />,
     },
     {
-      path: "employes-table",
-      element: <EmployesTable />,
-    },
-    {
-      path: "creer-employe",
-      element: <CreerEmploye />,
-    },
-    {
-      path: "details-employe/:id",
-      element: <DetailsEmploye />,
+      element: <AdminRoute />,
+      children: [
+        { path: "employes-table", element: <EmployesTable /> },
+        { path: "creer-employe", element: <CreerEmploye /> },
+        { path: "details-employe/:id", element: <DetailsEmploye /> },
+      ],
     },
   ],
 };

@@ -32,6 +32,7 @@ const tableComponents = {
       type: "item",
       icon: "ph ph-user-list",
       url: "/tables/employes-table",
+      requiresAdmin: true,
       children: [
         {
           id: "creer-employe",

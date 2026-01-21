@@ -35,10 +35,22 @@ export default function Navigation({
       }));
   }
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const isSuperUser = user?.is_superuser;
+
   const navGroups = menuItems.items
     .slice(0, lastItemIndex + 1)
-    .filter((item) => !item.hideInMenu)
+    .filter((item) => {
+      if (item.hideInMenu) return false;
+      if (item.requiresAdmin && !isSuperUser) return false;
+      return true;
+    })
     .map((item) => {
+      if (item.children) {
+        item.children = item.children.filter(
+          (child) => !child.requiresAdmin || isSuperUser,
+        );
+      }
       switch (item.type) {
         case "group":
           if (item.url && item.id !== lastItemId) {

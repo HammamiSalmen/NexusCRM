@@ -49,9 +49,14 @@ export default function Breadcrumbs() {
   );
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const isSuperUser = user?.is_superuser;
     setMain({});
     setSub({});
     setItem({});
+    if (location.pathname.includes("employe") && !isSuperUser) {
+      return;
+    }
     if (navigation.items) {
       getCollapse(navigation.items);
     }
