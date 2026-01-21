@@ -151,8 +151,8 @@ export default function CreerEmploye() {
                   Rôle <span className="text-danger">*</span>
                 </Form.Label>
                 <Form.Select {...register("role")}>
-                  <option value="staff">Employé (Staff)</option>
-                  <option value="admin">Super Administrateur</option>
+                  <option value="staff">Employé</option>
+                  <option value="admin">Administrateur</option>
                 </Form.Select>
                 {roleWatch === "admin" && (
                   <Form.Text className="text-danger">

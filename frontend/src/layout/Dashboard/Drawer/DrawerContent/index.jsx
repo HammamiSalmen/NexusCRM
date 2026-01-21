@@ -35,41 +35,44 @@ export default function Navigation({
       }));
   }
 
-  const navGroups = menuItems.items.slice(0, lastItemIndex + 1).map((item) => {
-    switch (item.type) {
-      case "group":
-        if (item.url && item.id !== lastItemId) {
+  const navGroups = menuItems.items
+    .slice(0, lastItemIndex + 1)
+    .filter((item) => !item.hideInMenu)
+    .map((item) => {
+      switch (item.type) {
+        case "group":
+          if (item.url && item.id !== lastItemId) {
+            return (
+              <ListGroup.Item key={item.id}>
+                <NavItem item={item} level={1} isParents />
+              </ListGroup.Item>
+            );
+          }
+
           return (
-            <ListGroup.Item key={item.id}>
-              <NavItem item={item} level={1} isParents />
-            </ListGroup.Item>
+            <NavGroup
+              key={item.id}
+              setSelectedID={setSelectedID}
+              setSelectedItems={setSelectedItems}
+              setSelectedLevel={setSelectedLevel}
+              selectedLevel={selectedLevel}
+              selectedID={selectedID}
+              selectedItems={selectedItems}
+              lastItem={lastItem}
+              remItems={remItems}
+              lastItemId={lastItemId}
+              item={item}
+              setSelectTab={setSelectTab ?? (() => {})}
+            />
           );
-        }
+      }
 
-        return (
-          <NavGroup
-            key={item.id}
-            setSelectedID={setSelectedID}
-            setSelectedItems={setSelectedItems}
-            setSelectedLevel={setSelectedLevel}
-            selectedLevel={selectedLevel}
-            selectedID={selectedID}
-            selectedItems={selectedItems}
-            lastItem={lastItem}
-            remItems={remItems}
-            lastItemId={lastItemId}
-            item={item}
-            setSelectTab={setSelectTab ?? (() => {})}
-          />
-        );
-    }
-
-    return (
-      <h6 key={item.id} className="text-danger align-items-center">
-        Fix - Navigation Group
-      </h6>
-    );
-  });
+      return (
+        <h6 key={item.id} className="text-danger align-items-center">
+          Fix - Navigation Group
+        </h6>
+      );
+    });
 
   return <ul className="pc-navbar">{navGroups}</ul>;
 }

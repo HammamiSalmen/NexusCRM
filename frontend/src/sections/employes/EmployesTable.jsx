@@ -128,7 +128,7 @@ export default function EmployesTable() {
                         bg="light-danger"
                         className="text-danger border border-danger"
                       >
-                        Superadmin
+                        Administrateur
                       </Badge>
                     ) : (
                       <Badge

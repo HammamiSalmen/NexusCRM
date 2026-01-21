@@ -10,7 +10,6 @@ import {
   phoneSchema,
 } from "@/utils/validationSchema";
 import MainCard from "components/MainCard";
-import Breadcrumbs from "components/Breadcrumbs";
 import api from "api/api";
 import Swal from "sweetalert2";
 import toast, { Toaster } from "react-hot-toast";
@@ -277,13 +276,6 @@ const DetailsClient = () => {
 
   return (
     <>
-      <Breadcrumbs
-        title="Fiche Client"
-        links={[
-          { title: "Clients", to: "/tables/clients-table" },
-          { title: client.nomClient },
-        ]}
-      />
       <Row className="mb-4">
         <Col md={12}>
           <MainCard className="border-0 shadow-sm">
@@ -471,6 +463,9 @@ const DetailsClient = () => {
                 })}
                 isInvalid={!!errClient.nomClient}
               />
+              <Form.Control.Feedback type="invalid">
+                {errClient.nomClient?.message}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-0">
               <Form.Label className="fw-bold small">TYPE DE CLIENT</Form.Label>

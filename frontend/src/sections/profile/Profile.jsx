@@ -4,14 +4,12 @@ import { Row, Col, Button, Form, Badge, Spinner, Stack } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import api from "api/api";
 import MainCard from "components/MainCard";
-import Breadcrumbs from "components/Breadcrumbs";
 import toast from "react-hot-toast";
 import {
   emailSchema,
   firstNameSchema,
   lastNameSchema,
   passwordSchema,
-  phoneSchema,
 } from "@/utils/validationSchema";
 
 const getAvatarColor = (name = "") => {
@@ -42,27 +40,19 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userData, setUserData] = useState(null);
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    reset,
-    formState: { errors },
-  } = useForm();
-
-  const newPassword = watch("password");
+  const infoForm = useForm();
+  const securityForm = useForm();
+  const newPassword = securityForm.watch("password");
 
   const fetchProfile = async () => {
     try {
       const res = await api.get("/api/users/me/");
       setUserData(res.data);
-      setValue("username", res.data.username);
-      setValue("first_name", res.data.first_name);
-      setValue("last_name", res.data.last_name);
-      setValue("email", res.data.email);
-      setValue("phone", res.data.phone || "");
+      infoForm.setValue("username", res.data.username);
+      infoForm.setValue("first_name", res.data.first_name);
+      infoForm.setValue("last_name", res.data.last_name);
+      infoForm.setValue("email", res.data.email);
+      infoForm.setValue("phone", res.data.phone || "");
       setLoading(false);
     } catch (error) {
       toast.error("Erreur lors du chargement du profil");
@@ -80,7 +70,6 @@ const Profile = () => {
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
-        phone: data.phone,
       };
       const res = await api.patch("/api/users/me/", payload);
       localStorage.setItem("user", JSON.stringify(res.data));
@@ -104,7 +93,7 @@ const Profile = () => {
       };
       await api.post("/api/users/change-password/", payload);
       toast.success("Mot de passe changé avec succès !");
-      reset({ current_password: "", password: "", confirmPassword: "" });
+      securityForm.reset();
     } catch (error) {
       toast.error(
         error.response?.data?.detail || "L'ancien mot de passe est incorrect",
@@ -142,10 +131,6 @@ const Profile = () => {
 
   return (
     <>
-      <Breadcrumbs
-        title="Mon Profil"
-        links={[{ title: "Accueil", to: "/" }, { title: "Profil" }]}
-      />
       <Row>
         <Col md={4}>
           <MainCard>
@@ -164,7 +149,7 @@ const Profile = () => {
                     userData.is_superuser ? "text-danger" : "text-primary"
                   }
                 >
-                  {userData.is_superuser ? "Admin" : "Collaborateur"}
+                  {userData.is_superuser ? "Administrateur" : "Employé"}
                 </Badge>
               </div>
             </Stack>
@@ -176,12 +161,6 @@ const Profile = () => {
               <span className="fw-medium small text-truncate ms-2">
                 {userData.email}
               </span>
-            </div>
-            <div className="d-flex align-items-center justify-content-between py-2">
-              <span className="text-muted">
-                <i className="ph ph-phone me-2" /> Téléphone
-              </span>
-              <span className="fw-medium small">{userData.phone || "---"}</span>
             </div>
             <div className="d-flex align-items-center justify-content-between py-2">
               <span className="text-muted">
@@ -205,13 +184,13 @@ const Profile = () => {
           >
             <div className="d-flex align-items-start gap-4">
               <div className="flex-grow-1">
-                <Form onSubmit={handleSubmit(onSubmitInfo)}>
+                <Form onSubmit={infoForm.handleSubmit(onSubmitInfo)}>
                   <Row>
                     <Col md={6}>
                       <Form.Group className="mb-3">
                         <Form.Label>Username</Form.Label>
                         <Form.Control
-                          {...register("username")}
+                          {...infoForm.register("username")}
                           readOnly
                           className="bg-light"
                         />
@@ -221,36 +200,36 @@ const Profile = () => {
                       <Form.Group className="mb-3">
                         <Form.Label>Email</Form.Label>
                         <Form.Control
-                          {...register("email", emailSchema)}
-                          isInvalid={!!errors.email}
+                          {...infoForm.register("email", emailSchema)}
+                          isInvalid={!!infoForm.formState.errors.email}
                         />
+                        <Form.Control.Feedback type="invalid">
+                          {infoForm.formState.errors.email?.message}
+                        </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                     <Col md={6}>
                       <Form.Group className="mb-3">
                         <Form.Label>Prénom</Form.Label>
                         <Form.Control
-                          {...register("first_name", firstNameSchema)}
-                          isInvalid={!!errors.first_name}
+                          {...infoForm.register("first_name", firstNameSchema)}
+                          isInvalid={!!infoForm.formState.errors.first_name}
                         />
+                        <Form.Control.Feedback type="invalid">
+                          {infoForm.formState.errors.first_name?.message}
+                        </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                     <Col md={6}>
                       <Form.Group className="mb-3">
                         <Form.Label>Nom</Form.Label>
                         <Form.Control
-                          {...register("last_name", lastNameSchema)}
-                          isInvalid={!!errors.last_name}
+                          {...infoForm.register("last_name", lastNameSchema)}
+                          isInvalid={!!infoForm.formState.errors.last_name}
                         />
-                      </Form.Group>
-                    </Col>
-                    <Col md={12}>
-                      <Form.Group className="mb-3">
-                        <Form.Label>Téléphone</Form.Label>
-                        <Form.Control
-                          {...register("phone", phoneSchema)}
-                          isInvalid={!!errors.phone}
-                        />
+                        <Form.Control.Feedback type="invalid">
+                          {infoForm.formState.errors.last_name?.message}
+                        </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                   </Row>
@@ -278,19 +257,21 @@ const Profile = () => {
           >
             <div className="d-flex align-items-start gap-4">
               <div className="flex-grow-1">
-                <Form onSubmit={handleSubmit(onSubmitPassword)}>
+                <Form onSubmit={securityForm.handleSubmit(onSubmitPassword)}>
                   <Form.Group className="mb-3">
                     <Form.Label>Mot de passe actuel</Form.Label>
                     <Form.Control
                       type="password"
                       placeholder="Entrez votre mot de passe actuel"
-                      {...register("current_password", {
+                      {...securityForm.register("current_password", {
                         required: "Ce champ est obligatoire",
                       })}
-                      isInvalid={!!errors.current_password}
+                      isInvalid={
+                        !!securityForm.formState.errors.current_password
+                      }
                     />
                     <Form.Control.Feedback type="invalid">
-                      {errors.current_password?.message}
+                      {securityForm.formState.errors.current_password?.message}
                     </Form.Control.Feedback>
                   </Form.Group>
                   <Row>
@@ -299,11 +280,11 @@ const Profile = () => {
                         <Form.Label>Nouveau mot de passe</Form.Label>
                         <Form.Control
                           type="password"
-                          {...register("password", passwordSchema)}
-                          isInvalid={!!errors.password}
+                          {...securityForm.register("password", passwordSchema)}
+                          isInvalid={!!securityForm.formState.errors.password}
                         />
                         <Form.Control.Feedback type="invalid">
-                          {errors.password?.message}
+                          {securityForm.formState.errors.password?.message}
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
@@ -312,15 +293,20 @@ const Profile = () => {
                         <Form.Label>Confirmer</Form.Label>
                         <Form.Control
                           type="password"
-                          {...register("confirmPassword", {
+                          {...securityForm.register("confirmPassword", {
                             validate: (v) =>
                               v === newPassword ||
                               "Les mots de passe diffèrent",
                           })}
-                          isInvalid={!!errors.confirmPassword}
+                          isInvalid={
+                            !!securityForm.formState.errors.confirmPassword
+                          }
                         />
                         <Form.Control.Feedback type="invalid">
-                          {errors.confirmPassword?.message}
+                          {
+                            securityForm.formState.errors.confirmPassword
+                              ?.message
+                          }
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
@@ -333,7 +319,10 @@ const Profile = () => {
                     >
                       Changer le mot de passe
                     </Button>
-                    <Button variant="outline-secondary" onClick={() => reset()}>
+                    <Button
+                      variant="outline-secondary"
+                      onClick={() => securityForm.reset()}
+                    >
                       Vider
                     </Button>
                   </div>

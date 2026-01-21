@@ -13,7 +13,6 @@ import {
   Badge,
 } from "react-bootstrap";
 import MainCard from "components/MainCard";
-import Breadcrumbs from "components/Breadcrumbs";
 import api from "api/api";
 import Swal from "sweetalert2";
 import toast, { Toaster } from "react-hot-toast";
@@ -197,13 +196,6 @@ const DetailsEmploye = () => {
 
   return (
     <>
-      <Breadcrumbs
-        title="Fiche Employé"
-        links={[
-          { title: "Employés", to: "/tables/employes-table" },
-          { title: `${employe.first_name} ${employe.last_name}` },
-        ]}
-      />
       <Row className="mb-4">
         <Col md={12}>
           <MainCard className="border-0 shadow-sm">
@@ -232,7 +224,7 @@ const DetailsEmploye = () => {
                         bg="light-danger"
                         className="text-danger border border-danger"
                       >
-                        Super Administrateur
+                        Administrateur
                       </Badge>
                     ) : (
                       <Badge

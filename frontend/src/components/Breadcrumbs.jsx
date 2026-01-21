@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -9,90 +9,93 @@ import navigation from "menu-items";
 export default function Breadcrumbs() {
   const location = useLocation();
   const [main, setMain] = useState({});
+  const [sub, setSub] = useState({});
   const [item, setItem] = useState({});
 
   const getCollapse = useCallback(
-    (item) => {
-      if (item.children) {
-        item.children.forEach((collapse) => {
-          if (collapse.type === "collapse") {
-            getCollapse(collapse);
-          } else if (
-            collapse.type === "item" &&
-            location.pathname === collapse.url
-          ) {
-            setMain((prev) => ({
-              ...prev,
-              type: "collapse",
-              title: typeof item.title === "string" ? item.title : undefined,
-            }));
-            setItem((prev) => ({
-              ...prev,
-              type: "item",
-              title:
-                typeof collapse.title === "string" ? collapse.title : undefined,
-              breadcrumbs: collapse.breadcrumbs !== false,
-            }));
-          }
-        });
-      }
+    (menuList) => {
+      menuList.forEach((group) => {
+        if (group.children) {
+          group.children.forEach((collapse) => {
+            const isMatchParent = location.pathname === collapse.url;
+
+            if (isMatchParent) {
+              setMain({ title: group.title });
+              setItem({
+                title: collapse.title,
+                breadcrumbs: collapse.breadcrumbs !== false,
+              });
+              setSub({});
+            }
+
+            if (collapse.children) {
+              collapse.children.forEach((child) => {
+                const isMatchChild =
+                  location.pathname === child.url ||
+                  location.pathname.startsWith(child.url + "/");
+
+                if (isMatchChild) {
+                  setMain({ title: group.title });
+                  setSub({ title: collapse.title, url: collapse.url });
+                  setItem({ title: child.title });
+                }
+              });
+            }
+          });
+        }
+      });
     },
     [location.pathname],
   );
 
   useEffect(() => {
-    navigation.items.forEach((navItem) => {
-      if (navItem.type === "group") {
-        getCollapse(navItem);
-      }
-    });
+    setMain({});
+    setSub({});
+    setItem({});
+    if (navigation.items) {
+      getCollapse(navigation.items);
+    }
   }, [location.pathname, getCollapse]);
 
-  let mainContent;
-  let itemContent;
-  let breadcrumbContent;
-  let title = "";
+  let breadcrumbContent = null;
 
-  if (main?.type === "collapse") {
-    mainContent = (
-      <Breadcrumb.Item href="#" className="text-capitalize">
-        {main.title}
-      </Breadcrumb.Item>
-    );
-  }
-
-  if (item?.type === "item") {
-    title = item.title ?? "";
-    itemContent = (
-      <Breadcrumb.Item href="#" className="text-capitalize">
-        {title}
-      </Breadcrumb.Item>
-    );
-
-    if (item.breadcrumbs !== false) {
-      breadcrumbContent = (
-        <div className="page-header">
-          <div className="page-block">
-            <Row className="align-items-center">
-              <Col md={12} className="page-header-title text-capitalize">
-                <h5>{title}</h5>
-              </Col>
-              <Col md={12}>
-                <Breadcrumb listProps={{ style: { marginBottom: 0 } }}>
-                  <Breadcrumb.Item href={APP_DEFAULT_PATH}>
-                    Home
+  if (item?.title) {
+    breadcrumbContent = (
+      <div className="page-header">
+        <div className="page-block">
+          <Row className="align-items-center">
+            <Col md={12} className="page-header-title text-capitalize">
+              <h5>{item.title}</h5>
+            </Col>
+            <Col md={12}>
+              <Breadcrumb listProps={{ style: { marginBottom: 0 } }}>
+                <Breadcrumb.Item
+                  linkAs={Link}
+                  linkProps={{ to: APP_DEFAULT_PATH }}
+                >
+                  Home
+                </Breadcrumb.Item>
+                {main.title && (
+                  <Breadcrumb.Item
+                    linkAs={Link}
+                    linkProps={{ to: sub.url }}
+                    active={!sub.title && !item.title}
+                  >
+                    {main.title}
                   </Breadcrumb.Item>
-                  {mainContent}
-                  {itemContent}
-                </Breadcrumb>
-              </Col>
-            </Row>
-          </div>
+                )}
+                {sub.title && (
+                  <Breadcrumb.Item linkAs={Link} linkProps={{ to: sub.url }}>
+                    {sub.title}
+                  </Breadcrumb.Item>
+                )}
+                <Breadcrumb.Item active>{item.title}</Breadcrumb.Item>
+              </Breadcrumb>
+            </Col>
+          </Row>
         </div>
-      );
-    } else {
-      breadcrumbContent = null;
-    }
+      </div>
+    );
   }
 
   return <>{breadcrumbContent}</>;

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from rest_framework import generics, viewsets, permissions
+from rest_framework import generics, viewsets, permissions, status
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -62,7 +62,7 @@ class UserViewSet(viewsets.ModelViewSet):
         instance.save()
 
     def get_permissions(self):
-        if self.action == "me":
+        if self.action in ["me", "change_password"]:
             return [permissions.IsAuthenticated()]
         return [IsSuperUser()]
 
@@ -78,6 +78,24 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+
+    @action(detail=False, methods=["post"], url_path="change-password")
+    def change_password(self, request):
+        user = request.user
+        current_password = request.data.get("current_password")
+        new_password = request.data.get("new_password")
+
+        if not user.check_password(current_password):
+            return Response(
+                {"detail": "L'ancien mot de passe est incorrect."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        user.set_password(new_password)
+        user.save()
+        return Response(
+            {"detail": "Mot de passe mis à jour avec succès."},
+            status=status.HTTP_200_OK,
+        )
 
 
 """ class UserListView(generics.ListAPIView):

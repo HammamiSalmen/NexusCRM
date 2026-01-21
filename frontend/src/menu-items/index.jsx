@@ -5,6 +5,7 @@ import informations from "./informations";
 // import uiComponents from "./ui-components";
 import tableRoutes from "./tables";
 import navigation from "./navigation";
+import profileMenu from "./profile";
 
 const menuItems = {
   items: [
@@ -13,6 +14,7 @@ const menuItems = {
     // formComponents,
     tableRoutes,
     informations,
+    { ...profileMenu, hideInMenu: true },
     // pages,
     // other,
   ],
