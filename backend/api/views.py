@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from rest_framework import generics, viewsets, permissions, status
+from rest_framework import generics, viewsets, permissions, status, filters
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,8 +9,9 @@ from .serializers import (
     ClientSerializer,
     ContactSerializer,
     InteractionSerializer,
+    NotificationSerializer,
 )
-from .models import Client, Contact, Interaction
+from .models import Client, Contact, Interaction, Notification
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -97,11 +98,8 @@ class UserViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
-
-""" class UserListView(generics.ListAPIView):
-    queryset = User.objects.all().order_by("-date_joined")
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated, IsSuperUser] """
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["username", "first_name", "last_name", "email"]
 
 
 class RegisterAdminView(generics.CreateAPIView):
@@ -163,6 +161,9 @@ class ClientViewSet(viewsets.ModelViewSet):
         if not self.request.user.is_superuser and instance.user != self.request.user:
             raise PermissionDenied("Vous ne pouvez pas supprimer ce client")
         instance.delete()
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["nomClient", "typeClient"]
 
 
 class ContactViewSet(viewsets.ModelViewSet):
@@ -250,3 +251,30 @@ class InteractionViewSet(viewsets.ModelViewSet):
                 "Vous n'avez pas le droit de supprimer cette interaction."
             )
         instance.delete()
+
+
+class NotificationViewSet(viewsets.ModelViewSet):
+    serializer_class = NotificationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Notification.objects.filter(recipient=self.request.user).order_by(
+            "-created_at"
+        )
+
+    @action(detail=False, methods=["post"])
+    def mark_all_read(self, request):
+        self.get_queryset().update(read=True)
+        return Response({"status": "marked all read"})
+
+    @action(detail=True, methods=["post"])
+    def mark_read(self, request, pk=None):
+        notif = self.get_object()
+        notif.read = True
+        notif.save()
+        return Response({"status": "marked read"})
+
+    @action(detail=False, methods=["delete"])
+    def delete_all(self, request):
+        self.get_queryset().delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -7,6 +7,7 @@ from .views import (
     CreateSuperAdminView,
     InteractionViewSet,
     MyTokenObtainPairView,
+    NotificationViewSet,
     RegisterAdminView,
     # UserListView,
     UserViewSet,
@@ -18,6 +19,7 @@ router.register(r"clients", ClientViewSet, basename="client")
 router.register(r"contacts", ContactViewSet, basename="contact")
 router.register(r"interactions", InteractionViewSet, basename="interaction")
 router.register(r"users", UserViewSet, basename="user")
+router.register(r"notifications", NotificationViewSet, basename="notification")
 
 urlpatterns = [
     path("auth/register/", RegisterAdminView.as_view(), name="register"),

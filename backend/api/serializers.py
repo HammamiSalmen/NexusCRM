@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Client, Contact, Interaction
+from .models import Client, Contact, Interaction, Notification
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -56,6 +56,7 @@ class ClientSerializer(serializers.ModelSerializer):
             "user",
             "contacts",
         ]  # contactes est un champ virtuel pour assusrer one to many sinon si __all__ il recupere juste ID.
+        extra_kwargs = {"user": {"required": False}}
 
 
 class InteractionSerializer(serializers.ModelSerializer):
@@ -63,3 +64,9 @@ class InteractionSerializer(serializers.ModelSerializer):
         model = Interaction
         fields = "__all__"
         extra_kwargs = {"user": {"read_only": True}}
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ["id", "title", "message", "read", "created_at", "link"]
