@@ -1,14 +1,68 @@
 const navigation = {
-  id: "group-dashboard-loading-unique",
-  title: "Navigation",
+  id: "main-menu",
   type: "group",
   children: [
     {
-      id: "dashboard",
-      title: "Dashboard",
+      id: "Dashboard",
+      title: "Tableau de bord",
       type: "item",
       icon: "ph ph-house-line",
       url: "/",
+    },
+    {
+      id: "Tâches",
+      title: "Liste de tâches",
+      type: "item",
+      icon: "ph ph-list-checks",
+      url: "/Tâches",
+    },
+    {
+      id: "Table-clients",
+      title: "Liste des clients",
+      type: "item",
+      icon: "ph ph-address-book",
+      url: "/tables/Table-clients",
+      children: [
+        {
+          id: "Creer-client",
+          title: "Créer un Client",
+          type: "item",
+          url: "/tables/Creer-client",
+          hideInMenu: true,
+        },
+
+        {
+          id: "Details-client",
+          title: "Détails du Client",
+          type: "item",
+          url: "/tables/Details-client",
+          hideInMenu: true,
+        },
+      ],
+    },
+    {
+      id: "employes-table",
+      title: "Liste des employés",
+      type: "item",
+      icon: "ph ph-user-list",
+      url: "/tables/employes-table",
+      requiresAdmin: true,
+      children: [
+        {
+          id: "creer-employe",
+          title: "Créer un Employé",
+          type: "item",
+          url: "/tables/creer-employe",
+          hideInMenu: true,
+        },
+        {
+          id: "details-employe",
+          title: "Détails de l'Employé",
+          type: "item",
+          url: "/tables/details-employe",
+          hideInMenu: true,
+        },
+      ],
     },
   ],
 };

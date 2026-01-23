@@ -78,7 +78,7 @@ export default function Breadcrumbs() {
                   linkAs={Link}
                   linkProps={{ to: APP_DEFAULT_PATH }}
                 >
-                  Home
+                  Accueil
                 </Breadcrumb.Item>
                 {main.title && (
                   <Breadcrumb.Item

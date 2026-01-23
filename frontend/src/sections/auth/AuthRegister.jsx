@@ -21,7 +21,7 @@ import {
   passwordSchema,
 } from "utils/validationSchema";
 
-import DarkLogo from "assets/images/logo-dark.svg";
+import DarkLogo from "assets/images/Chatt.png";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api";
 import toast from "react-hot-toast";
@@ -79,9 +79,17 @@ export default function AuthRegisterForm({ className, link }) {
 
   return (
     <MainCard className="mb-0">
-      <div className="text-center">
+      <div className="b-brand text-primary d-flex justify-content-center align-items-center">
         <a>
-          <Image src={DarkLogo} alt="img" />
+          <Image
+            src={DarkLogo}
+            alt="img"
+            style={{
+              height: "90px",
+              maxHeight: "100%",
+              marginRight: "30px",
+            }}
+          />
         </a>
       </div>
       <Form onSubmit={handleSubmit(onSubmit)}>

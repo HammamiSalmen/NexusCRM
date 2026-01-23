@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import api from "../../api/api";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 import MainCard from "components/MainCard";
-import DarkLogo from "assets/images/logo-dark.svg";
+import DarkLogo from "assets/images/Chatt.png";
 import toast from "react-hot-toast";
 
 export default function AuthLoginForm({ className, link }) {
@@ -39,8 +39,16 @@ export default function AuthLoginForm({ className, link }) {
 
   return (
     <MainCard className="mb-0">
-      <div className="text-center">
-        <Image src={DarkLogo} alt="NexusCRM" />
+      <div className="b-brand text-primary d-flex justify-content-center align-items-center">
+        <Image
+          src={DarkLogo}
+          alt="NexusCRM"
+          style={{
+            height: "90px",
+            maxHeight: "100%",
+            marginRight: "30px",
+          }}
+        />
       </div>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <h4 className="text-center f-w-500 mt-4 mb-3">Connexion</h4>

@@ -1,9 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import ChartMapRoutes from "./ChartMapRoutes";
-import ComponentsRoutes from "./ComponentsRoutes";
-import FormsRoutes from "./FormsRoutes";
-import OtherRoutes from "./OtherRoutes";
 import PagesRoutes from "./PagesRoutes";
 import NavigationRoutes from "./NavigationRoutes";
 import TablesRoutes from "./TablesRoutes";
@@ -22,15 +19,7 @@ const router = createBrowserRouter(
           <DashboardLayout />
         </ProtectedRoute>
       ),
-      children: [
-        NavigationRoutes,
-        FormsRoutes,
-        TablesRoutes,
-        ChartMapRoutes,
-        ComponentsRoutes,
-        ProfileRoutes,
-        OtherRoutes,
-      ],
+      children: [NavigationRoutes, TablesRoutes, ChartMapRoutes, ProfileRoutes],
     },
 
     PagesRoutes,

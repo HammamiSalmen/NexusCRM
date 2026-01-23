@@ -1,12 +1,12 @@
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import ClientsTable from "@/sections/clients/ClientsTable";
+import TableClients from "@/sections/clients/TableClients";
 
 export default function BasicTablePage() {
   return (
     <Row>
       <Col sm={12}>
-        <ClientsTable />
+        <TableClients />
       </Col>
     </Row>
   );

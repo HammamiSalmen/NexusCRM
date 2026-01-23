@@ -13,7 +13,7 @@ import api from "api/api";
 import toast from "react-hot-toast";
 import MainCard from "components/MainCard";
 
-export default function ClientsTable() {
+export default function TableClients() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);

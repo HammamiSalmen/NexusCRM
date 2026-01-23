@@ -3,7 +3,7 @@ import { lazy } from "react";
 import Loadable from "components/Loadable";
 import AdminRoute from "components/AdminRoute";
 
-const ClientsTable = Loadable(lazy(() => import("views/table/ClientsTable")));
+const TableClients = Loadable(lazy(() => import("views/table/TableClients")));
 const CreerClient = Loadable(
   lazy(() => import("@/sections/clients/CreerClient")),
 );
@@ -22,16 +22,15 @@ const TablesRoutes = {
   path: "tables",
   children: [
     {
-      path: "clients-table",
-      element: <ClientsTable />,
-      // children: [{ path: "basic-table", element: <BootstrapTableBasic /> }],
+      path: "Table-clients",
+      element: <TableClients />,
     },
     {
-      path: "creer-client",
+      path: "Creer-client",
       element: <CreerClient />,
     },
     {
-      path: "details-client/:id",
+      path: "Details-client/:id",
       element: <DetailsClient />,
     },
     {
