@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Client, Contact, Interaction, Notification
+from .models import Client, Contact, Interaction, Notification, Task
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -70,3 +70,10 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = ["id", "title", "message", "read", "created_at", "link"]
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = "__all__"
+        read_only_fields = ["created_by", "created_at"]

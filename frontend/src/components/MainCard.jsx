@@ -17,7 +17,6 @@ export default function MainCard({
 }) {
   return (
     <Card ref={ref} className={className}>
-      {/* Header Section */}
       {title && (
         <Card.Header className={headerClassName}>
           <Stack
@@ -33,7 +32,6 @@ export default function MainCard({
           </Stack>
         </Card.Header>
       )}
-      {/* Content */}
       {content && <Card.Body className={bodyClassName}>{children}</Card.Body>}
       {!content && children}
       {footer && (

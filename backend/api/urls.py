@@ -5,10 +5,12 @@ from .views import (
     ContactViewSet,
     CreateAdminBySuperAdminView,
     CreateSuperAdminView,
+    DashboardStatsView,
     InteractionViewSet,
     MyTokenObtainPairView,
     NotificationViewSet,
     RegisterAdminView,
+    TaskViewSet,
     # UserListView,
     UserViewSet,
 )
@@ -20,9 +22,11 @@ router.register(r"contacts", ContactViewSet, basename="contact")
 router.register(r"interactions", InteractionViewSet, basename="interaction")
 router.register(r"users", UserViewSet, basename="user")
 router.register(r"notifications", NotificationViewSet, basename="notification")
+router.register(r"tasks", TaskViewSet, basename="task")
 
 urlpatterns = [
     path("auth/register/", RegisterAdminView.as_view(), name="register"),
+    path("dashboard/", DashboardStatsView.as_view()),
     # path("users/", UserListView.as_view(), name="user-list"),
     path("auth/create-admin/", CreateAdminBySuperAdminView.as_view()),
     path("auth/create-superadmin/", CreateSuperAdminView.as_view()),

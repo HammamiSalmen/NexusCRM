@@ -4,14 +4,18 @@ from rest_framework import generics, viewsets, permissions, status, filters
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.db.models.functions import TruncWeek
+from django.db.models import Count, F
+from rest_framework.views import APIView
 from .serializers import (
+    TaskSerializer,
     UserSerializer,
     ClientSerializer,
     ContactSerializer,
     InteractionSerializer,
     NotificationSerializer,
 )
-from .models import Client, Contact, Interaction, Notification
+from .models import Client, Contact, Interaction, Notification, Task
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -278,3 +282,97 @@ class NotificationViewSet(viewsets.ModelViewSet):
     def delete_all(self, request):
         self.get_queryset().delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class TaskViewSet(viewsets.ModelViewSet):
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return Task.objects.all()
+        return Task.objects.filter(assigned_to=user)
+
+    def perform_create(self, serializer):
+        if not self.request.user.is_superuser:
+            raise PermissionDenied("Seul le chef peut créer des tâches")
+        serializer.save(created_by=self.request.user)
+
+    def perform_update(self, serializer):
+        user = self.request.user
+        task = self.get_object()
+        if user.is_superuser:
+            serializer.save()
+            return
+        if task.assigned_to != user:
+            raise PermissionDenied("Vous ne pouvez modifier que vos tâches")
+        allowed_fields = {"status"}
+        incoming_fields = set(serializer.validated_data.keys())
+        if not incoming_fields.issubset(allowed_fields):
+            raise PermissionDenied("Vous pouvez seulement modifier le statut")
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        if not self.request.user.is_superuser:
+            raise PermissionDenied("Seul le chef peut supprimer des tâches")
+        instance.delete()
+
+
+class DashboardStatsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        if user.is_superuser:
+            clients = Client.objects.all()
+            interactions = Interaction.objects.all()
+            tasks = Task.objects.all()
+        else:
+            clients = Client.objects.filter(user=user)
+            interactions = Interaction.objects.filter(client__user=user)
+            tasks = Task.objects.filter(assigned_to=user)
+
+        top_clients = clients.annotate(
+            interaction_count=Count("interactions")
+        ).order_by("-interaction_count")[:5]
+        recent_interactions = interactions.order_by("-dateInteraction")[:5]
+        clients_growth = (
+            clients.annotate(week=TruncWeek("dateCreationClient"))
+            .values("week")
+            .annotate(count=Count("id"))
+            .order_by("week")
+        )
+        data = {
+            "total_clients": clients.count(),
+            "total_interactions": interactions.count(),
+            "completed_tasks": tasks.filter(status="DONE").count(),  # Ajouté
+            "pending_tasks": tasks.filter(status="TODO").count(),
+            "clients_by_type": list(
+                clients.values("typeClient").annotate(count=Count("id"))
+            ),
+            "interactions_by_type": list(
+                interactions.values("typeInteraction").annotate(count=Count("id"))
+            ),
+            "top_clients": [
+                {"name": c.nomClient, "count": c.interaction_count, "id": c.id}
+                for c in top_clients
+            ],
+            "recent_interactions": [
+                {
+                    "client": i.client.nomClient,
+                    "type": i.typeInteraction,
+                    "date": i.dateInteraction,
+                    "comment": i.commInteraction[:30] + "...",
+                }
+                for i in recent_interactions
+            ],
+            "client_growth": [
+                {
+                    "date": c["week"].strftime("%d %b") if c["week"] else "N/A",
+                    "count": c["count"],
+                }
+                for c in clients_growth
+            ],
+        }
+        return Response(data)

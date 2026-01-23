@@ -70,3 +70,26 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notif pour {self.recipient}: {self.title}"
+
+
+class Task(models.Model):
+    STATUS_CHOICES = [
+        ("TODO", "À faire"),
+        ("IN_PROGRESS", "En cours"),
+        ("DONE", "Terminée"),
+    ]
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    due_date = models.DateTimeField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="TODO")
+
+    assigned_to = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="tasks"
+    )
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="created_tasks"
+    )
+
+    def __str__(self):
+        return self.title

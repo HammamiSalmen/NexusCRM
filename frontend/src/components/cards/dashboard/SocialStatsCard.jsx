@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+/* import PropTypes from "prop-types";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -56,3 +56,4 @@ SocialStatsCard.propTypes = {
   color: PropTypes.string,
   stats: PropTypes.array,
 };
+ */

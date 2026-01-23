@@ -1,156 +1,131 @@
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import SalesPerformanceCard from "components/cards/dashboard/SalesPerformanceCard";
-import SocialStatsCard from "components/cards/dashboard/SocialStatsCard";
-import StatIndicatorCard from "components/cards/dashboard/StatIndicatorCard";
-import {
-  UsersMap,
-  EarningChart,
-  RatingCard,
-  RecentUsersCard,
-} from "sections/dashboard/default";
-
-const salesPerformanceData = [
-  {
-    title: "Daily Sales",
-    icon: "ph ph-arrow-up text-success",
-    amount: "$ 249.95",
-    progress: { now: 67, className: "bg-brand-color-1" },
-  },
-  {
-    title: "Monthly Sales",
-    icon: "ph ph-arrow-down text-danger",
-    amount: "$ 2,942.32",
-    progress: { now: 36, className: "bg-brand-color-2" },
-  },
-  {
-    title: "Yearly Sales",
-    icon: "ph ph-arrow-up text-success",
-    amount: "$ 8,638.32",
-    progress: { now: 80, className: "bg-brand-color-1" },
-  },
-];
-
-const statIndicatorData = [
-  {
-    icon: "ph ph-lightbulb-filament",
-    value: "235",
-    label: "TOTAL IDEAS",
-    iconColor: "text-success",
-  },
-  {
-    icon: "ph ph-map-pin-line",
-    value: "26",
-    label: "TOTAL LOCATION",
-    iconColor: "text-primary",
-  },
-];
-
-const socialStatsData = [
-  {
-    icon: "ti ti-brand-facebook-filled text-primary",
-    count: "12,281",
-    percentage: "+7.2%",
-    color: "text-success",
-    stats: [
-      {
-        label: "Target",
-        value: "35,098",
-        progress: {
-          now: 60,
-          className: "bg-brand-color-1",
-        },
-      },
-      {
-        label: "Duration",
-        value: "3,539",
-        progress: {
-          now: 45,
-          className: "bg-brand-color-2",
-        },
-      },
-    ],
-  },
-  {
-    icon: "ti ti-brand-twitter-filled text-info",
-    count: "11,200",
-    percentage: "+6.2%",
-    color: "text-primary",
-    stats: [
-      {
-        label: "Target",
-        value: "34,185",
-        progress: {
-          now: 40,
-          className: "bg-success",
-        },
-      },
-      {
-        label: "Duration",
-        value: "4,567",
-        progress: {
-          now: 70,
-        },
-      },
-    ],
-  },
-  {
-    icon: "ti ti-brand-google-filled text-danger",
-    count: "10,500",
-    percentage: "+5.9%",
-    color: "text-primary",
-    stats: [
-      {
-        label: "Target",
-        value: "25,998",
-        progress: {
-          now: 80,
-          className: "bg-brand-color-1",
-        },
-      },
-      {
-        label: "Duration",
-        value: "7,753",
-        progress: {
-          now: 50,
-          className: "bg-brand-color-2",
-        },
-      },
-    ],
-  },
-];
+import { useEffect, useState } from "react";
+import { Row, Col, Spinner, Alert } from "react-bootstrap";
+import MainCard from "components/MainCard";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import api from "../../../api/api";
+import AnalyticEcommerce from "../../../components/cards/dashboard/AnalyticEcommerce";
+import ClientGrowthChart from "../../../components/cards/dashboard/ClientGrowthChart";
+import RecentInteractionsTable from "../../../components/cards/dashboard/RecentInteractionsTable";
+import InteractionsByTypeChart from "../../../components/cards/dashboard/InteractionsByTypeChart";
 
 export default function DefaultPage() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    api
+      .get("api/dashboard/")
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.error("Dashboard error", err);
+        setError("Impossible de charger les données du tableau de bord.");
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "300px" }}
+      >
+        <Spinner animation="border" variant="primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <Alert variant="danger">{error}</Alert>;
+  }
+
+  if (!data) {
+    return <Alert variant="warning">Aucune donnée reçue.</Alert>;
+  }
+
   return (
-    <Row>
-      {salesPerformanceData.map((item, index) => (
-        <Col key={index} md={index === 2 ? 12 : 6} xl={4}>
-          <SalesPerformanceCard {...item} />
+    <>
+      <Row className="mb-4 g-3">
+        <Col md={3}>
+          <AnalyticEcommerce
+            title="Total Clients"
+            count={data.total_clients}
+            icon="bi bi-people"
+            color="primary"
+          />
         </Col>
-      ))}
-
-      <Col md={6} xl={8}>
-        <UsersMap />
-      </Col>
-      <Col md={6} xl={4}>
-        <>
-          <EarningChart />
-          <StatIndicatorCard data={statIndicatorData} />
-        </>
-      </Col>
-
-      {socialStatsData.map((item, index) => (
-        <Col key={index} md={index === 0 ? 12 : 6} xl={4}>
-          <SocialStatsCard {...item} />
+        <Col md={3}>
+          <AnalyticEcommerce
+            title="Total Interactions"
+            count={data.total_interactions}
+            icon="bi bi-chat-dots"
+            color="info"
+          />
         </Col>
-      ))}
-
-      <Col md={6} xl={4}>
-        <RatingCard />
-      </Col>
-      <Col md={6} xl={8}>
-        <RecentUsersCard />
-      </Col>
-    </Row>
+        <Col md={3}>
+          <AnalyticEcommerce
+            title="Tâches Accomplies"
+            count={data.completed_tasks}
+            icon="bi bi-check-circle"
+            color="success"
+          />
+        </Col>
+        <Col md={3}>
+          <AnalyticEcommerce
+            title="Tâches en Attente"
+            count={data.pending_tasks}
+            icon="bi bi-clock-history"
+            color="danger"
+          />
+        </Col>
+      </Row>
+      <Row className="mb-4 g-3">
+        <Col md={4}>
+          <InteractionsByTypeChart
+            title="Nombre de clients par type"
+            data={data.clients_by_type || []}
+            isPie={true}
+          />
+        </Col>
+        <Col md={8}>
+          <Row className="g-3 h-100">
+            <Col md={12} style={{ height: "50%" }}>
+              <ClientGrowthChart data={data.client_growth || []} />
+            </Col>
+            <Col md={12} style={{ height: "48%" }}>
+              <InteractionsByTypeChart
+                title="Interactions par type"
+                data={data.interactions_by_type || []}
+                isPie={false}
+              />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      <Row className="g-3">
+        <Col md={8}>
+          <RecentInteractionsTable data={data.recent_interactions || []} />
+        </Col>
+        <Col md={4}>
+          <MainCard title="Clients les plus actifs">
+            {data.top_clients.map((client, index) => (
+              <div key={index} className="mb-4">
+                <div className="d-flex justify-content-between mb-1">
+                  <span className="fw-bold">{client.name}</span>
+                  <span className="fw-bold">{client.count} interactions</span>
+                </div>
+                <ProgressBar
+                  now={(client.count / (data.top_clients[0]?.count || 1)) * 100}
+                  variant={index % 2 === 0 ? "success" : "primary"}
+                  style={{ height: "8px" }}
+                />
+              </div>
+            ))}
+          </MainCard>
+        </Col>
+      </Row>
+    </>
   );
 }
