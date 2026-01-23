@@ -4,20 +4,20 @@ import {
   Button,
   Pagination,
   Stack,
-  Form,
   Row,
   Col,
+  Dropdown,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import api from "api/api";
 import toast from "react-hot-toast";
 import MainCard from "components/MainCard";
 
-export default function TableClients() {
+export default function ClientsTable() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortType, setSortType] = useState("date-desc");
+  const [sortType, setSortType] = useState("name-asc");
   const [filterMode, setFilterMode] = useState("all");
   const itemsPerPage = 6;
   const navigate = useNavigate();
@@ -79,6 +79,13 @@ export default function TableClients() {
     setCurrentPage(pageNumber);
   };
 
+  const sortLabels = {
+    "date-desc": "Plus récents",
+    "date-asc": "Plus anciens",
+    "name-asc": "Nom (A-Z)",
+    "name-desc": "Nom (Z-A)",
+  };
+
   const getAvatarColor = (name) => {
     const colors = [
       "#1abc9c",
@@ -132,42 +139,108 @@ export default function TableClients() {
       <MainCard
         title={
           <Row className="align-items-center g-3">
-            <Col md={4}>
-              <h4 className="mb-0">Liste des clients</h4>
-            </Col>
-            <Col md={8}>
-              <Row className="justify-content-end g-2">
-                {user.is_superuser && (
-                  <Col md={3}>
-                    <Form.Select
-                      size="sm"
-                      value={filterMode}
-                      onChange={(e) => {
-                        setFilterMode(e.target.value);
-                        setCurrentPage(1);
-                      }}
-                    >
-                      <option value="all">Tous les clients</option>
-                      <option value="mine">Mes clients uniquement</option>
-                    </Form.Select>
-                  </Col>
-                )}
-                <Col md={3}>
-                  <Form.Select
+            <Col md={4}></Col>
+            <Col
+              md={8}
+              className="d-flex justify-content-md-end align-items-center gap-3"
+            >
+              {user.is_superuser && (
+                <div className="bg-light p-1 rounded-3 d-flex shadow-sm border">
+                  <Button
+                    variant={filterMode === "all" ? "white" : "transparent"}
                     size="sm"
-                    value={sortType}
-                    onChange={(e) => {
-                      setSortType(e.target.value);
+                    className={`rounded-2 px-3 border-0 ${filterMode === "all" ? "shadow-sm fw-bold" : "text-muted"}`}
+                    onClick={() => {
+                      setFilterMode("all");
                       setCurrentPage(1);
                     }}
                   >
-                    <option value="date-desc">Plus récent au début</option>
-                    <option value="date-asc">Plus ancien au début</option>
-                    <option value="name-asc">Nom (A-Z)</option>
-                    <option value="name-desc">Nom (Z-A)</option>
-                  </Form.Select>
-                </Col>
-              </Row>
+                    Tous
+                  </Button>
+                  <Button
+                    variant={filterMode === "mine" ? "white" : "transparent"}
+                    size="sm"
+                    className={`rounded-2 px-3 border-0 ${filterMode === "mine" ? "shadow-sm fw-bold" : "text-muted"}`}
+                    onClick={() => {
+                      setFilterMode("mine");
+                      setCurrentPage(1);
+                    }}
+                  >
+                    Mes clients
+                  </Button>
+                </div>
+              )}
+              <div
+                className="vr d-none d-md-block"
+                style={{ height: "20px", opacity: 0.1 }}
+              ></div>
+              <Dropdown align="end">
+                <Dropdown.Toggle
+                  variant="link"
+                  id="dropdown-sort"
+                  className="text-decoration-none text-dark p-0 d-flex align-items-center fw-medium"
+                >
+                  <div
+                    className="bg-light rounded-circle p-2 me-2 d-flex align-items-center justify-content-center border"
+                    style={{ width: "32px", height: "32px" }}
+                  >
+                    <i
+                      className="ph ph-sliders-horizontal"
+                      style={{ fontSize: "1.1rem" }}
+                    />
+                  </div>
+                  <span className="small">{sortLabels[sortType]}</span>
+                </Dropdown.Toggle>
+                <Dropdown.Menu
+                  className="shadow border-0 py-2"
+                  style={{ borderRadius: "12px" }}
+                >
+                  <Dropdown.Header className="text-uppercase small fw-bold text-muted">
+                    Trier par nom
+                  </Dropdown.Header>
+                  <Dropdown.Item
+                    className="py-2"
+                    onClick={() => {
+                      setSortType("name-asc");
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <i className="ph ph-sort-ascending me-2" /> Nom (A-Z)
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className="py-2"
+                    onClick={() => {
+                      setSortType("name-desc");
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <i className="ph ph-sort-descending me-2" /> Nom (Z-A)
+                  </Dropdown.Item>
+                  <Dropdown.Divider className="opacity-50" />
+                  <Dropdown.Header className="text-uppercase small fw-bold text-muted">
+                    Trier par date
+                  </Dropdown.Header>
+                  <Dropdown.Item
+                    className="py-2"
+                    onClick={() => {
+                      setSortType("date-desc");
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <i className="ph ph-calendar-plus me-2 text-primary" /> Plus
+                    récents
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className="py-2"
+                    onClick={() => {
+                      setSortType("date-asc");
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <i className="ph ph-calendar-minus me-2" /> Plus anciens
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </Col>
           </Row>
         }

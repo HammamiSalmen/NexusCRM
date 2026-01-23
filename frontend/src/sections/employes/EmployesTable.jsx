@@ -8,7 +8,7 @@ import {
   Form,
   Row,
   Col,
-  Stack,
+  Dropdown,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import api from "api/api";
@@ -111,6 +111,13 @@ export default function EmployesTable() {
     return filtered;
   };
 
+  const sortLabels = {
+    "date-desc": "Plus récents",
+    "date-asc": "Plus anciens",
+    "name-asc": "Nom (A-Z)",
+    "name-desc": "Nom (Z-A)",
+  };
+
   const processedEmployees = getProcessedEmployees();
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -136,41 +143,112 @@ export default function EmployesTable() {
       <MainCard
         title={
           <Row className="align-items-center g-3">
-            <Col md={4}>
-              <h4 className="mb-0">Liste des employés</h4>
-            </Col>
-            <Col md={8}>
-              <Row className="justify-content-end g-2">
-                <Col md={3}>
-                  <Form.Select
-                    size="sm"
-                    value={roleFilter}
-                    onChange={(e) => {
-                      setRoleFilter(e.target.value);
+            <Col md={4}></Col>
+            <Col
+              md={8}
+              className="d-flex justify-content-md-end align-items-center gap-3"
+            >
+              <div className="bg-light p-1 rounded-3 d-flex shadow-sm border">
+                <Button
+                  variant={roleFilter === "all" ? "white" : "transparent"}
+                  size="sm"
+                  className={`rounded-2 px-3 border-0 ${roleFilter === "all" ? "shadow-sm fw-bold" : "text-muted"}`}
+                  onClick={() => {
+                    setRoleFilter("all");
+                    setCurrentPage(1);
+                  }}
+                >
+                  Tous
+                </Button>
+                <Button
+                  variant={roleFilter === "admin" ? "white" : "transparent"}
+                  size="sm"
+                  className={`rounded-2 px-3 border-0 ${roleFilter === "admin" ? "shadow-sm fw-bold" : "text-muted"}`}
+                  onClick={() => {
+                    setRoleFilter("admin");
+                    setCurrentPage(1);
+                  }}
+                >
+                  Administrateur
+                </Button>
+                <Button
+                  variant={roleFilter === "staff" ? "white" : "transparent"}
+                  size="sm"
+                  className={`rounded-2 px-3 border-0 ${roleFilter === "staff" ? "shadow-sm fw-bold" : "text-muted"}`}
+                  onClick={() => {
+                    setRoleFilter("staff");
+                    setCurrentPage(1);
+                  }}
+                >
+                  Employé
+                </Button>
+              </div>
+              <div
+                className="vr d-none d-md-block"
+                style={{ height: "20px", opacity: 0.1 }}
+              ></div>
+              <Dropdown align="end">
+                <Dropdown.Toggle
+                  variant="link"
+                  className="text-decoration-none text-dark p-0 d-flex align-items-center fw-medium"
+                >
+                  <div
+                    className="bg-light rounded-circle p-2 me-2 d-flex align-items-center justify-content-center border"
+                    style={{ width: "32px", height: "32px" }}
+                  >
+                    <i
+                      className="ph ph-sliders-horizontal"
+                      style={{ fontSize: "1.1rem" }}
+                    />
+                  </div>
+                  <span className="small">{sortLabels[sortType]}</span>
+                </Dropdown.Toggle>
+                <Dropdown.Menu
+                  className="shadow border-0 py-2"
+                  style={{ borderRadius: "12px" }}
+                >
+                  <Dropdown.Header className="text-uppercase small fw-bold text-muted">
+                    Nom
+                  </Dropdown.Header>
+                  <Dropdown.Item
+                    onClick={() => {
+                      setSortType("name-asc");
                       setCurrentPage(1);
                     }}
                   >
-                    <option value="all">Tous les rôles</option>
-                    <option value="admin">Administrateurs</option>
-                    <option value="staff">Employés</option>
-                  </Form.Select>
-                </Col>
-                <Col md={3}>
-                  <Form.Select
-                    size="sm"
-                    value={sortType}
-                    onChange={(e) => {
-                      setSortType(e.target.value);
+                    <i className="ph ph-text-aa me-2" /> Nom (A-Z)
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      setSortType("name-desc");
                       setCurrentPage(1);
                     }}
                   >
-                    <option value="name-asc">Nom (A-Z)</option>
-                    <option value="name-desc">Nom (Z-A)</option>
-                    <option value="date-desc">Plus récent</option>
-                    <option value="date-asc">Plus ancien</option>
-                  </Form.Select>
-                </Col>
-              </Row>
+                    <i className="ph ph-text-aa me-2" /> Nom (Z-A)
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Header className="text-uppercase small fw-bold text-muted">
+                    Date d'arrivée
+                  </Dropdown.Header>
+                  <Dropdown.Item
+                    onClick={() => {
+                      setSortType("date-desc");
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <i className="ph ph-calendar-plus me-2 text-primary" /> Plus
+                    récent
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      setSortType("date-asc");
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <i className="ph ph-calendar-minus me-2" /> Plus ancien
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </Col>
           </Row>
         }

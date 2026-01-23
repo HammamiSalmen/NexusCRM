@@ -156,9 +156,13 @@ export default function Kanban() {
     <>
       <Row className="mb-3">
         {isSuperUser && (
-          <Col className="text-end">
-            <Button variant="primary" onClick={() => setShowModal(true)}>
-              + Nouvelle tâche
+          <Col direction="horizontal" justifyContent="between" className="mb-4">
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => setShowModal(true)}
+            >
+              <i className="ph ph-plus-circle me-1" /> Nouvelle tâche
             </Button>
           </Col>
         )}
