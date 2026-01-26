@@ -3,7 +3,6 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import ChartMapRoutes from "./ChartMapRoutes";
 import ComponentsRoutes from "./ComponentsRoutes";
 import FormsRoutes from "./FormsRoutes";
-import OtherRoutes from "./OtherRoutes";
 import PagesRoutes from "./PagesRoutes";
 import NavigationRoutes from "./NavigationRoutes";
 import TablesRoutes from "./TablesRoutes";
@@ -29,7 +28,6 @@ const router = createBrowserRouter(
         ChartMapRoutes,
         ComponentsRoutes,
         ProfileRoutes,
-        OtherRoutes,
       ],
     },
 

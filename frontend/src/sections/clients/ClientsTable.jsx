@@ -80,8 +80,8 @@ export default function ClientsTable() {
   };
 
   const sortLabels = {
-    "date-desc": "Plus récents",
-    "date-asc": "Plus anciens",
+    "date-desc": "Les plus récents",
+    "date-asc": "Les plus anciens",
     "name-asc": "Nom (A-Z)",
     "name-desc": "Nom (Z-A)",
   };
@@ -133,7 +133,7 @@ export default function ClientsTable() {
           size="lg"
           onClick={() => navigate("/tables/creer-client")}
         >
-          <i className="ph ph-plus-circle me-1" /> Créer un nouveau client
+          <i className="ph ph-plus-circle me-1" /> Ajouter un nouveau client
         </Button>
       </Stack>
       <MainCard
@@ -218,7 +218,7 @@ export default function ClientsTable() {
                   </Dropdown.Item>
                   <Dropdown.Divider className="opacity-50" />
                   <Dropdown.Header className="text-uppercase small fw-bold text-muted">
-                    Trier par date
+                    Date d'arrivée
                   </Dropdown.Header>
                   <Dropdown.Item
                     className="py-2"
@@ -286,7 +286,7 @@ export default function ClientsTable() {
             {!loading && processedClients.length === 0 && (
               <tr>
                 <td colSpan="4" className="text-center py-4">
-                  Aucun client trouvé
+                  Aucun client n'a été trouvé.
                 </td>
               </tr>
             )}

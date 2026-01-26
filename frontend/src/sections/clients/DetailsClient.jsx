@@ -123,7 +123,7 @@ const DetailsClient = () => {
       });
       setLoading(false);
     } catch (err) {
-      toast.error("Impossible de charger le client");
+      toast.error("Impossible de charger les données du client");
       navigate("/tables/clients-table");
     }
   };
@@ -142,11 +142,11 @@ const DetailsClient = () => {
     setIsSubmitting(true);
     try {
       await api.patch(`/api/clients/${id}/`, data);
-      toast.success("Informations client mises à jour");
+      toast.success("Informations client mises à jour avec succès");
       setShowClientModal(false);
       fetchClientData();
     } catch (error) {
-      toast.error("Erreur de mise à jour");
+      toast.error("Erreur lors de la mise à jour");
     } finally {
       setIsSubmitting(false);
     }
@@ -155,7 +155,7 @@ const DetailsClient = () => {
   const handleDeleteClient = () => {
     Swal.fire({
       title: "Supprimer le client ?",
-      text: `Cela supprimera ${client.nomClient} et tous ses contacts de façon définitive.`,
+      text: `Cette action supprimera définitivement ${client.nomClient} et l'ensemble de ses contacts.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#e74c3c",
@@ -164,7 +164,7 @@ const DetailsClient = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         api.delete(`/api/clients/${id}/`).then(() => {
-          toast.success("Client supprimé");
+          toast.success("Client supprimé avec succès");
           navigate("/tables/clients-table");
         });
       }
@@ -197,7 +197,7 @@ const DetailsClient = () => {
         updatedContacts = updatedContacts.map((c) =>
           c.id === selectedContact.id ? { ...c, ...payload } : c,
         );
-        toast.success("Contact modifié");
+        toast.success("Contact modifié avec succès");
       } else {
         const res = await api.post(`/api/contacts/`, payload);
         if (data.isPrincipal) {
@@ -208,7 +208,7 @@ const DetailsClient = () => {
           isPrincipal: data.isPrincipal === true,
         };
         updatedContacts.push(newContact);
-        toast.success("Contact ajouté");
+        toast.success("Contact ajouté avec succès");
       }
       if (data.isPrincipal) {
         localStorage.setItem(
@@ -221,7 +221,7 @@ const DetailsClient = () => {
       }
       if (!updatedContacts.some((c) => c.isPrincipal)) {
         updatedContacts[0].isPrincipal = true;
-        toast.error("Minimum un contact principal doit être spécifié");
+        toast.error("Au moins un contact principal doit être spécifié");
       }
       setClient((prev) => ({
         ...prev,
@@ -229,7 +229,7 @@ const DetailsClient = () => {
       }));
       setShowContactModal(false);
     } catch (error) {
-      toast.error("Erreur d'enregistrement");
+      toast.error("Erreur lors de l'enregistrement");
     } finally {
       setIsSubmitting(false);
     }
@@ -238,15 +238,16 @@ const DetailsClient = () => {
   const handleDeleteContact = (contact) => {
     Swal.fire({
       title: "Supprimer ce contact ?",
-      text: `${contact.prenomContact} ${contact.nomContact} sera retiré.`,
+      text: `${contact.prenomContact} ${contact.nomContact} sera retiré définitivement.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#e74c3c",
       confirmButtonText: "Supprimer",
+      cancelButtonText: "Annuler",
     }).then((result) => {
       if (result.isConfirmed) {
         api.delete(`/api/contacts/${contact.id}/`).then(() => {
-          toast.success("Contact supprimé");
+          toast.success("Contact supprimé avec succès");
           fetchClientData();
         });
       }
@@ -270,7 +271,7 @@ const DetailsClient = () => {
       contacts: updated,
     }));
     toast.success(
-      `${updated[indexToSet].prenomContact} est maintenant le contact principal`,
+      `${updated[indexToSet].prenomContact} est désormais le contact principal`,
     );
   };
 
@@ -386,7 +387,7 @@ const DetailsClient = () => {
                       {contact.prenomContact} {contact.nomContact}
                     </h6>
                     <p className="text-muted small mb-3 text-truncate">
-                      {contact.posteContact || "Aucun poste"}
+                      {contact.posteContact || "Aucun poste défini"}
                     </p>
                     <div className="bg-light p-2 rounded text-start mb-3">
                       <div className="small text-truncate mb-1">
@@ -456,10 +457,12 @@ const DetailsClient = () => {
         <Form onSubmit={handleSubClient(onUpdateClient)}>
           <Modal.Body className="p-4">
             <Form.Group className="mb-3">
-              <Form.Label className="fw-bold small">NOM DU CLIENT</Form.Label>
+              <Form.Label>
+                Nom client <span className="text-danger">*</span>
+              </Form.Label>
               <Form.Control
                 {...regClient("nomClient", {
-                  required: "Nom du client est requis",
+                  required: "Le nom du client est requis",
                 })}
                 isInvalid={!!errClient.nomClient}
               />
@@ -468,7 +471,9 @@ const DetailsClient = () => {
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-0">
-              <Form.Label className="fw-bold small">TYPE DE CLIENT</Form.Label>
+              <Form.Label>
+                Type <span className="text-danger">*</span>
+              </Form.Label>
               <Form.Select {...regClient("typeClient")}>
                 <option value="PARTICULIER">Particulier</option>
                 <option value="ENTREPRISE">Entreprise</option>
@@ -495,8 +500,8 @@ const DetailsClient = () => {
         <Modal.Header closeButton className="bg-light">
           <Modal.Title>
             {selectedContact
-              ? "Éditer le contact"
-              : "Nouveau contact pour " + client.nomClient}
+              ? "Modifier les coordonnées du contact"
+              : "Ajouter un nouveau contact " + client.nomClient}
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubContact(onSaveContact)}>
@@ -533,7 +538,7 @@ const DetailsClient = () => {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Adresse E-mail <span className="text-danger">*</span>
+                    Adresse e-mail <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="email"
@@ -566,7 +571,7 @@ const DetailsClient = () => {
                   </Form.Label>
                   <Form.Control
                     {...regContact("adresseContact", {
-                      required: "Adresse est requis",
+                      required: "L'adresse est requise.",
                     })}
                     isInvalid={!!errorsContact.adresseContact}
                   />
@@ -588,14 +593,15 @@ const DetailsClient = () => {
                   <Form.Check
                     type="checkbox"
                     id="isPrincipal"
-                    label="Définir comme contact principal"
+                    label="Définir en tant que contact principal"
                     {...regContact("isPrincipal")}
                     className="fw-bold text-primary"
                   />
                   {watchContact("isPrincipal") && (
                     <Form.Text className="text-info d-block animate__animated animate__fadeIn">
                       <i className="ti ti-info-circle me-1" />
-                      Ce contact sera mis en avant sur la fiche client.
+                      Ce contact sera la référence principale sur la fiche de ce
+                      client.
                     </Form.Text>
                   )}
                 </Form.Group>

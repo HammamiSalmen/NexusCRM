@@ -68,13 +68,13 @@ export default function EmployesTable() {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       if (!user?.is_superuser) {
-        toast.error("Accès non autorisé");
+        toast.error("Accès non autorisé.");
         return navigate("/dashboard");
       }
       const response = await api.get("/api/users/");
       setEmployees(response.data);
     } catch (error) {
-      toast.error("Erreur chargement employés");
+      toast.error("Erreur lors du chargement des employés.");
     } finally {
       setLoading(false);
     }
@@ -112,8 +112,8 @@ export default function EmployesTable() {
   };
 
   const sortLabels = {
-    "date-desc": "Plus récents",
-    "date-asc": "Plus anciens",
+    "date-desc": "Les plus récents",
+    "date-asc": "Les plus anciens",
     "name-asc": "Nom (A-Z)",
     "name-desc": "Nom (Z-A)",
   };
@@ -138,7 +138,7 @@ export default function EmployesTable() {
         className="mb-4"
         onClick={() => navigate("/tables/creer-employe")}
       >
-        <i className="ph ph-plus-circle me-1" /> Créer un nouvel employé
+        <i className="ph ph-plus-circle me-1" /> Ajouter un nouvel employé
       </Button>
       <MainCard
         title={
@@ -169,7 +169,7 @@ export default function EmployesTable() {
                     setCurrentPage(1);
                   }}
                 >
-                  Administrateur
+                  Administrateurs
                 </Button>
                 <Button
                   variant={roleFilter === "staff" ? "white" : "transparent"}
@@ -180,7 +180,7 @@ export default function EmployesTable() {
                     setCurrentPage(1);
                   }}
                 >
-                  Employé
+                  Employés
                 </Button>
               </div>
               <div
@@ -208,7 +208,7 @@ export default function EmployesTable() {
                   style={{ borderRadius: "12px" }}
                 >
                   <Dropdown.Header className="text-uppercase small fw-bold text-muted">
-                    Nom
+                    Trier par nom
                   </Dropdown.Header>
                   <Dropdown.Item
                     onClick={() => {
@@ -237,7 +237,7 @@ export default function EmployesTable() {
                     }}
                   >
                     <i className="ph ph-calendar-plus me-2 text-primary" /> Plus
-                    récent
+                    récents
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
@@ -245,7 +245,7 @@ export default function EmployesTable() {
                       setCurrentPage(1);
                     }}
                   >
-                    <i className="ph ph-calendar-minus me-2" /> Plus ancien
+                    <i className="ph ph-calendar-minus me-2" /> Plus anciens
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -318,7 +318,7 @@ export default function EmployesTable() {
             {!loading && processedEmployees.length === 0 && (
               <tr>
                 <td colSpan="5" className="text-center py-4">
-                  Aucun employé trouvé
+                  Aucun employé n'a été trouvé.
                 </td>
               </tr>
             )}
@@ -327,7 +327,9 @@ export default function EmployesTable() {
         {processedEmployees.length > itemsPerPage && (
           <div className="d-flex justify-content-between align-items-center p-3 border-top">
             <div className="text-muted small">
-              {processedEmployees.length} employé(s) trouvé(s)
+              Affichage de {indexOfFirstItem + 1} à{" "}
+              {Math.min(indexOfLastItem, processedEmployees.length)} sur{" "}
+              {processedEmployees.length} employés
             </div>
             <Pagination className="mb-0">
               <Pagination.First

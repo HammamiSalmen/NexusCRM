@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import api from "../../api/api";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 import MainCard from "components/MainCard";
-import DarkLogo from "assets/images/logo-transparent.png";
+import DarkLogo from "assets/images/logo-transparent-noir.png";
 import toast from "react-hot-toast";
 
 export default function AuthLoginForm({ className, link }) {
@@ -32,7 +32,7 @@ export default function AuthLoginForm({ className, link }) {
       toast.success(`Bienvenue, ${user.username} !`);
       navigate("/");
     } catch (error) {
-      toast.error("Identifiants invalides ou erreur serveur.");
+      toast.error("Identifiants incorrects ou erreur serveur.");
       console.error("Login error", error);
     }
   };
@@ -45,8 +45,8 @@ export default function AuthLoginForm({ className, link }) {
           alt="NexusCRM"
           style={{
             maxHeight: "100%",
-            marginLeft: "1px",
-            height: "90px",
+            height: "100px",
+            width: "160px",
           }}
         />
       </div>
@@ -59,7 +59,9 @@ export default function AuthLoginForm({ className, link }) {
           <Form.Control
             type="text"
             placeholder="Nom d'utilisateur"
-            {...register("username", { required: "Nom d'utilisateur requis" })}
+            {...register("username", {
+              required: "Le nom d'utilisateur est requis",
+            })}
             isInvalid={!!errors.username}
           />
           <Form.Control.Feedback type="invalid">
@@ -72,7 +74,9 @@ export default function AuthLoginForm({ className, link }) {
             <Form.Control
               type={showPassword ? "text" : "password"}
               placeholder="Mot de passe"
-              {...register("password", { required: "Mot de passe requis" })}
+              {...register("password", {
+                required: "Le mot de passe est requis",
+              })}
               isInvalid={!!errors.password}
             />
             <Button onClick={() => setShowPassword(!showPassword)}>

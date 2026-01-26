@@ -52,7 +52,7 @@ export default function Kanban() {
   const deleteTask = (taskId) => {
     Swal.fire({
       title: "Supprimer cette tâche ?",
-      text: "Cette action est irréversible",
+      text: "Cette action est irréversible.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -64,11 +64,11 @@ export default function Kanban() {
         api
           .delete(`api/tasks/${taskId}/`)
           .then(() => {
-            toast.success("Tâche supprimée");
+            toast.success("Tâche supprimée avec succès");
             fetchTasks();
           })
           .catch(() => {
-            toast.error("Erreur lors de la suppression");
+            toast.error("Une erreur est survenue lors de la suppression");
           });
       }
     });
@@ -84,7 +84,7 @@ export default function Kanban() {
       return;
     }
     if (!newTask.assigned_to) {
-      toast.error("Veuillez assigner la tâche");
+      toast.error("Veuillez assigner un responsable à la tâche");
       return;
     }
     try {
@@ -112,7 +112,7 @@ export default function Kanban() {
         status: "TODO",
       });
     } catch {
-      toast.error("Erreur lors de l’enregistrement");
+      toast.error("Erreur lors de l'enregistrement des données");
     }
   };
 
@@ -142,11 +142,11 @@ export default function Kanban() {
         status: destination.droppableId,
       })
       .then(() => {
-        toast.success("Statut mis à jour");
+        toast.success("Le statut a été mis à jour");
         fetchTasks();
       })
       .catch(() => {
-        toast.error("Impossible de modifier le statut");
+        toast.error("Impossible de modifier le statut de la tâche");
       });
   };
 
@@ -186,7 +186,7 @@ export default function Kanban() {
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>
-            {editingTask ? "Modifier la tâche" : "Nouvelle tâche"}
+            {editingTask ? "Modifier la tâche" : "Créer une nouvelle tâche"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -248,7 +248,7 @@ export default function Kanban() {
             Annuler
           </Button>
           <Button variant="primary" onClick={handleSaveTask}>
-            {editingTask ? "Enregistrer" : "Créer"}
+            {editingTask ? "Enregistrer les modifications" : "Créer la tâche"}
           </Button>
         </Modal.Footer>
       </Modal>

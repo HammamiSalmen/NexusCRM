@@ -46,11 +46,11 @@ export default function KanbanColumn({
             {...provided.droppableProps}
             style={{
               minHeight: "600px",
-              background: snapshot.isDraggingOver ? "#e2e6ea" : "#f4f6f8",
               padding: "12px",
               borderRadius: "0 0 8px 8px",
               transition: "background-color 0.2s ease",
             }}
+            className={`kanban-dropzone ${snapshot.isDraggingOver ? "is-dragging" : ""}`}
           >
             {tasks.map((task, index) => (
               <Draggable
@@ -83,7 +83,7 @@ export default function KanbanColumn({
                             bg={task.priority === "HIGH" ? "danger" : "info"}
                             style={{ fontSize: "10px" }}
                           >
-                            {task.priority}
+                            {task.priority === "HIGH" ? "URGENT" : "NORMAL"}
                           </Badge>
                         )}
                       </Stack>

@@ -1,4 +1,4 @@
-import { lazy } from "react";
+/* import { lazy } from "react";
 import Loadable from "components/Loadable";
 // import DashboardLayout from "layout/Dashboard";
 
@@ -14,3 +14,4 @@ const OtherRoutes = {
 };
 
 export default OtherRoutes;
+ */

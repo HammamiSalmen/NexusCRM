@@ -5,7 +5,7 @@ const profileMenu = {
   children: [
     {
       id: "profile",
-      title: "Mon Profil",
+      title: "Mon profil",
       type: "item",
       url: "/profile",
       icon: "ph ph-user",

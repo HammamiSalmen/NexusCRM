@@ -4,7 +4,12 @@ import MainCard from "components/MainCard";
 export default function InteractionsByTypeChart({ data, title, isPie }) {
   const series = isPie
     ? data.map((item) => item.count)
-    : [{ name: "Total", data: data.map((item) => item.count) }];
+    : [
+        {
+          name: "Total des interactions",
+          data: data.map((item) => item.count),
+        },
+      ];
 
   const options = {
     chart: {
@@ -30,7 +35,7 @@ export default function InteractionsByTypeChart({ data, title, isPie }) {
     dataLabels: {
       enabled: true,
       formatter: function (val) {
-        return `${Math.round(val)}%`;
+        return `${Math.round(val)} %`;
       },
       style: {
         fontSize: "14px",

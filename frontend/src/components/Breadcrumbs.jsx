@@ -69,8 +69,8 @@ export default function Breadcrumbs() {
       <div className="page-header">
         <div className="page-block">
           <Row className="align-items-center">
-            <Col md={12} className="page-header-title text-capitalize">
-              <h5>{item.title}</h5>
+            <Col md={12} className="page-header-title">
+              <h5 style={{ textTransform: "none" }}>{item.title}</h5>
             </Col>
             <Col md={12}>
               <Breadcrumb listProps={{ style: { marginBottom: 0 } }}>

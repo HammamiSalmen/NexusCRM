@@ -24,7 +24,7 @@ export default function DefaultPage() {
         }
       })
       .catch((err) => {
-        console.error("Dashboard error", err);
+        console.error("Erreur Tableau de bord", err);
         toast.error(
           "Impossible de charger les statistiques du tableau de bord.",
         );
@@ -115,7 +115,7 @@ export default function DefaultPage() {
                 <div className="d-flex justify-content-between mb-1">
                   <span className="fw-bold">{client.name}</span>
                   <span className="fw-bold text-muted small">
-                    {client.count} interactions
+                    {client.count} interaction{client.count > 1 ? "s" : ""}
                   </span>
                 </div>
                 <ProgressBar

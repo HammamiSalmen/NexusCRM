@@ -13,7 +13,7 @@ export default function RecentInteractionsTable({ data }) {
             <th className="ps-4">Client</th>
             <th>Type</th>
             <th>Date</th>
-            <th className="pe-4">Note</th>
+            <th className="pe-4">Commentaire</th>
           </tr>
         </thead>
         <tbody>
@@ -34,10 +34,10 @@ export default function RecentInteractionsTable({ data }) {
                 <span
                   className={`badge ${item.type === "email" ? "bg-light-info text-info" : "bg-light-success text-success"} border-0`}
                 >
-                  {item.type}
+                  {item.type === "email" ? "E-mail" : item.type}
                 </span>
               </td>
-              <td>{new Date(item.date).toLocaleDateString()}</td>
+              <td>{new Date(item.date).toLocaleDateString("fr-FR")}</td>
               <td className="pe-4 text-muted small">{item.comment}</td>
             </tr>
           ))}

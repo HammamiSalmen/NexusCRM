@@ -130,3 +130,61 @@ $cyan-600: shade-color($cyan, 20%);
 $cyan-700: shade-color($cyan, 40%);
 $cyan-800: shade-color($cyan, 60%);
 $cyan-900: shade-color($cyan, 80%);
+
+/* ======================================
+   Datta Able – Dark Theme (clean)
+====================================== */
+
+[data-pc-theme='dark'] {
+    /* Body */
+    --bs-body-bg: #0f172a;
+    --bs-body-bg-rgb: 15, 23, 42;
+    --bs-body-color: #e5e7eb;
+    --bs-body-color-rgb: 229, 231, 235;
+
+    /* Text */
+    --bs-heading-color: #f9fafb;
+    --bs-secondary-color: #9ca3af;
+    --bs-tertiary-color: #6b7280;
+
+    /* Borders */
+    --bs-border-color: #334155;
+    --bs-border-color-translucent: rgba(51, 65, 85, 0.5);
+
+    /* Cards */
+    --pc-card-box-shadow: none;
+
+    /* Sidebar */
+    --pc-sidebar-background: #1f2937;
+    --pc-sidebar-color: #9ca3af;
+    --pc-sidebar-active-color: #04a9f5;
+    --pc-sidebar-active-background: rgba(4, 169, 245, 0.15);
+    --pc-sidebar-main-active-color: #ffffff;
+    --pc-sidebar-caption-color: #cbd5f5;
+    --pc-sidebar-shadow: none;
+
+    /* Header */
+    --pc-header-background: #020617;
+    --pc-header-color: #e5e7eb;
+    --pc-header-shadow: none;
+
+    /* Tables */
+    --bs-table-bg: #020617;
+    --bs-table-striped-bg: #020617;
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.04);
+
+    /* Dropdown */
+    --bs-dropdown-bg: #020617;
+    --bs-dropdown-link-color: #e5e7eb;
+    --bs-dropdown-link-hover-bg: #1e293b;
+
+    /* Forms */
+    --bs-input-bg: #020617;
+    --bs-input-color: #e5e7eb;
+    --bs-input-border-color: #334155;
+    --bs-input-placeholder-color: #64748b;
+
+    /* Primary color (unchanged) */
+    --bs-primary: #04a9f5;
+    --bs-primary-rgb: 4, 169, 245;
+}

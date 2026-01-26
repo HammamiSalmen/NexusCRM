@@ -1,0 +1,181 @@
+[data-pc-theme='dark'] {
+    color-scheme: dark;
+
+    body,
+    .pc-content,
+    .main-content {
+        background-color: #0f172a;
+        color: #e5e7eb;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        color: #f9fafb;
+    }
+
+    .text-muted,
+    .text-secondary,
+    .small {
+        color: #9ca3af !important;
+    }
+
+    .card,
+    .kanban-column,
+    .kanban-board,
+    .task-card,
+    .dropdown-menu,
+    .modal-content,
+    .pc-h-dropdown,
+    .swal2-popup {
+        background-color: #020617 !important;
+        border-color: #334155 !important;
+        color: #e5e7eb;
+    }
+
+    .card-header,
+    .card-footer,
+    .modal-header,
+    .modal-footer,
+    .pc-h-dropdown .dropdown-header {
+        background-color: #020617 !important;
+        border-color: #334155 !important;
+    }
+
+    .pc-header,
+    .header-wrapper {
+        background: #020617 !important;
+        border: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+
+        &::before,
+        &::after {
+            display: none !important;
+            content: none !important;
+        }
+    }
+
+    .pc-container {
+        border-top: none !important;
+        box-shadow: none !important;
+    }
+
+    .pc-h-item {
+        .pc-head-link {
+            color: #94a3b8 !important;
+            background-color: transparent !important;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+
+            i,
+            svg {
+                color: #94a3b8 !important;
+                fill: #94a3b8 !important;
+            }
+
+            &:hover,
+            &:focus {
+                background-color: #1e293b !important;
+                color: #111 !important;
+
+                i,
+                svg {
+                    color: #111 !important;
+                    fill: #111 !important;
+                }
+            }
+        }
+
+        &>.btn-link:hover {
+            background-color: #1e293b !important;
+            text-decoration: none;
+        }
+    }
+
+    .table {
+        --bs-table-bg: transparent;
+        --bs-table-color: #e5e7eb;
+        --bs-table-border-color: #334155;
+
+        th,
+        td {
+            border-color: #334155 !important;
+        }
+
+        thead th {
+            background-color: #020617;
+            color: #f1f5f9;
+        }
+
+        &.table-hover tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.04);
+        }
+    }
+
+    .form-control,
+    .form-select {
+        background-color: #020617;
+        border-color: #334155;
+        color: #e5e7eb;
+
+        &:focus {
+            border-color: #1de9b6;
+            box-shadow: none;
+        }
+
+        &::placeholder {
+            color: #64748b;
+        }
+    }
+
+    .bg-white {
+        background-color: #020617 !important;
+        color: #e5e7eb !important;
+    }
+
+    .bg-light {
+        background-color: #1e293b !important;
+        color: #e5e7eb !important;
+    }
+
+    .badge {
+        border: none;
+
+        &.bg-light,
+        &.bg-secondary {
+            background-color: #1e293b !important;
+            color: #e5e7eb !important;
+        }
+
+        &.bg-light-success {
+            background-color: rgba(29, 233, 182, 0.15) !important;
+            color: #1de9b6 !important;
+        }
+
+        &.bg-light-info {
+            background-color: rgba(3, 169, 244, 0.15) !important;
+            color: #03a9f4 !important;
+        }
+    }
+
+    .page-link {
+        background-color: #020617;
+        color: #e5e7eb;
+        border-color: #334155;
+
+        &:hover {
+            background-color: #1e293b;
+            color: #fff;
+        }
+    }
+
+    .page-item.active .page-link {
+        background-color: #1de9b6;
+        border-color: #1de9b6;
+        color: #000;
+    }
+}

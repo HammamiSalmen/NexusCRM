@@ -83,3 +83,49 @@ body.modal-open .pc-header {
 .react-hot-toast {
   z-index: 9999 !important;
 }
+
+[data-pc-theme="dark"] {
+  body {
+    background-color: #0f172a;
+    color: #e5e7eb;
+  }
+
+  .pc-header,
+  .pc-sidebar,
+  .pc-footer {
+    background-color: #020617;
+    border-color: #1e293b;
+  }
+
+  .card,
+  .main-card {
+    background-color: #020617;
+    color: #e5e7eb;
+  }
+
+  .table {
+    color: #e5e7eb;
+
+    thead {
+      background-color: #020617;
+    }
+  }
+
+  .dropdown-menu {
+    background-color: #020617;
+    border-color: #1e293b;
+  }
+
+  .apexcharts-menu-item:hover {
+    color: var(--bs-black);
+  }
+
+  .apexcharts-tooltip {
+    background: #020617 !important;
+    color: #e5e7eb !important;
+  }
+
+  .bg-light {
+    background-color: #020617 !important;
+  }
+}

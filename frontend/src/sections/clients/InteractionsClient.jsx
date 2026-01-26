@@ -38,7 +38,7 @@ const InteractionsClient = ({
       );
       setInteractions(sortedData);
     } catch (error) {
-      toast.error("Erreur de chargement");
+      toast.error("Erreur lors du chargement des interactions");
     } finally {
       setLoading(false);
     }
@@ -78,10 +78,10 @@ const InteractionsClient = ({
       };
       if (editingId) {
         await api.put(`/api/interactions/${editingId}/`, payload);
-        toast.success("Modifié avec succès");
+        toast.success("Interaction modifiée avec succès");
       } else {
         await api.post(`/api/interactions/`, payload);
-        toast.success("Ajouté avec succès");
+        toast.success("Interaction ajoutée avec succès");
       }
       setEditingId(null);
       const principalContact = allContacts.find((c) => c.isPrincipal);
@@ -94,7 +94,7 @@ const InteractionsClient = ({
       });
       fetchInteractions();
     } catch (error) {
-      toast.error("Erreur lors de l'enregistrement");
+      toast.error("Erreur lors de l'enregistrement de l'interaction");
     }
   };
 
@@ -125,7 +125,7 @@ const InteractionsClient = ({
 
     Swal.fire({
       title: "Supprimer cette interaction ?",
-      text: "Cette action est définitive.",
+      text: "Cette action est irréversible.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#e74c3c",
@@ -135,10 +135,10 @@ const InteractionsClient = ({
       if (result.isConfirmed) {
         try {
           await api.delete(`/api/interactions/${idInt}/`);
-          toast.success("Supprimé");
+          toast.success("Interaction supprimée avec succès");
           fetchInteractions();
         } catch (e) {
-          toast.error("Erreur suppression");
+          toast.error("Erreur lors de la suppression");
         }
       }
     });
@@ -190,9 +190,7 @@ const InteractionsClient = ({
               <Col md={3}>
                 <Form.Select
                   size="sm"
-                  {...register("selectedContactId", {
-                    required: "Contact obligatoire",
-                  })}
+                  {...register("selectedContactId")}
                   isInvalid={!!errors.selectedContactId}
                 >
                   {allContacts.map((c) => (
@@ -217,8 +215,8 @@ const InteractionsClient = ({
                   as="textarea"
                   rows={2}
                   size="sm"
-                  placeholder="Détails..."
-                  {...register("commInteraction", { required: true })}
+                  placeholder="Détails de l'interaction..."
+                  {...register("commInteraction")}
                 />
               </Col>
             </Row>
@@ -226,7 +224,7 @@ const InteractionsClient = ({
         </div>
         <div className="p-4" style={{ maxHeight: "400px", overflowY: "auto" }}>
           {loading ? (
-            <div className="text-center p-3">Chargement...</div>
+            <div className="text-center p-3">Chargement en cours...</div>
           ) : (
             interactions.map((item) => {
               const currentId = item.id || item.idInteraction;
@@ -261,7 +259,9 @@ const InteractionsClient = ({
                         })()}
                         <br />
                         <small className="text-muted">
-                          {new Date(item.dateInteraction).toLocaleString()}
+                          {new Date(item.dateInteraction).toLocaleString(
+                            "fr-FR",
+                          )}
                         </small>
                       </div>
                       <div>

@@ -100,7 +100,7 @@ const DetailsEmploye = () => {
       );
       setLoading(false);
     } catch (err) {
-      toast.error("Erreur chargement données");
+      toast.error("Erreur lors du chargement des données.");
       navigate("/tables/employes-table");
     }
   };
@@ -129,11 +129,11 @@ const DetailsEmploye = () => {
       };
       if (data.password) payload.password = data.password;
       await api.patch(`/api/users/${id}/`, payload);
-      toast.success("Employé mis à jour");
+      toast.success("Employé mis à jour avec succès.");
       setShowEditModal(false);
       fetchEmployeData();
     } catch (error) {
-      toast.error("Erreur mise à jour");
+      toast.error("Erreur lors de la mise à jour.");
     } finally {
       setIsSubmitting(false);
     }
@@ -142,17 +142,17 @@ const DetailsEmploye = () => {
   const handleTransfer = async (event) => {
     event.preventDefault();
     const newUserId = event.target.newUserId.value;
-    if (!newUserId) return toast.error("Veuillez choisir un utilisateur");
+    if (!newUserId) return toast.error("Veuillez choisir un utilisateur.");
     try {
       setIsSubmitting(true);
       await api.patch(`/api/clients/${clientToTransfer.id}/`, {
         user: newUserId,
       });
-      toast.success(`Client transféré avec succès`);
+      toast.success(`Le client a été transféré avec succès.`);
       setShowTransferModal(false);
       fetchEmployeData();
     } catch (error) {
-      toast.error("Erreur lors du transfert");
+      toast.error("Erreur lors du transfert.");
     } finally {
       setIsSubmitting(false);
     }
@@ -164,8 +164,8 @@ const DetailsEmploye = () => {
         ? "Désactiver ce compte ?"
         : "Réactiver ce compte ?",
       text: employe.is_active
-        ? "L'utilisateur ne pourra plus se connecter."
-        : "L'utilisateur pourra à nouveau accéder au CRM.",
+        ? "L'utilisateur ne pourra plus accéder à la plateforme."
+        : "L'utilisateur pourra de nouveau accéder à la plateforme.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: employe.is_active ? "#e74c3c" : "#2ecc71",
@@ -177,7 +177,7 @@ const DetailsEmploye = () => {
       if (result.isConfirmed) {
         await api.patch(`/api/users/${id}/`, { is_active: !employe.is_active });
         toast.success(
-          employe.is_active ? "Compte désactivé" : "Compte réactivé",
+          employe.is_active ? "Compte désactivé." : "Compte réactivé.",
         );
         fetchEmployeData();
       }
@@ -236,11 +236,11 @@ const DetailsEmploye = () => {
                     )}
                     {employe.is_active ? (
                       <Badge bg="light-success" className="text-success">
-                        Compte Actif
+                        Compte actif
                       </Badge>
                     ) : (
                       <Badge bg="light-secondary" className="text-secondary">
-                        Compte Désactivé
+                        Compte désactivé
                       </Badge>
                     )}
                   </div>
@@ -279,7 +279,7 @@ const DetailsEmploye = () => {
                       <th width="60"></th>
                       <th className="text-center">Nom</th>
                       <th className="text-center">Type</th>
-                      <th className="text-center">Date Création</th>
+                      <th className="text-center">Date de création</th>
                       <th className="text-center">Actions</th>
                     </tr>
                   </thead>
@@ -410,7 +410,7 @@ const DetailsEmploye = () => {
                   <Form.Label>Rôle</Form.Label>
                   <Form.Select {...register("role")}>
                     <option value="staff">Employé</option>
-                    <option value="admin">Super Admin</option>
+                    <option value="admin">Administrateur</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -433,7 +433,7 @@ const DetailsEmploye = () => {
               Annuler
             </Button>
             <Button variant="primary" type="submit" disabled={isSubmitting}>
-              Enregistrer
+              Enregistrer les modifications
             </Button>
           </Modal.Footer>
         </Form>

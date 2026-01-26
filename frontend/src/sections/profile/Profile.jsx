@@ -39,6 +39,7 @@ const getInitials = (name = "") => {
 const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingMDP, setIsSubmittingMDP] = useState(false);
   const [userData, setUserData] = useState(null);
   const infoForm = useForm();
   const securityForm = useForm();
@@ -85,21 +86,21 @@ const Profile = () => {
   };
 
   const onSubmitPassword = async (data) => {
-    setIsSubmitting(true);
+    setIsSubmittingMDP(true);
     try {
       const payload = {
         current_password: data.current_password,
         new_password: data.password,
       };
       await api.post("/api/users/change-password/", payload);
-      toast.success("Mot de passe changé avec succès !");
+      toast.success("Mot de passe modifié avec succès !");
       securityForm.reset();
     } catch (error) {
       toast.error(
         error.response?.data?.detail || "L'ancien mot de passe est incorrect",
       );
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingMDP(false);
     }
   };
 
@@ -188,7 +189,7 @@ const Profile = () => {
                   <Row>
                     <Col md={6}>
                       <Form.Group className="mb-3">
-                        <Form.Label>Username</Form.Label>
+                        <Form.Label>Nom d'utilisateur</Form.Label>
                         <Form.Control
                           {...infoForm.register("username")}
                           readOnly
@@ -198,7 +199,7 @@ const Profile = () => {
                     </Col>
                     <Col md={6}>
                       <Form.Group className="mb-3">
-                        <Form.Label>Email</Form.Label>
+                        <Form.Label>Adresse e-mail</Form.Label>
                         <Form.Control
                           {...infoForm.register("email", emailSchema)}
                           isInvalid={!!infoForm.formState.errors.email}
@@ -262,7 +263,7 @@ const Profile = () => {
                     <Form.Label>Mot de passe actuel</Form.Label>
                     <Form.Control
                       type="password"
-                      placeholder="Entrez votre mot de passe actuel"
+                      placeholder="Saisissez votre mot de passe actuel"
                       {...securityForm.register("current_password", {
                         required: "Ce champ est obligatoire",
                       })}
@@ -290,7 +291,7 @@ const Profile = () => {
                     </Col>
                     <Col md={6}>
                       <Form.Group className="mb-3">
-                        <Form.Label>Confirmer</Form.Label>
+                        <Form.Label>Confirmation du mot de passe</Form.Label>
                         <Form.Control
                           type="password"
                           {...securityForm.register("confirmPassword", {
@@ -315,15 +316,18 @@ const Profile = () => {
                     <Button
                       variant="danger"
                       type="submit"
+                      disabled={isSubmittingMDP}
                       style={{ backgroundColor: "#d55858", border: "none" }}
                     >
-                      Changer le mot de passe
+                      {isSubmittingMDP
+                        ? "Changement..."
+                        : "Changer le mot de passe"}
                     </Button>
                     <Button
                       variant="outline-secondary"
                       onClick={() => securityForm.reset()}
                     >
-                      Vider
+                      Réinitialiser
                     </Button>
                   </div>
                 </Form>

@@ -50,7 +50,7 @@ export default function CreerEmploye() {
       navigate("/tables/employes-table");
     } catch (error) {
       console.error(error);
-      toast.error("Erreur lors de la création.");
+      toast.error("Une erreur est survenue lors de la création.");
     } finally {
       setIsSubmitting(false);
     }
@@ -96,7 +96,7 @@ export default function CreerEmploye() {
                 </Form.Label>
                 <Form.Control
                   {...register("username", {
-                    required: "Identifiant est requis",
+                    required: "L'identifiant est requis",
                   })}
                   isInvalid={!!errors.username}
                 />
@@ -156,8 +156,8 @@ export default function CreerEmploye() {
                 </Form.Select>
                 {roleWatch === "admin" && (
                   <Form.Text className="text-danger">
-                    <i className="ti ti-alert-triangle me-1" /> Attention : Ce
-                    rôle donne tous les droits.
+                    <i className="ti ti-alert-triangle me-1" /> Attention : ce
+                    rôle accorde l'intégralité des droits d'accès.
                   </Form.Text>
                 )}
               </Form.Group>
@@ -170,7 +170,7 @@ export default function CreerEmploye() {
               className="px-5 text-white"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Enregistrement..." : "Créer l'employé"}
+              {isSubmitting ? "Enregistrement en cours..." : "Créer l'employé"}
             </Button>
           </div>
         </Form>

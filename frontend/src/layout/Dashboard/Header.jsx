@@ -6,6 +6,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 import api from "api/api";
 import SimpleBarScroll from "components/third-party/SimpleBar";
 import Img1 from "assets/images/user/avatar-1.png";
+import { toggleTheme, getTheme } from "utils/theme";
 
 const getAvatarColor = (name = "") => {
   const colors = [
@@ -64,6 +65,12 @@ export default function Header() {
     users: [],
   });
   const [isSearching, setIsSearching] = useState(false);
+  const [theme, setThemeState] = useState(getTheme());
+
+  const handleThemeToggle = () => {
+    const nextTheme = toggleTheme();
+    setThemeState(nextTheme);
+  };
 
   const fetchNotifications = async () => {
     try {
@@ -198,7 +205,7 @@ export default function Header() {
                 <Form className="px-3 py-2">
                   <Form.Control
                     type="search"
-                    placeholder="Rechercher Client/Employé..."
+                    placeholder="Rechercher un client ou un employé..."
                     className="border-0 shadow-none"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -263,6 +270,17 @@ export default function Header() {
         </div>
         <div className="ms-auto">
           <Nav className="list-unstyled">
+            <Nav.Item className="pc-h-item">
+              <Button
+                variant="link"
+                className="pc-head-link"
+                onClick={handleThemeToggle}
+              >
+                <i
+                  className={`ph ${theme === "dark" ? "ph-sun" : "ph-moon"}`}
+                />
+              </Button>
+            </Nav.Item>
             <Dropdown className="pc-h-item" align="end">
               <Dropdown.Toggle
                 className="pc-head-link me-0 arrow-none"
@@ -291,7 +309,7 @@ export default function Header() {
                   <div className="dropdown-body text-wrap position-relative">
                     {notifications.length === 0 ? (
                       <div className="text-center py-4 text-muted">
-                        Pas de nouvelles notifications
+                        Aucune nouvelle notification
                       </div>
                     ) : (
                       notifications.map((notification) => (
@@ -409,7 +427,7 @@ export default function Header() {
                       to="/profile"
                       className="justify-content-start py-2"
                     >
-                      <i className="ti ti-user me-2 fs-5" /> Mon Profil
+                      <i className="ti ti-user me-2 fs-5" /> Mon profil
                     </Dropdown.Item>
                     <div className="d-grid my-2 px-3">
                       <Button

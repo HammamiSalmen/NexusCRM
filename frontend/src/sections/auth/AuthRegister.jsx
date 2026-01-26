@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -9,9 +8,7 @@ import Image from "react-bootstrap/Image";
 import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
 import Stack from "react-bootstrap/Stack";
-
 import { useForm } from "react-hook-form";
-
 import MainCard from "components/MainCard";
 import {
   confirmPasswordSchema,
@@ -20,8 +17,7 @@ import {
   lastNameSchema,
   passwordSchema,
 } from "utils/validationSchema";
-
-import DarkLogo from "assets/images/logo-transparent.png";
+import DarkLogo from "assets/images/logo-transparent-noir.png";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api";
 import toast from "react-hot-toast";
@@ -64,7 +60,7 @@ export default function AuthRegisterForm({ className, link }) {
       toast.success("Compte créé avec succès !");
       reset();
 
-      navigate("/"); // navigate("/login");
+      navigate("/");
     } catch (error) {
       console.error(error);
       if (error.response && error.response.data) {
@@ -83,11 +79,11 @@ export default function AuthRegisterForm({ className, link }) {
         <a>
           <Image
             src={DarkLogo}
-            alt="img"
+            alt="NexusCRM"
             style={{
               maxHeight: "100%",
-              marginLeft: "1px",
-              height: "90px",
+              height: "100px",
+              width: "160px",
             }}
           />
         </a>
@@ -101,7 +97,7 @@ export default function AuthRegisterForm({ className, link }) {
             <Form.Group className="mb-3" controlId="formFirstName">
               <Form.Control
                 type="text"
-                placeholder="First Name"
+                placeholder="Prénom"
                 {...register("firstName", firstNameSchema)}
                 isInvalid={!!errors.firstName}
                 className={
@@ -118,7 +114,7 @@ export default function AuthRegisterForm({ className, link }) {
             <Form.Group className="mb-3" controlId="formLastName">
               <Form.Control
                 type="text"
-                placeholder="Last Name"
+                placeholder="Nom"
                 {...register("lastName", lastNameSchema)}
                 isInvalid={!!errors.lastName}
                 className={
@@ -152,7 +148,7 @@ export default function AuthRegisterForm({ className, link }) {
         <Form.Group className="mb-3" controlId="formEmail">
           <Form.Control
             type="email"
-            placeholder="Email Address"
+            placeholder="Adresse e-mail"
             {...register("email", emailSchema)}
             isInvalid={!!errors.email}
             className={
@@ -168,7 +164,7 @@ export default function AuthRegisterForm({ className, link }) {
           <InputGroup>
             <Form.Control
               type={showPassword ? "text" : "password"}
-              placeholder="Password"
+              placeholder="Mot de passe"
               {...register("password", passwordSchema)}
               isInvalid={!!errors.password}
               className={
@@ -191,7 +187,7 @@ export default function AuthRegisterForm({ className, link }) {
         <Form.Group className="mb-3" controlId="formConfirmPassword">
           <Form.Control
             type="password"
-            placeholder="Confirm Password"
+            placeholder="Confirmer le mot de passe"
             {...register("confirmPassword", confirmPasswordSchema)}
             isInvalid={!!errors.confirmPassword}
             className={
@@ -207,7 +203,7 @@ export default function AuthRegisterForm({ className, link }) {
           <Form.Group controlId="customCheckc1">
             <Form.Check
               type="checkbox"
-              label="I agree to all the Terms & Condition"
+              label="J'accepte les conditions générales d'utilisation"
               defaultChecked
               className={`input-primary ${className ? className : "text-muted"} `}
             />
@@ -219,14 +215,14 @@ export default function AuthRegisterForm({ className, link }) {
             className="shadow px-sm-4"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Création..." : "S'inscrire"}
+            {isSubmitting ? "Création en cours..." : "S'inscrire"}
           </Button>
         </div>
         <Stack
           direction="horizontal"
           className="justify-content-between align-items-end mt-4"
         >
-          <h6 className={`f-w-500 mb-0 ${className}`}>Déjà Inscrit ?</h6>
+          <h6 className={`f-w-500 mb-0 ${className}`}>Déjà inscrit ?</h6>
           <Link to={link} className="link-primary">
             Se connecter
           </Link>

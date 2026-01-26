@@ -110,14 +110,14 @@ export default function CreerClient() {
       contacts.map((c, idx) => ({ ...c, isPrincipal: idx === indexToSet })),
     );
     toast.success(
-      `${contacts[indexToSet].prenomContact} est maintenant le contact principal`,
+      `${contacts[indexToSet].prenomContact} est désormais le contact principal.`,
     );
   };
 
   const removeContact = (indexToRemove) => {
     Swal.fire({
       title: "Supprimer ce contact ?",
-      text: "Cette action est irréversible pour cette saisie.",
+      text: "Cette modification sera immédiate pour ce formulaire.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -219,7 +219,7 @@ export default function CreerClient() {
                     </Form.Label>
                     <Form.Control
                       {...register("nomClient", {
-                        required: "Nom Client requis",
+                        required: "Le nom du client est requis.",
                       })}
                       isInvalid={!!errors.nomClient}
                     />
@@ -341,10 +341,10 @@ export default function CreerClient() {
                   {isSubmitting ? (
                     <>
                       <span className="spinner-border spinner-border-sm me-2" />
-                      Enregistrement...
+                      Enregistrement en cours...
                     </>
                   ) : (
-                    "Enregistrer le client"
+                    "Enregistrer la fiche client"
                   )}
                 </Button>
               </div>
@@ -361,7 +361,9 @@ export default function CreerClient() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {editingIndex !== null ? "Modifier le contact" : "Nouveau contact"}
+            {editingIndex !== null
+              ? "Modifier les coordonnées du contact"
+              : "Ajouter un nouveau contact"}
           </Modal.Title>
         </Modal.Header>
         <Form>
@@ -398,7 +400,7 @@ export default function CreerClient() {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Adresse E-mail <span className="text-danger">*</span>
+                    Adresse e-mail <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="email"
@@ -431,7 +433,7 @@ export default function CreerClient() {
                   </Form.Label>
                   <Form.Control
                     {...regContact("adresseContact", {
-                      required: "Adresse requis",
+                      required: "L'adresse est requise.",
                     })}
                     isInvalid={!!errorsContact.adresseContact}
                   />
@@ -453,14 +455,15 @@ export default function CreerClient() {
                   <Form.Check
                     type="checkbox"
                     id="isPrincipal"
-                    label="Définir comme contact principal"
+                    label="Définir en tant que contact principal"
                     {...regContact("isPrincipal")}
                     className="fw-bold text-primary"
                   />
                   {watchContact("isPrincipal") && (
                     <Form.Text className="text-info d-block animate__animated animate__fadeIn">
                       <i className="ti ti-info-circle me-1" />
-                      Ce contact sera mis en avant sur la fiche client.
+                      Ce contact sera la référence principale sur la fiche de ce
+                      client.
                     </Form.Text>
                   )}
                 </Form.Group>

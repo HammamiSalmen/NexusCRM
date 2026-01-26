@@ -1,38 +1,41 @@
 export const emailSchema = {
-  required: "Email est requis",
+  required: "L'adresse e-mail est requise",
   pattern: {
     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-    message: "Email invalide",
+    message: "Adresse e-mail invalide",
   },
 };
 
 export const passwordSchema = {
-  required: "Mot de passe est requis",
+  required: "Le mot de passe est requis",
   minLength: {
     value: 8,
-    message: "Mot de passe doit contenir au moins 8 caractères",
+    message: "Le mot de passe doit contenir au moins 8 caractères",
   },
 };
 
 export const confirmPasswordSchema = {
-  required: "Confirmation est requis",
-  minLength: { value: 8, message: "les 2 mots de passe ne correspondent pas" },
+  required: "La confirmation du mot de passe est requise",
+  minLength: {
+    value: 8,
+    message: "Les deux mots de passe ne correspondent pas",
+  },
 };
 
 export const firstNameSchema = {
-  required: "Prénom est requis",
+  required: "Le prénom est requis",
   pattern: { value: /^[a-zA-Z\s]+$/, message: "Prénom invalide" },
 };
 
 export const lastNameSchema = {
-  required: "Nom est requis",
+  required: "Le nom est requis",
   pattern: { value: /^[a-zA-Z\s]+$/, message: "Nom invalide" },
 };
 
 export const phoneSchema = {
-  required: "Téléphone est requis",
+  required: "Le numéro de téléphone est requis",
   pattern: {
     value: /^\+?[\d\s\-\(\)]{8,20}$/,
-    message: "Téléphone invalide",
+    message: "Numéro de téléphone invalide",
   },
 };
