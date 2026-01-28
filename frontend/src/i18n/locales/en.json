@@ -310,6 +310,7 @@
   "kanban.priority_normal": "NORMAL",
   "auth_otp_label": "Verification Code",
   "auth_otp_placeholder": "Enter code received by email",
+  "auth_otp_link": "Back",
   "auth_verify_btn": "Verify Code",
   "auth_code_sent": "Code sent! Check your email.",
   "error_otp_required": "Verification code is required"

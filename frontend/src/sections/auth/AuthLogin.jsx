@@ -125,10 +125,7 @@ export default function AuthLoginForm({ className, link }) {
                 })}
                 isInvalid={!!errors.password}
               />
-              <Button
-                onClick={() => setShowPassword(!showPassword)}
-                variant="outline-secondary"
-              >
+              <Button onClick={() => setShowPassword(!showPassword)}>
                 <i className={showPassword ? "ti ti-eye" : "ti ti-eye-off"} />
               </Button>
               <Form.Control.Feedback type="invalid">
@@ -150,9 +147,7 @@ export default function AuthLoginForm({ className, link }) {
               )}
               maxLength={6}
               style={{
-                letterSpacing: "5px",
-                textAlign: "center",
-                fontSize: "1.2rem",
+                letterSpacing: "1px",
               }}
               {...register("otp", {
                 required: t("error_otp_required", "Le code est requis"),
@@ -197,7 +192,8 @@ export default function AuthLoginForm({ className, link }) {
               className="p-0 text-decoration-none"
               onClick={() => setStep(1)}
             >
-              <i className="ti ti-arrow-left me-1"></i> Retour
+              <i className="ti ti-arrow-left me-1"></i>
+              {t("auth_otp_link", "Retour")}
             </Button>
           )}
         </Stack>
