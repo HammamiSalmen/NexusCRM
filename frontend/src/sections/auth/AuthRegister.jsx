@@ -8,6 +8,7 @@ import Image from "react-bootstrap/Image";
 import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
 import Stack from "react-bootstrap/Stack";
+import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import MainCard from "components/MainCard";
 import {
@@ -23,6 +24,7 @@ import api from "../../api/api";
 import toast from "react-hot-toast";
 
 export default function AuthRegisterForm({ className, link }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const {
@@ -42,7 +44,10 @@ export default function AuthRegisterForm({ className, link }) {
     if (data.password !== data.confirmPassword) {
       setError("confirmPassword", {
         type: "manual",
-        message: "Les mots de passe ne correspondent pas !",
+        message: t(
+          "error_passwords_mismatch_msg",
+          "Les mots de passe ne correspondent pas !",
+        ),
       });
       return;
     }
@@ -57,7 +62,7 @@ export default function AuthRegisterForm({ className, link }) {
         last_name: data.lastName,
       });
 
-      toast.success("Compte créé avec succès !");
+      toast.success(t("auth_register_success", "Compte créé avec succès !"));
       reset();
 
       navigate("/");
@@ -65,10 +70,13 @@ export default function AuthRegisterForm({ className, link }) {
       console.error(error);
       if (error.response && error.response.data) {
         const msg =
-          error.response.data.username || "Erreur lors de l'inscription.";
+          error.response.data.username ||
+          t("auth_register_error", "Erreur lors de l'inscription.");
         toast.error(msg.toString());
       } else {
-        toast.error("Impossible de contacter le serveur.");
+        toast.error(
+          t("auth_server_error", "Impossible de contacter le serveur."),
+        );
       }
     }
   };
@@ -90,15 +98,15 @@ export default function AuthRegisterForm({ className, link }) {
       </div>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <h4 className={`text-center f-w-500 mt-4 mb-3 ${className}`}>
-          Inscription
+          {t("auth_register_title", "Inscription")}
         </h4>
         <Row>
           <Col sm={6}>
             <Form.Group className="mb-3" controlId="formFirstName">
               <Form.Control
                 type="text"
-                placeholder="Prénom"
-                {...register("firstName", firstNameSchema)}
+                placeholder={t("auth_firstname_placeholder", "Prénom")}
+                {...register("firstName", firstNameSchema(t))}
                 isInvalid={!!errors.firstName}
                 className={
                   className &&
@@ -114,8 +122,8 @@ export default function AuthRegisterForm({ className, link }) {
             <Form.Group className="mb-3" controlId="formLastName">
               <Form.Control
                 type="text"
-                placeholder="Nom"
-                {...register("lastName", lastNameSchema)}
+                placeholder={t("auth_lastname_placeholder", "Nom")}
+                {...register("lastName", lastNameSchema(t))}
                 isInvalid={!!errors.lastName}
                 className={
                   className &&
@@ -131,9 +139,12 @@ export default function AuthRegisterForm({ className, link }) {
         <Form.Group className="mb-3" controlId="formUsername">
           <Form.Control
             type="text"
-            placeholder="Nom d'utilisateur"
+            placeholder={t("auth_username_placeholder", "Nom d'utilisateur")}
             {...register("username", {
-              required: "Le nom d'utilisateur est requis",
+              required: t(
+                "error_username_required",
+                "Le nom d'utilisateur est requis",
+              ),
             })}
             isInvalid={!!errors.username}
             className={
@@ -148,8 +159,8 @@ export default function AuthRegisterForm({ className, link }) {
         <Form.Group className="mb-3" controlId="formEmail">
           <Form.Control
             type="email"
-            placeholder="Adresse e-mail"
-            {...register("email", emailSchema)}
+            placeholder={t("auth_email_placeholder", "Adresse e-mail")}
+            {...register("email", emailSchema(t))}
             isInvalid={!!errors.email}
             className={
               className &&
@@ -164,8 +175,8 @@ export default function AuthRegisterForm({ className, link }) {
           <InputGroup>
             <Form.Control
               type={showPassword ? "text" : "password"}
-              placeholder="Mot de passe"
-              {...register("password", passwordSchema)}
+              placeholder={t("auth_password_placeholder", "Mot de passe")}
+              {...register("password", passwordSchema(t))}
               isInvalid={!!errors.password}
               className={
                 className &&
@@ -187,8 +198,11 @@ export default function AuthRegisterForm({ className, link }) {
         <Form.Group className="mb-3" controlId="formConfirmPassword">
           <Form.Control
             type="password"
-            placeholder="Confirmer le mot de passe"
-            {...register("confirmPassword", confirmPasswordSchema)}
+            placeholder={t(
+              "auth_confirm_password_placeholder",
+              "Confirmer le mot de passe",
+            )}
+            {...register("confirmPassword", confirmPasswordSchema(t))}
             isInvalid={!!errors.confirmPassword}
             className={
               className &&
@@ -203,7 +217,10 @@ export default function AuthRegisterForm({ className, link }) {
           <Form.Group controlId="customCheckc1">
             <Form.Check
               type="checkbox"
-              label="J'accepte les conditions générales d'utilisation"
+              label={t(
+                "auth_accept_terms",
+                "J'accepte les conditions générales d'utilisation",
+              )}
               defaultChecked
               className={`input-primary ${className ? className : "text-muted"} `}
             />
@@ -215,16 +232,20 @@ export default function AuthRegisterForm({ className, link }) {
             className="shadow px-sm-4"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Création en cours..." : "S'inscrire"}
+            {isSubmitting
+              ? t("auth_register_loading", "Création en cours...")
+              : t("auth_register_btn", "S'inscrire")}
           </Button>
         </div>
         <Stack
           direction="horizontal"
           className="justify-content-between align-items-end mt-4"
         >
-          <h6 className={`f-w-500 mb-0 ${className}`}>Déjà inscrit ?</h6>
+          <h6 className={`f-w-500 mb-0 ${className}`}>
+            {t("auth_already_registered", "Déjà inscrit ?")}
+          </h6>
           <Link to={link} className="link-primary">
-            Se connecter
+            {t("auth_login_link", "Se connecter")}
           </Link>
         </Stack>
       </Form>

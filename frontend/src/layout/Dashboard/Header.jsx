@@ -7,6 +7,7 @@ import api from "api/api";
 import SimpleBarScroll from "components/third-party/SimpleBar";
 import Img1 from "assets/images/user/avatar-1.png";
 import { toggleTheme, getTheme } from "utils/theme";
+import { useTranslation } from "react-i18next";
 
 const getAvatarColor = (name = "") => {
   const colors = [
@@ -32,22 +33,24 @@ const getInitials = (name = "") => {
   return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
 };
 
-const timeSince = (date) => {
-  const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-  let interval = seconds / 31536000;
-  if (interval > 1) return Math.floor(interval) + " ans";
-  interval = seconds / 2592000;
-  if (interval > 1) return Math.floor(interval) + " mois";
-  interval = seconds / 86400;
-  if (interval > 1) return Math.floor(interval) + " jours";
-  interval = seconds / 3600;
-  if (interval > 1) return Math.floor(interval) + " heures";
-  interval = seconds / 60;
-  if (interval > 1) return Math.floor(interval) + " minutes";
-  return Math.floor(seconds) + " secondes";
-};
-
 export default function Header() {
+  const { t, i18n } = useTranslation();
+
+  const timeSince = (date) => {
+    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + ` ${t("years")}`;
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + ` ${t("months")}`;
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + ` ${t("days")}`;
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + ` ${t("hours")}`;
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + ` ${t("minutes")}`;
+    return Math.floor(seconds) + ` ${t("seconds")}`;
+  };
+
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster?.isDashboardDrawerOpened;
   const navigate = useNavigate();
@@ -55,7 +58,7 @@ export default function Header() {
   const fullName =
     `${user.first_name || ""} ${user.last_name || ""}`.trim() ||
     user.username ||
-    "Utilisateur";
+    t("user_default");
 
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -205,7 +208,7 @@ export default function Header() {
                 <Form className="px-3 py-2">
                   <Form.Control
                     type="search"
-                    placeholder="Rechercher un client ou un employé..."
+                    placeholder={t("search_placeholder")}
                     className="border-0 shadow-none"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -219,7 +222,7 @@ export default function Header() {
                       {searchResults.clients.length > 0 && (
                         <>
                           <h6 className="text-muted text-uppercase small">
-                            Clients
+                            {t("clients")}
                           </h6>
                           <div className="list-group mb-3">
                             {searchResults.clients.map((client) => (
@@ -238,7 +241,7 @@ export default function Header() {
                       {searchResults.users.length > 0 && (
                         <>
                           <h6 className="text-muted text-uppercase small">
-                            Employés
+                            {t("employees")}
                           </h6>
                           <div className="list-group">
                             {searchResults.users.map((u) => (
@@ -259,7 +262,7 @@ export default function Header() {
                     searchQuery.length > 2 &&
                     !isSearching && (
                       <div className="text-center p-3 text-muted">
-                        Aucun résultat trouvé
+                        {t("no_results")}
                       </div>
                     )
                   )}
@@ -285,6 +288,28 @@ export default function Header() {
               <Dropdown.Toggle
                 className="pc-head-link me-0 arrow-none"
                 variant="link"
+              >
+                <i className="ph ph-translate" />
+              </Dropdown.Toggle>
+              <Dropdown.Menu className="pc-h-dropdown">
+                <Dropdown.Item
+                  active={i18n.language === "fr"}
+                  onClick={() => i18n.changeLanguage("fr")}
+                >
+                  Français
+                </Dropdown.Item>
+                <Dropdown.Item
+                  active={i18n.language === "en"}
+                  onClick={() => i18n.changeLanguage("en")}
+                >
+                  English
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            <Dropdown className="pc-h-item" align="end">
+              <Dropdown.Toggle
+                className="pc-head-link me-0 arrow-none"
+                variant="link"
                 id="notification-dropdown"
               >
                 <i className="ph ph-bell" />
@@ -296,20 +321,20 @@ export default function Header() {
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown-notification pc-h-dropdown">
                 <Dropdown.Header className="d-flex align-items-center justify-content-between">
-                  <h5 className="m-0">Notifications</h5>
+                  <h5 className="m-0">{t("notifications")}</h5>
                   <Link
                     className="btn btn-link btn-sm"
                     to="#"
                     onClick={handleMarkAllRead}
                   >
-                    Tout marquer comme lu
+                    {t("mark_all_read")}
                   </Link>
                 </Dropdown.Header>
                 <SimpleBarScroll style={{ maxHeight: "calc(100vh - 215px)" }}>
                   <div className="dropdown-body text-wrap position-relative">
                     {notifications.length === 0 ? (
                       <div className="text-center py-4 text-muted">
-                        Aucune nouvelle notification
+                        {t("no_notifications")}
                       </div>
                     ) : (
                       notifications.map((notification) => (
@@ -325,12 +350,6 @@ export default function Header() {
                               : "4px solid transparent",
                             display: "block",
                           }}
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.filter = "brightness(0.95)")
-                          }
-                          onMouseLeave={(e) =>
-                            (e.currentTarget.style.filter = "none")
-                          }
                         >
                           <Stack
                             direction="horizontal"
@@ -370,7 +389,7 @@ export default function Header() {
                     className="link-danger small fw-bold"
                     onClick={handleClearAll}
                   >
-                    Supprimer toutes les notifications
+                    {t("delete_all_notifications")}
                   </Link>
                 </div>
               </Dropdown.Menu>
@@ -427,7 +446,7 @@ export default function Header() {
                       to="/profile"
                       className="justify-content-start py-2"
                     >
-                      <i className="ti ti-user me-2 fs-5" /> Mon profil
+                      <i className="ti ti-user me-2 fs-5" /> {t("my_profile")}
                     </Dropdown.Item>
                     <div className="d-grid my-2 px-3">
                       <Button
@@ -436,7 +455,7 @@ export default function Header() {
                         size="sm"
                         className="d-flex align-items-center justify-content-center"
                       >
-                        <i className="ti ti-logout me-2" /> Déconnexion
+                        <i className="ti ti-logout me-2" /> {t("logout")}
                       </Button>
                     </div>
                   </div>

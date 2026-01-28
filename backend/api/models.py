@@ -1,12 +1,29 @@
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
+import datetime
+
+
+class EmailOTP(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="emailotp")
+    otp_code = models.CharField(max_length=6, blank=True, null=True)
+    otp_created_at = models.DateTimeField(blank=True, null=True)
+    attempts = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.user.username
+
+    def is_otp_valid(self):
+        if not self.otp_created_at:
+            return False
+        return (timezone.now() - self.otp_created_at) < datetime.timedelta(minutes=5)
 
 
 class Client(models.Model):
     TYPE_CLIENT = [
-        ("PARTICULIER", "Particulier"),
-        ("ENTREPRISE", "Entreprise"),
+        ("PARTICULIER", _("Particulier")),
+        ("ENTREPRISE", _("Entreprise")),
     ]
 
     typeClient = models.CharField(max_length=20, choices=TYPE_CLIENT)
@@ -37,10 +54,10 @@ class Contact(models.Model):
 
 class Interaction(models.Model):
     TYPE_INTERACTION = [
-        ("APPEL", "Appel Téléphonique"),
-        ("EMAIL", "Email"),
-        ("REUNION", "Réunion"),
-        ("AUTRE", "Autre"),
+        ("APPEL", _("Appel Téléphonique")),
+        ("EMAIL", _("Email")),
+        ("REUNION", _("Réunion")),
+        ("AUTRE", _("Autre")),
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -74,9 +91,9 @@ class Notification(models.Model):
 
 class Task(models.Model):
     STATUS_CHOICES = [
-        ("TODO", "À faire"),
-        ("IN_PROGRESS", "En cours"),
-        ("DONE", "Terminée"),
+        ("TODO", _("À faire")),
+        ("IN_PROGRESS", _("En cours")),
+        ("DONE", _("Terminée")),
     ]
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)

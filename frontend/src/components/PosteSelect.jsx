@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState, useRef } from "react";
 import { Form, ListGroup, InputGroup } from "react-bootstrap";
 import { getPostesSuggestions } from "utils/postesManager";
 
 export default function PosteSelect({ register, error, setValue, watch }) {
+  const { t } = useTranslation();
   const [suggestions, setSuggestions] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -38,15 +40,21 @@ export default function PosteSelect({ register, error, setValue, watch }) {
   return (
     <Form.Group className="mb-3 position-relative" ref={containerRef}>
       <Form.Label className="fw-bold small text-uppercase text-muted">
-        Poste / Fonction <span className="text-danger">*</span>
+        {t("job_title_label", "Poste / Fonction")}
+        <span className="text-danger">*</span>
       </Form.Label>
       <InputGroup hasValidation>
         <InputGroup.Text className="bg-white border-end-0">
           <i className="ti ti-briefcase text-primary" />
         </InputGroup.Text>
         <Form.Control
-          {...register("posteContact", { required: "Le poste est requis" })}
-          placeholder="Saisissez ou choisissez un poste..."
+          {...register("posteContact", {
+            required: t("job_title_required", "Le poste est requis"),
+          })}
+          placeholder={t(
+            "job_title_placeholder",
+            "Saisissez ou choisissez un poste...",
+          )}
           className="border-start-0 ps-0"
           autoComplete="off"
           onFocus={() => setShowDropdown(true)}
@@ -82,7 +90,8 @@ export default function PosteSelect({ register, error, setValue, watch }) {
               onClick={() => setShowDropdown(false)}
               className="py-2 small text-primary italic border-0"
             >
-              <i className="ti ti-plus me-2" /> Utiliser "{currentValue}"
+              <i className="ti ti-plus me-2" />
+              {t("use_custom_value", "Utiliser")} "{currentValue}"
             </ListGroup.Item>
           )}
         </ListGroup>

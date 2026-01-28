@@ -1,11 +1,11 @@
 const profileMenu = {
   id: "profile-group",
-  title: "Utilisateur",
+  title: "user_default",
   type: "group",
   children: [
     {
       id: "profile",
-      title: "Mon profil",
+      title: "my_profile",
       type: "item",
       url: "/profile",
       icon: "ph ph-user",

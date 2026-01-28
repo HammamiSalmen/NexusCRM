@@ -1,7 +1,13 @@
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-from .models import Client, Notification
+from .models import Client, EmailOTP, Notification
+from django.utils.translation import gettext_lazy as _
+
+
+@receiver(post_save, sender=User)
+def ensure_email_otp(sender, instance, created, **kwargs):
+    EmailOTP.objects.get_or_create(user=instance)
 
 
 @receiver(pre_save, sender=Client)
@@ -20,7 +26,6 @@ def store_old_user(sender, instance, **kwargs):
 def manage_client_notifications(sender, instance, created, **kwargs):
     link_url = f"/tables/details-client/{instance.id}"
     notifs = []
-
     if created:
         admins = User.objects.filter(is_superuser=True)
         for admin in admins:
@@ -28,32 +33,34 @@ def manage_client_notifications(sender, instance, created, **kwargs):
                 notifs.append(
                     Notification(
                         recipient=admin,
-                        title="Nouveau Client",
-                        message=f"Le client '{instance.nomClient}' a été ajouté par {instance.user.username}.",
+                        title=(_("Nouveau client")),
+                        message=_("Le client '%(nom)s' a été ajouté par %(user)s.")
+                        % {"nom": instance.nomClient, "user": instance.user.username},
                         link=link_url,
                     )
                 )
-
     else:
         if hasattr(instance, "_old_user") and instance._old_user != instance.user:
             notifs.append(
                 Notification(
                     recipient=instance.user,
-                    title="Client Attribué",
-                    message=f"La gestion du client '{instance.nomClient}' vous a été attribuée.",
+                    title=(_("Client attribué")),
+                    message=_("La gestion du client '%(nom)s' vous a été attribuée.")
+                    % {"nom": instance.nomClient},
                     link=link_url,
                 )
             )
-
             if instance._old_user:
                 notifs.append(
                     Notification(
                         recipient=instance._old_user,
-                        title="Client Retiré",
-                        message=f"La gestion du client '{instance.nomClient}' a été transférée à {instance.user.username}.",
+                        title=(_("Client Retiré")),
+                        message=_(
+                            "La gestion du client '%(nom)s' a été transférée à %(user)s."
+                        )
+                        % {"nom": instance.nomClient, "user": instance.user.username},
                         link=link_url,
                     )
                 )
-
     if notifs:
         Notification.objects.bulk_create(notifs)

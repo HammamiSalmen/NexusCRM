@@ -5,8 +5,10 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { APP_DEFAULT_PATH } from "config";
 import navigation from "menu-items";
+import { useTranslation } from "react-i18next";
 
 export default function Breadcrumbs() {
+  const { t } = useTranslation();
   const location = useLocation();
   const [main, setMain] = useState({});
   const [sub, setSub] = useState({});
@@ -70,7 +72,7 @@ export default function Breadcrumbs() {
         <div className="page-block">
           <Row className="align-items-center">
             <Col md={12} className="page-header-title">
-              <h5 style={{ textTransform: "none" }}>{item.title}</h5>
+              <h5 style={{ textTransform: "none" }}>{t(item.title)}</h5>
             </Col>
             <Col md={12}>
               <Breadcrumb listProps={{ style: { marginBottom: 0 } }}>
@@ -78,7 +80,7 @@ export default function Breadcrumbs() {
                   linkAs={Link}
                   linkProps={{ to: APP_DEFAULT_PATH }}
                 >
-                  Accueil
+                  {t("home")}
                 </Breadcrumb.Item>
                 {main.title && (
                   <Breadcrumb.Item
@@ -86,15 +88,15 @@ export default function Breadcrumbs() {
                     linkProps={{ to: sub.url }}
                     active={!sub.title && !item.title}
                   >
-                    {main.title}
+                    {t(main.title)}
                   </Breadcrumb.Item>
                 )}
                 {sub.title && (
                   <Breadcrumb.Item linkAs={Link} linkProps={{ to: sub.url }}>
-                    {sub.title}
+                    {t(sub.title)}
                   </Breadcrumb.Item>
                 )}
-                <Breadcrumb.Item active>{item.title}</Breadcrumb.Item>
+                <Breadcrumb.Item active>{t(item.title)}</Breadcrumb.Item>
               </Breadcrumb>
             </Col>
           </Row>

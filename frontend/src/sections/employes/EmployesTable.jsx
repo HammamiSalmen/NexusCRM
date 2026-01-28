@@ -11,6 +11,7 @@ import {
   Dropdown,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import api from "api/api";
 import toast from "react-hot-toast";
 import MainCard from "components/MainCard";
@@ -55,6 +56,7 @@ const AvatarPro = ({ name }) => (
 );
 
 export default function EmployesTable() {
+  const { t } = useTranslation();
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,13 +70,13 @@ export default function EmployesTable() {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       if (!user?.is_superuser) {
-        toast.error("Accès non autorisé.");
+        toast.error(t("unauthorized_access"));
         return navigate("/dashboard");
       }
       const response = await api.get("/api/users/");
       setEmployees(response.data);
     } catch (error) {
-      toast.error("Erreur lors du chargement des employés.");
+      toast.error(t("error_load_employees"));
     } finally {
       setLoading(false);
     }
@@ -112,10 +114,10 @@ export default function EmployesTable() {
   };
 
   const sortLabels = {
-    "date-desc": "Les plus récents",
-    "date-asc": "Les plus anciens",
-    "name-asc": "Nom (A-Z)",
-    "name-desc": "Nom (Z-A)",
+    "date-desc": t("recent"),
+    "date-asc": t("oldest"),
+    "name-asc": t("sort_name_asc"),
+    "name-desc": t("sort_name_desc"),
   };
 
   const processedEmployees = getProcessedEmployees();
@@ -138,7 +140,7 @@ export default function EmployesTable() {
         className="mb-4"
         onClick={() => navigate("/tables/creer-employe")}
       >
-        <i className="ph ph-plus-circle me-1" /> Ajouter un nouvel employé
+        <i className="ph ph-plus-circle me-1" /> {t("add_new_employee")}
       </Button>
       <MainCard
         title={
@@ -158,7 +160,7 @@ export default function EmployesTable() {
                     setCurrentPage(1);
                   }}
                 >
-                  Tous
+                  {t("filter_all")}
                 </Button>
                 <Button
                   variant={roleFilter === "admin" ? "white" : "transparent"}
@@ -169,7 +171,7 @@ export default function EmployesTable() {
                     setCurrentPage(1);
                   }}
                 >
-                  Administrateurs
+                  {t("administrators")}
                 </Button>
                 <Button
                   variant={roleFilter === "staff" ? "white" : "transparent"}
@@ -180,7 +182,7 @@ export default function EmployesTable() {
                     setCurrentPage(1);
                   }}
                 >
-                  Employés
+                  {t("employees")}
                 </Button>
               </div>
               <div
@@ -208,7 +210,7 @@ export default function EmployesTable() {
                   style={{ borderRadius: "12px" }}
                 >
                   <Dropdown.Header className="text-uppercase small fw-bold text-muted">
-                    Trier par nom
+                    {t("sort_by_name")}
                   </Dropdown.Header>
                   <Dropdown.Item
                     onClick={() => {
@@ -216,7 +218,7 @@ export default function EmployesTable() {
                       setCurrentPage(1);
                     }}
                   >
-                    <i className="ph ph-text-aa me-2" /> Nom (A-Z)
+                    <i className="ph ph-text-aa me-2" /> {t("sort_name_asc")}
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
@@ -224,11 +226,11 @@ export default function EmployesTable() {
                       setCurrentPage(1);
                     }}
                   >
-                    <i className="ph ph-text-aa me-2" /> Nom (Z-A)
+                    <i className="ph ph-text-aa me-2" /> {t("sort_name_desc")}
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Header className="text-uppercase small fw-bold text-muted">
-                    Date d'arrivée
+                    {t("sort_by_date")}
                   </Dropdown.Header>
                   <Dropdown.Item
                     onClick={() => {
@@ -236,8 +238,8 @@ export default function EmployesTable() {
                       setCurrentPage(1);
                     }}
                   >
-                    <i className="ph ph-calendar-plus me-2 text-primary" /> Plus
-                    récents
+                    <i className="ph ph-calendar-plus me-2 text-primary" />
+                    {t("recent")}
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
@@ -245,7 +247,7 @@ export default function EmployesTable() {
                       setCurrentPage(1);
                     }}
                   >
-                    <i className="ph ph-calendar-minus me-2" /> Plus anciens
+                    <i className="ph ph-calendar-minus me-2" /> {t("oldest")}
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -257,10 +259,10 @@ export default function EmployesTable() {
           <thead>
             <tr>
               <th width="60"></th>
-              <th className="text-center">Nom</th>
-              <th className="text-center">Rôle</th>
-              <th className="text-center">Statut</th>
-              <th className="text-center">Date de création</th>
+              <th className="text-center">{t("table_name")}</th>
+              <th className="text-center">{t("role")}</th>
+              <th className="text-center">{t("status")}</th>
+              <th className="text-center">{t("table_date_creation")}</th>
             </tr>
           </thead>
           <tbody>
@@ -290,25 +292,25 @@ export default function EmployesTable() {
                         bg="light-danger"
                         className="text-danger border border-danger"
                       >
-                        Administrateur
+                        {t("administrators")}
                       </Badge>
                     ) : (
                       <Badge
                         bg="light-primary"
                         className="text-primary border border-primary"
                       >
-                        Employé
+                        {t("employee")}
                       </Badge>
                     )}
                   </td>
                   <td>
                     {emp.is_active ? (
                       <Badge bg="success" pill>
-                        Actif
+                        {t("active")}
                       </Badge>
                     ) : (
                       <Badge bg="secondary" pill>
-                        Inactif
+                        {t("inactive")}
                       </Badge>
                     )}
                   </td>
@@ -318,7 +320,7 @@ export default function EmployesTable() {
             {!loading && processedEmployees.length === 0 && (
               <tr>
                 <td colSpan="5" className="text-center py-4">
-                  Aucun employé n'a été trouvé.
+                  {t("no_employees_found")}
                 </td>
               </tr>
             )}
@@ -327,9 +329,11 @@ export default function EmployesTable() {
         {processedEmployees.length > itemsPerPage && (
           <div className="d-flex justify-content-between align-items-center p-3 border-top">
             <div className="text-muted small">
-              Affichage de {indexOfFirstItem + 1} à{" "}
-              {Math.min(indexOfLastItem, processedEmployees.length)} sur{" "}
-              {processedEmployees.length} employés
+              {t("pagination_showing", {
+                start: indexOfFirstItem + 1,
+                end: Math.min(indexOfLastItem, processedEmployees.length),
+                total: processedEmployees.length,
+              })}
             </div>
             <Pagination className="mb-0">
               <Pagination.First

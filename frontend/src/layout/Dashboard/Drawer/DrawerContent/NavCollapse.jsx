@@ -6,6 +6,7 @@ import Collapse from "react-bootstrap/Collapse";
 import ListGroup from "react-bootstrap/ListGroup";
 import NavItem from "./NavItem";
 import { useGetMenuMaster } from "api/menu";
+import { useTranslation } from "react-i18next";
 
 export default function NavCollapse({
   menu,
@@ -16,6 +17,7 @@ export default function NavCollapse({
   setSelectedLevel,
   selectedLevel,
 }) {
+  const { t } = useTranslation();
   const { menuMaster } = useGetMenuMaster();
   const navigation = useNavigate();
   const drawerOpen = menuMaster?.isDashboardDrawerOpened;
@@ -153,7 +155,7 @@ export default function NavCollapse({
             <i className={menu.icon} />
           </span>
         )}
-        <span className="pc-mtext">{menu.title}</span>
+        <span className="pc-mtext">{t(menu.title)}</span>
         <span className="pc-arrow">
           <i className={`ti ti-chevron-right`} />
         </span>

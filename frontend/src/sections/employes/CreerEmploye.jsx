@@ -9,11 +9,13 @@ import {
 } from "utils/validationSchema";
 import InputGroup from "react-bootstrap/InputGroup";
 import MainCard from "components/MainCard";
+import { useTranslation } from "react-i18next";
 import api from "api/api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export default function CreerEmploye() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -46,11 +48,11 @@ export default function CreerEmploye() {
       };
 
       await api.post("/api/users/", payload);
-      toast.success("Employé créé avec succès !");
+      toast.success(t("employee_created"));
       navigate("/tables/employes-table");
     } catch (error) {
       console.error(error);
-      toast.error("Une erreur est survenue lors de la création.");
+      toast.error(t("error_save_general"));
     } finally {
       setIsSubmitting(false);
     }
@@ -58,16 +60,16 @@ export default function CreerEmploye() {
 
   return (
     <Stack gap={4}>
-      <MainCard title="Création d'un nouvel employé">
+      <MainCard title={t("create_employee")}>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Row>
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  Prénom <span className="text-danger">*</span>
+                  {t("label_prenom")} <span className="text-danger">*</span>
                 </Form.Label>
                 <Form.Control
-                  {...register("first_name", firstNameSchema)}
+                  {...register("first_name", firstNameSchema(t))}
                   isInvalid={!!errors.first_name}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -78,10 +80,10 @@ export default function CreerEmploye() {
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  Nom <span className="text-danger">*</span>
+                  {t("label_nom")} <span className="text-danger">*</span>
                 </Form.Label>
                 <Form.Control
-                  {...register("last_name", lastNameSchema)}
+                  {...register("last_name", lastNameSchema(t))}
                   isInvalid={!!errors.last_name}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -92,11 +94,11 @@ export default function CreerEmploye() {
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  Identifiant <span className="text-danger">*</span>
+                  {t("username")} <span className="text-danger">*</span>
                 </Form.Label>
                 <Form.Control
                   {...register("username", {
-                    required: "L'identifiant est requis",
+                    required: t("error_client_name_req"),
                   })}
                   isInvalid={!!errors.username}
                 />
@@ -108,11 +110,12 @@ export default function CreerEmploye() {
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  Email <span className="text-danger">*</span>
+                  {t("label_email_address")}
+                  <span className="text-danger">*</span>
                 </Form.Label>
                 <Form.Control
                   type="email"
-                  {...register("email", emailSchema)}
+                  {...register("email", emailSchema(t))}
                   isInvalid={!!errors.email}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -123,13 +126,13 @@ export default function CreerEmploye() {
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  Mot de passe <span className="text-danger">*</span>
+                  {t("label_password")} <span className="text-danger">*</span>
                 </Form.Label>
                 <InputGroup>
                   <Form.Control
                     type={showPassword ? "text" : "password"}
-                    placeholder="Mot de passe"
-                    {...register("password", passwordSchema)}
+                    placeholder={t("label_password")}
+                    {...register("password", passwordSchema(t))}
                     isInvalid={!!errors.password}
                   />
                   <Button onClick={togglePasswordVisibility}>
@@ -148,16 +151,16 @@ export default function CreerEmploye() {
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  Rôle <span className="text-danger">*</span>
+                  {t("label_type")} <span className="text-danger">*</span>
                 </Form.Label>
                 <Form.Select {...register("role")}>
-                  <option value="staff">Employé</option>
-                  <option value="admin">Administrateur</option>
+                  <option value="staff">{t("employees")}</option>
+                  <option value="admin">{t("administrators")}</option>
                 </Form.Select>
                 {roleWatch === "admin" && (
                   <Form.Text className="text-danger">
-                    <i className="ti ti-alert-triangle me-1" /> Attention : ce
-                    rôle accorde l'intégralité des droits d'accès.
+                    <i className="ti ti-alert-triangle me-1" />
+                    {t("admin_warning")}
                   </Form.Text>
                 )}
               </Form.Group>
@@ -170,7 +173,7 @@ export default function CreerEmploye() {
               className="px-5 text-white"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Enregistrement en cours..." : "Créer l'employé"}
+              {isSubmitting ? t("saving_in_progress") : t("create_employee")}
             </Button>
           </div>
         </Form>

@@ -4,35 +4,35 @@ const navigation = {
   children: [
     {
       id: "dashboard",
-      title: "Tableau de bord",
+      title: "dashboard",
       type: "item",
       icon: "ph ph-house-line",
       url: "/",
     },
     {
       id: "to-do",
-      title: "Liste des tâches",
+      title: "task_list",
       type: "item",
       icon: "ph ph-list-checks",
       url: "/informations/to-do/kanban",
     },
     {
       id: "clients-table",
-      title: "Liste des clients",
+      title: "client_list",
       type: "item",
       icon: "ph ph-address-book",
       url: "/tables/clients-table",
       children: [
         {
           id: "creer-client",
-          title: "Créer un client",
+          title: "create_client",
           type: "item",
           url: "/tables/creer-client",
           hideInMenu: true,
         },
         {
           id: "details-client",
-          title: "Détails du client",
+          title: "client_details",
           type: "item",
           url: "/tables/details-client",
           hideInMenu: true,
@@ -41,7 +41,7 @@ const navigation = {
     },
     {
       id: "employes-table",
-      title: "Liste des employés",
+      title: "employee_list",
       type: "item",
       icon: "ph ph-user-list",
       url: "/tables/employes-table",
@@ -49,14 +49,14 @@ const navigation = {
       children: [
         {
           id: "creer-employe",
-          title: "Créer un employé",
+          title: "create_employee",
           type: "item",
           url: "/tables/creer-employe",
           hideInMenu: true,
         },
         {
           id: "details-employe",
-          title: "Détails de l'employé",
+          title: "employee_details",
           type: "item",
           url: "/tables/details-employe",
           hideInMenu: true,

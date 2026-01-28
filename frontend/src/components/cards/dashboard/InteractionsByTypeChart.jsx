@@ -1,12 +1,14 @@
 import Chart from "react-apexcharts";
 import MainCard from "components/MainCard";
+import { useTranslation } from "react-i18next";
 
 export default function InteractionsByTypeChart({ data, title, isPie }) {
+  const { t } = useTranslation();
   const series = isPie
     ? data.map((item) => item.count)
     : [
         {
-          name: "Total des interactions",
+          name: t("total_interactions_chart"),
           data: data.map((item) => item.count),
         },
       ];

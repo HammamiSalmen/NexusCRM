@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import {
   Table,
@@ -9,11 +10,13 @@ import {
   Dropdown,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import api from "api/api";
 import toast from "react-hot-toast";
 import MainCard from "components/MainCard";
 
 export default function ClientsTable() {
+  const { t, i18n } = useTranslation();
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,7 +32,7 @@ export default function ClientsTable() {
       const response = await api.get("/api/clients/");
       setClients(response.data);
     } catch (error) {
-      toast.error("Erreur lors du chargement des clients");
+      toast.error(t("error_load_clients"));
     } finally {
       setLoading(false);
     }
@@ -80,10 +83,10 @@ export default function ClientsTable() {
   };
 
   const sortLabels = {
-    "date-desc": "Les plus récents",
-    "date-asc": "Les plus anciens",
-    "name-asc": "Nom (A-Z)",
-    "name-desc": "Nom (Z-A)",
+    "date-desc": t("sort_date_desc"),
+    "date-asc": t("sort_date_asc"),
+    "name-asc": t("sort_name_asc"),
+    "name-desc": t("sort_name_desc"),
   };
 
   const getAvatarColor = (name) => {
@@ -133,7 +136,7 @@ export default function ClientsTable() {
           size="lg"
           onClick={() => navigate("/tables/creer-client")}
         >
-          <i className="ph ph-plus-circle me-1" /> Ajouter un nouveau client
+          <i className="ph ph-plus-circle me-1" /> {t("add_new_client")}
         </Button>
       </Stack>
       <MainCard
@@ -155,7 +158,7 @@ export default function ClientsTable() {
                       setCurrentPage(1);
                     }}
                   >
-                    Tous
+                    {t("filter_all")}
                   </Button>
                   <Button
                     variant={filterMode === "mine" ? "white" : "transparent"}
@@ -166,7 +169,7 @@ export default function ClientsTable() {
                       setCurrentPage(1);
                     }}
                   >
-                    Mes clients
+                    {t("filter_mine")}
                   </Button>
                 </div>
               )}
@@ -196,7 +199,7 @@ export default function ClientsTable() {
                   style={{ borderRadius: "12px" }}
                 >
                   <Dropdown.Header className="text-uppercase small fw-bold text-muted">
-                    Trier par nom
+                    {t("sort_by_name")}
                   </Dropdown.Header>
                   <Dropdown.Item
                     className="py-2"
@@ -205,7 +208,8 @@ export default function ClientsTable() {
                       setCurrentPage(1);
                     }}
                   >
-                    <i className="ph ph-sort-ascending me-2" /> Nom (A-Z)
+                    <i className="ph ph-sort-ascending me-2" />
+                    {t("sort_name_asc")}
                   </Dropdown.Item>
                   <Dropdown.Item
                     className="py-2"
@@ -214,11 +218,12 @@ export default function ClientsTable() {
                       setCurrentPage(1);
                     }}
                   >
-                    <i className="ph ph-sort-descending me-2" /> Nom (Z-A)
+                    <i className="ph ph-sort-descending me-2" />
+                    {t("sort_name_desc")}
                   </Dropdown.Item>
                   <Dropdown.Divider className="opacity-50" />
                   <Dropdown.Header className="text-uppercase small fw-bold text-muted">
-                    Date d'arrivée
+                    {t("sort_date_arrival")}
                   </Dropdown.Header>
                   <Dropdown.Item
                     className="py-2"
@@ -227,8 +232,8 @@ export default function ClientsTable() {
                       setCurrentPage(1);
                     }}
                   >
-                    <i className="ph ph-calendar-plus me-2 text-primary" /> Plus
-                    récents
+                    <i className="ph ph-calendar-plus me-2 text-primary" />
+                    {t("sort_date_desc")}
                   </Dropdown.Item>
                   <Dropdown.Item
                     className="py-2"
@@ -237,7 +242,8 @@ export default function ClientsTable() {
                       setCurrentPage(1);
                     }}
                   >
-                    <i className="ph ph-calendar-minus me-2" /> Plus anciens
+                    <i className="ph ph-calendar-minus me-2" />
+                    {t("sort_date_asc")}
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -249,9 +255,9 @@ export default function ClientsTable() {
           <thead>
             <tr>
               <th width="60"></th>
-              <th className="text-center">Nom</th>
-              <th className="text-center">Type</th>
-              <th className="text-center">Date de création</th>
+              <th className="text-center">{t("table_name")}</th>
+              <th className="text-center">{t("type")}</th>
+              <th className="text-center">{t("table_date_creation")}</th>
             </tr>
           </thead>
           <tbody>
@@ -279,14 +285,16 @@ export default function ClientsTable() {
                     </span>
                   </td>
                   <td>
-                    {new Date(client.dateCreationClient).toLocaleDateString()}
+                    {new Date(client.dateCreationClient).toLocaleDateString(
+                      i18n.language,
+                    )}
                   </td>
                 </tr>
               ))}
             {!loading && processedClients.length === 0 && (
               <tr>
                 <td colSpan="4" className="text-center py-4">
-                  Aucun client n'a été trouvé.
+                  {t("no_clients_found")}
                 </td>
               </tr>
             )}
@@ -295,9 +303,11 @@ export default function ClientsTable() {
         {processedClients.length > itemsPerPage && (
           <div className="d-flex justify-content-between align-items-center p-3 border-top">
             <div className="text-muted small">
-              Affichage de {indexOfFirstItem + 1} à{" "}
-              {Math.min(indexOfLastItem, processedClients.length)} sur{" "}
-              {processedClients.length} clients
+              {t("pagination_showing", {
+                start: indexOfFirstItem + 1,
+                end: Math.min(indexOfLastItem, processedClients.length),
+                total: processedClients.length,
+              })}
             </div>
             <Pagination className="mb-0">
               <Pagination.First

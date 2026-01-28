@@ -13,6 +13,7 @@ import {
   Badge,
 } from "react-bootstrap";
 import MainCard from "components/MainCard";
+import { useTranslation } from "react-i18next";
 import api from "api/api";
 import Swal from "sweetalert2";
 import toast, { Toaster } from "react-hot-toast";
@@ -63,6 +64,7 @@ const AvatarPro = ({ name, size = "35px", fontSize = "14px" }) => (
 );
 
 const DetailsEmploye = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [employe, setEmploye] = useState(null);
@@ -100,7 +102,7 @@ const DetailsEmploye = () => {
       );
       setLoading(false);
     } catch (err) {
-      toast.error("Erreur lors du chargement des données.");
+      toast.error(t("error_load_client_data"));
       navigate("/tables/employes-table");
     }
   };
@@ -129,11 +131,11 @@ const DetailsEmploye = () => {
       };
       if (data.password) payload.password = data.password;
       await api.patch(`/api/users/${id}/`, payload);
-      toast.success("Employé mis à jour avec succès.");
+      toast.success(t("success_employee_update"));
       setShowEditModal(false);
       fetchEmployeData();
     } catch (error) {
-      toast.error("Erreur lors de la mise à jour.");
+      toast.error(t("error_employee_update"));
     } finally {
       setIsSubmitting(false);
     }
@@ -142,17 +144,17 @@ const DetailsEmploye = () => {
   const handleTransfer = async (event) => {
     event.preventDefault();
     const newUserId = event.target.newUserId.value;
-    if (!newUserId) return toast.error("Veuillez choisir un utilisateur.");
+    if (!newUserId) return toast.error(t("error_select_user"));
     try {
       setIsSubmitting(true);
       await api.patch(`/api/clients/${clientToTransfer.id}/`, {
         user: newUserId,
       });
-      toast.success(`Le client a été transféré avec succès.`);
+      toast.success(t("success_client_transfer"));
       setShowTransferModal(false);
       fetchEmployeData();
     } catch (error) {
-      toast.error("Erreur lors du transfert.");
+      toast.error(t("error_client_transfer"));
     } finally {
       setIsSubmitting(false);
     }
@@ -161,23 +163,22 @@ const DetailsEmploye = () => {
   const handleDisableUser = () => {
     Swal.fire({
       title: employe.is_active
-        ? "Désactiver ce compte ?"
-        : "Réactiver ce compte ?",
-      text: employe.is_active
-        ? "L'utilisateur ne pourra plus accéder à la plateforme."
-        : "L'utilisateur pourra de nouveau accéder à la plateforme.",
+        ? t("swal_disable_account")
+        : t("swal_enable_account"),
+      text: employe.is_active ? t("swal_disable_text") : t("swal_enable_text"),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: employe.is_active ? "#e74c3c" : "#2ecc71",
       confirmButtonText: employe.is_active
-        ? "Oui, désactiver"
-        : "Oui, réactiver",
-      cancelButtonText: "Annuler",
+        ? t("swal_confirm_disable")
+        : t("swal_confirm_enable"),
+
+      cancelButtonText: t("cancel"),
     }).then(async (result) => {
       if (result.isConfirmed) {
         await api.patch(`/api/users/${id}/`, { is_active: !employe.is_active });
         toast.success(
-          employe.is_active ? "Compte désactivé." : "Compte réactivé.",
+          employe.is_active ? t("disable_account") : t("enable_account"),
         );
         fetchEmployeData();
       }
@@ -224,23 +225,23 @@ const DetailsEmploye = () => {
                         bg="light-danger"
                         className="text-danger border border-danger"
                       >
-                        Administrateur
+                        {t("administrators")}
                       </Badge>
                     ) : (
                       <Badge
                         bg="light-primary"
                         className="text-primary border border-primary"
                       >
-                        Employé
+                        {t("employee")}
                       </Badge>
                     )}
                     {employe.is_active ? (
                       <Badge bg="light-success" className="text-success">
-                        Compte actif
+                        {t("account_active")}
                       </Badge>
                     ) : (
                       <Badge bg="light-secondary" className="text-secondary">
-                        Compte désactivé
+                        {t("account_disabled")}
                       </Badge>
                     )}
                   </div>
@@ -252,8 +253,9 @@ const DetailsEmploye = () => {
               </div>
               <div className="d-flex gap-2">
                 <Button variant="outline-primary" onClick={openEditModal}>
-                  <i className="ti ti-pencil" /> Modifier
+                  <i className="ti ti-pencil" /> {t("edit_employee")}
                 </Button>
+
                 <Button
                   variant={
                     employe.is_active ? "outline-danger" : "outline-success"
@@ -263,13 +265,17 @@ const DetailsEmploye = () => {
                   <i
                     className={`ti ${employe.is_active ? "ti-user-off" : "ti-user-check"}`}
                   />
-                  {employe.is_active ? " Désactiver" : " Réactiver"}
+                  {employe.is_active
+                    ? t("employee_disabled")
+                    : t("employee_enabled")}
                 </Button>
               </div>
             </div>
             <hr className="my-4 opacity-10" />
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <h4 className="mb-0">Clients associés ({clientsGeres.length})</h4>
+              <h4 className="mb-0">
+                {t("associated_clients")} ({clientsGeres.length})
+              </h4>
             </div>
             {clientsGeres.length > 0 ? (
               <div className="table-responsive">
@@ -277,10 +283,12 @@ const DetailsEmploye = () => {
                   <thead className="bg-light">
                     <tr>
                       <th width="60"></th>
-                      <th className="text-center">Nom</th>
-                      <th className="text-center">Type</th>
-                      <th className="text-center">Date de création</th>
-                      <th className="text-center">Actions</th>
+                      <th className="text-center">{t("table_name")}</th>
+                      <th className="text-center">{t("type")}</th>
+                      <th className="text-center">
+                        {t("table_date_creation")}
+                      </th>
+                      <th className="text-center">{t("actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -315,7 +323,7 @@ const DetailsEmploye = () => {
                           <Button
                             variant="outline-warning"
                             size="sm"
-                            title="Transférer à un autre agent"
+                            title={t("tooltip_transfer_client")}
                             onClick={(e) => {
                               e.stopPropagation();
                               setClientToTransfer(client);
@@ -332,9 +340,11 @@ const DetailsEmploye = () => {
                 {clientsGeres.length > itemsPerPage && (
                   <div className="d-flex justify-content-between align-items-center p-3 border-top">
                     <div className="text-muted small">
-                      Affichage de {indexOfFirstItem + 1} à{" "}
-                      {Math.min(indexOfLastItem, clientsGeres.length)} sur{" "}
-                      {clientsGeres.length} clients
+                      {t("pagination_showing", {
+                        start: indexOfFirstItem + 1,
+                        end: Math.min(indexOfLastItem, clientsGeres.length),
+                        total: clientsGeres.length,
+                      })}
                     </div>
                     <Pagination className="mb-0">
                       <Pagination.Prev
@@ -366,7 +376,7 @@ const DetailsEmploye = () => {
             ) : (
               <div className="text-center py-5 text-muted bg-light rounded dashed-border">
                 <i className="ti ti-folder-off fs-1 mb-2 d-block" />
-                Cet employé ne gère aucun client pour le moment.
+                {t("no_clients_assigned")}
               </div>
             )}
           </MainCard>
@@ -379,50 +389,50 @@ const DetailsEmploye = () => {
         backdrop="static"
       >
         <Modal.Header closeButton className="bg-light">
-          <Modal.Title>Modifier l'employé</Modal.Title>
+          <Modal.Title>{t("edit_employee_title")}</Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit(onUpdateEmploye)}>
           <Modal.Body className="p-4">
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Prénom</Form.Label>
-                  <Form.Control {...register("first_name", firstNameSchema)} />
+                  <Form.Label>{t("label_prenom")}</Form.Label>
+                  <Form.Control
+                    {...register("first_name", firstNameSchema(t))}
+                  />
                 </Form.Group>
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Nom</Form.Label>
-                  <Form.Control {...register("last_name", lastNameSchema)} />
+                  <Form.Label>{t("label_nom")}</Form.Label>
+                  <Form.Control {...register("last_name", lastNameSchema(t))} />
                 </Form.Group>
               </Col>
               <Col md={12}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label>{t("label_email_address")}</Form.Label>
                   <Form.Control
                     type="email"
-                    {...register("email", emailSchema)}
+                    {...register("email", emailSchema(t))}
                   />
                 </Form.Group>
               </Col>
               <Col md={12}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Rôle</Form.Label>
+                  <Form.Label>{t("role")}</Form.Label>
                   <Form.Select {...register("role")}>
-                    <option value="staff">Employé</option>
-                    <option value="admin">Administrateur</option>
+                    <option value="staff">{t("employees")}</option>
+                    <option value="admin">{t("administrators")}</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
               <Col md={12}>
                 <Form.Group className="mb-3">
-                  <Form.Label>
-                    Nouveau mot de passe (laisser vide si inchangé)
-                  </Form.Label>
+                  <Form.Label>{t("new_password_optional")}</Form.Label>
                   <Form.Control
                     type="password"
-                    {...register("password", passwordSchema)}
-                    placeholder="******"
+                    {...register("password", passwordSchema(t))}
+                    placeholder={t("password_placeholder")}
                   />
                 </Form.Group>
               </Col>
@@ -430,10 +440,10 @@ const DetailsEmploye = () => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="link" onClick={() => setShowEditModal(false)}>
-              Annuler
+              {t("cancel")}
             </Button>
             <Button variant="primary" type="submit" disabled={isSubmitting}>
-              Enregistrer les modifications
+              {t("save_changes")}
             </Button>
           </Modal.Footer>
         </Form>
@@ -444,18 +454,17 @@ const DetailsEmploye = () => {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title>Transférer le client</Modal.Title>
+          <Modal.Title>{t("transfer_client")}</Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleTransfer}>
           <Modal.Body>
             <p>
-              Transférer <strong>{clientToTransfer?.nomClient}</strong> vers un
-              autre collaborateur :
+              {t("transfer_client_to", { name: clientToTransfer?.nomClient })}
             </p>
             <Form.Group>
-              <Form.Label>Choisir le nouvel attributaire</Form.Label>
+              <Form.Label>{t("choose_new_owner")}</Form.Label>
               <Form.Select name="newUserId" required>
-                <option value="">Sélectionner un employé...</option>
+                <option value="">{t("select_employee")}</option>
                 {allUsers.map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.first_name} {user.last_name} (@{user.username})
@@ -466,10 +475,10 @@ const DetailsEmploye = () => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="link" onClick={() => setShowTransferModal(false)}>
-              Annuler
+              {t("cancel")}
             </Button>
             <Button variant="warning" type="submit" disabled={isSubmitting}>
-              Confirmer le transfert
+              {t("confirm_transfer")}
             </Button>
           </Modal.Footer>
         </Form>

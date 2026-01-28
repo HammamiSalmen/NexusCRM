@@ -1,6 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
+from django.utils.translation import gettext_lazy as _
 import os
 
 load_dotenv()
@@ -12,6 +13,20 @@ SECRET_KEY = "django-insecure-hwn8+)one1u99^#%wtisic4&$#vsa@yr&(-yt(%t2)(a6%q(-9
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+USE_I18N = True
+USE_L10N = True
+
+LANGUAGE_CODE = "fr"
+
+LANGUAGES = [
+    ("fr", _("French")),
+    ("en", _("English")),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / "locale/",
+]
 
 ALLOWED_HOSTS = ["*"]
 
@@ -51,6 +66,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -99,11 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
-USE_I18N = True
 
 USE_TZ = True
 
@@ -111,3 +123,11 @@ STATIC_URL = "static/"
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True  # i can change those
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == "True"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")

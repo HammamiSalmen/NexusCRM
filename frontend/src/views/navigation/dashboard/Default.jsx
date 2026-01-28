@@ -8,10 +8,12 @@ import ClientGrowthChart from "../../../components/cards/dashboard/ClientGrowthC
 import RecentInteractionsTable from "../../../components/cards/dashboard/RecentInteractionsTable";
 import InteractionsByTypeChart from "../../../components/cards/dashboard/InteractionsByTypeChart";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export default function DefaultPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     api
@@ -20,17 +22,15 @@ export default function DefaultPage() {
         if (res.data) {
           setData(res.data);
         } else {
-          toast.error("Aucune donnée reçue du serveur.");
+          toast.error(t("error_no_data"));
         }
       })
       .catch((err) => {
         console.error("Erreur Tableau de bord", err);
-        toast.error(
-          "Impossible de charger les statistiques du tableau de bord.",
-        );
+        toast.error(t("error_dashboard_load"));
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [t]);
 
   if (loading) {
     return (
@@ -50,7 +50,7 @@ export default function DefaultPage() {
       <Row className="mb-4 g-3">
         <Col md={3}>
           <AnalyticEcommerce
-            title="Total des clients"
+            title={t("total_clients")}
             count={data.total_clients}
             icon="bi bi-people"
             color="primary"
@@ -58,7 +58,7 @@ export default function DefaultPage() {
         </Col>
         <Col md={3}>
           <AnalyticEcommerce
-            title="Total des interactions"
+            title={t("total_interactions")}
             count={data.total_interactions}
             icon="bi bi-chat-dots"
             color="info"
@@ -66,7 +66,7 @@ export default function DefaultPage() {
         </Col>
         <Col md={3}>
           <AnalyticEcommerce
-            title="Tâches terminées"
+            title={t("completed_tasks")}
             count={data.completed_tasks}
             icon="bi bi-check-circle"
             color="success"
@@ -74,7 +74,7 @@ export default function DefaultPage() {
         </Col>
         <Col md={3}>
           <AnalyticEcommerce
-            title="Tâches en cours"
+            title={t("pending_tasks")}
             count={data.pending_tasks}
             icon="bi bi-clock-history"
             color="danger"
@@ -84,7 +84,7 @@ export default function DefaultPage() {
       <Row className="mb-4 g-3">
         <Col md={4}>
           <InteractionsByTypeChart
-            title="Répartition des clients par type"
+            title={t("client_distribution_type")}
             data={data.clients_by_type || []}
             isPie={true}
           />
@@ -96,7 +96,7 @@ export default function DefaultPage() {
             </Col>
             <Col md={12} style={{ height: "48%" }}>
               <InteractionsByTypeChart
-                title="Volume d'interactions par canal"
+                title={t("interaction_volume_canal")}
                 data={data.interactions_by_type || []}
                 isPie={false}
               />
@@ -109,13 +109,14 @@ export default function DefaultPage() {
           <RecentInteractionsTable data={data.recent_interactions || []} />
         </Col>
         <Col md={4}>
-          <MainCard title="Classement des clients les plus actifs">
+          <MainCard title={t("active_clients_ranking")}>
             {data.top_clients.map((client, index) => (
               <div key={index} className="mb-4">
                 <div className="d-flex justify-content-between mb-1">
                   <span className="fw-bold">{client.name}</span>
                   <span className="fw-bold text-muted small">
-                    {client.count} interaction{client.count > 1 ? "s" : ""}
+                    {client.count}{" "}
+                    {client.count > 1 ? t("interactions") : t("interaction")}
                   </span>
                 </div>
                 <ProgressBar

@@ -1,19 +1,21 @@
 import { Table } from "react-bootstrap";
 import MainCard from "components/MainCard";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const getAvatarInitial = (name) => name.charAt(0).toUpperCase();
 
 export default function RecentInteractionsTable({ data }) {
+  const { t, i18n } = useTranslation();
   return (
-    <MainCard title="Interactions les plus récentes" content={false}>
+    <MainCard title={t("recent_interactions")} content={false}>
       <Table responsive hover className="align-middle mb-0">
         <thead className="bg-light">
           <tr>
-            <th className="ps-4">Client</th>
-            <th>Type</th>
-            <th>Date</th>
-            <th className="pe-4">Commentaire</th>
+            <th className="ps-4">{t("client")}</th>
+            <th>{t("type")}</th>
+            <th>{t("date")}</th>
+            <th className="pe-4">{t("comment")}</th>
           </tr>
         </thead>
         <tbody>
@@ -37,7 +39,11 @@ export default function RecentInteractionsTable({ data }) {
                   {item.type === "email" ? "E-mail" : item.type}
                 </span>
               </td>
-              <td>{new Date(item.date).toLocaleDateString("fr-FR")}</td>
+              <td>
+                {new Date(item.date).toLocaleDateString(
+                  i18n.language === "fr" ? "fr-FR" : "en-US",
+                )}
+              </td>
               <td className="pe-4 text-muted small">{item.comment}</td>
             </tr>
           ))}

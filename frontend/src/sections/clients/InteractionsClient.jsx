@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Button, Modal, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import api from "api/api";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
@@ -14,6 +15,7 @@ const InteractionsClient = ({
   allContacts,
   initialContactId,
 }) => {
+  const { t, i18n } = useTranslation();
   const [interactions, setInteractions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -38,7 +40,7 @@ const InteractionsClient = ({
       );
       setInteractions(sortedData);
     } catch (error) {
-      toast.error("Erreur lors du chargement des interactions");
+      toast.error(t("error_interaction_load"));
     } finally {
       setLoading(false);
     }
@@ -78,10 +80,10 @@ const InteractionsClient = ({
       };
       if (editingId) {
         await api.put(`/api/interactions/${editingId}/`, payload);
-        toast.success("Interaction modifiée avec succès");
+        toast.success(t("success_interaction_edit"));
       } else {
         await api.post(`/api/interactions/`, payload);
-        toast.success("Interaction ajoutée avec succès");
+        toast.success(t("success_interaction_add"));
       }
       setEditingId(null);
       const principalContact = allContacts.find((c) => c.isPrincipal);
@@ -94,7 +96,7 @@ const InteractionsClient = ({
       });
       fetchInteractions();
     } catch (error) {
-      toast.error("Erreur lors de l'enregistrement de l'interaction");
+      toast.error(t("error_interaction_save"));
     }
   };
 
@@ -119,26 +121,26 @@ const InteractionsClient = ({
 
   const handleDelete = (idInt) => {
     if (!idInt) {
-      toast.error("ID invalide");
+      toast.error(t("error_invalid_id"));
       return;
     }
 
     Swal.fire({
-      title: "Supprimer cette interaction ?",
-      text: "Cette action est irréversible.",
+      title: t("swal_delete_title"),
+      text: t("swal_delete_text"),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#e74c3c",
-      confirmButtonText: "Oui, supprimer",
-      cancelButtonText: "Annuler",
+      confirmButtonText: t("swal_confirm_btn"),
+      cancelButtonText: t("cancel"),
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           await api.delete(`/api/interactions/${idInt}/`);
-          toast.success("Interaction supprimée avec succès");
+          toast.success(t("success_interaction_delete"));
           fetchInteractions();
         } catch (e) {
-          toast.error("Erreur lors de la suppression");
+          toast.error(t("error_interaction_delete"));
         }
       }
     });
@@ -146,10 +148,10 @@ const InteractionsClient = ({
 
   const getTypeConfig = (type) => {
     const configs = {
-      APPEL: { color: "primary", icon: "ti-phone-call" },
-      EMAIL: { color: "info", icon: "ti-mail" },
-      REUNION: { color: "success", icon: "ti-users" },
-      AUTRE: { color: "secondary", icon: "ti-dots" },
+      APPEL: { color: "primary", icon: "ti-phone-call", label: t("type_call") },
+      EMAIL: { color: "info", icon: "ti-mail", label: t("type_email") },
+      REUNION: { color: "success", icon: "ti-users", label: t("type_meeting") },
+      AUTRE: { color: "secondary", icon: "ti-dots", label: t("type_other") },
     };
     return configs[type] || configs.AUTRE;
   };
@@ -165,7 +167,9 @@ const InteractionsClient = ({
     >
       <Modal.Header closeButton className="bg-light">
         <Modal.Title>
-          {editingId ? "Modifier l'interaction" : `Historique : ${clientName}`}
+          {editingId
+            ? t("edit_interaction")
+            : t("interaction_history", { name: clientName })}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="p-0">
@@ -181,10 +185,10 @@ const InteractionsClient = ({
               </Col>
               <Col md={3}>
                 <Form.Select size="sm" {...register("typeInteraction")}>
-                  <option value="APPEL">Appel</option>
-                  <option value="EMAIL">Email</option>
-                  <option value="REUNION">Réunion</option>
-                  <option value="AUTRE">Autre</option>
+                  <option value="APPEL">{t("type_call")}</option>
+                  <option value="EMAIL">{t("type_email")}</option>
+                  <option value="REUNION">{t("type_meeting")}</option>
+                  <option value="AUTRE">{t("type_other")}</option>
                 </Form.Select>
               </Col>
               <Col md={3}>
@@ -207,7 +211,7 @@ const InteractionsClient = ({
                   variant={editingId ? "secondary" : "primary"}
                   className="w-100"
                 >
-                  {editingId ? "Modifier" : "Ajouter"}
+                  {editingId ? t("btn_modify") : t("btn_add")}
                 </Button>
               </Col>
               <Col md={12}>
@@ -215,7 +219,7 @@ const InteractionsClient = ({
                   as="textarea"
                   rows={2}
                   size="sm"
-                  placeholder="Détails de l'interaction..."
+                  placeholder={t("placeholder_interaction_details")}
                   {...register("commInteraction")}
                 />
               </Col>
@@ -224,7 +228,7 @@ const InteractionsClient = ({
         </div>
         <div className="p-4" style={{ maxHeight: "400px", overflowY: "auto" }}>
           {loading ? (
-            <div className="text-center p-3">Chargement en cours...</div>
+            <div className="text-center p-3">{t("loading_in_progress")}</div>
           ) : (
             interactions.map((item) => {
               const currentId = item.id || item.idInteraction;
@@ -260,7 +264,7 @@ const InteractionsClient = ({
                         <br />
                         <small className="text-muted">
                           {new Date(item.dateInteraction).toLocaleString(
-                            "fr-FR",
+                            i18n.language,
                           )}
                         </small>
                       </div>

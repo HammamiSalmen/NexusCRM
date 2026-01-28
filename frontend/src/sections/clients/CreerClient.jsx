@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Row, Col, Form, Button, Modal, Stack, Image } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import MainCard from "components/MainCard";
+import { useTranslation } from "react-i18next";
 import api from "api/api";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
@@ -16,6 +17,7 @@ import {
 } from "@/utils/validationSchema";
 
 export default function CreerClient() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
   const [showContactModal, setShowContactModal] = useState(false);
@@ -88,7 +90,12 @@ export default function CreerClient() {
       resetContact();
       setShowContactModal(true);
     } else {
-      toast.error("Veuillez d'abord saisir le nom du client.");
+      toast.error(
+        t(
+          "error_client_name_first",
+          "Veuillez d'abord saisir le nom du client.",
+        ),
+      );
     }
   };
 
@@ -100,7 +107,10 @@ export default function CreerClient() {
       setShowContactModal(true);
     } else {
       toast.error(
-        "Veuillez saisir le nom du client avant de modifier un contact.",
+        t(
+          "error_client_name_edit",
+          "Veuillez saisir le nom du client avant de modifier un contact.",
+        ),
       );
     }
   };
@@ -110,24 +120,28 @@ export default function CreerClient() {
       contacts.map((c, idx) => ({ ...c, isPrincipal: idx === indexToSet })),
     );
     toast.success(
-      `${contacts[indexToSet].prenomContact} est désormais le contact principal.`,
+      t("toast_contact_set_main", {
+        name: contacts[indexToSet].prenomContact,
+        defaultValue: `${contacts[indexToSet].prenomContact} est désormais le contact principal.`,
+      }),
     );
   };
 
   const removeContact = (indexToRemove) => {
     Swal.fire({
-      title: "Supprimer ce contact ?",
-      text: "Cette modification sera immédiate pour ce formulaire.",
+      title: t("swal_delete_contact_title", "Supprimer ce contact ?"),
+      text: t(
+        "swal_delete_contact_text",
+        "Cette modification sera immédiate pour ce formulaire.",
+      ),
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Oui, supprimer",
-      cancelButtonText: "Annuler",
+      confirmButtonText: t("swal_confirm_btn", "Oui, supprimer"),
+      cancelButtonText: t("cancel", "Annuler"),
     }).then((result) => {
       if (result.isConfirmed) {
         setContacts(contacts.filter((_, idx) => idx !== indexToRemove));
-        toast.success("Contact retiré de la liste");
+        toast.success(t("toast_contact_removed", "Contact retiré de la liste"));
       }
     });
   };
@@ -136,10 +150,10 @@ export default function CreerClient() {
     let newContacts = [...contacts];
     if (editingIndex !== null) {
       newContacts[editingIndex] = data;
-      toast.success("Contact modifié");
+      toast.success(t("success_contact_edit", "Contact modifié"));
     } else {
       newContacts.push(data);
-      toast.success("Contact ajouté");
+      toast.success(t("success_contact_add", "Contact ajouté"));
     }
     if (data.posteContact) registerPosteUsage(data.posteContact);
     const isFirstContact = contacts.length === 0;
@@ -159,15 +173,30 @@ export default function CreerClient() {
     if (action === "close") {
       setShowContactModal(false);
     } else {
-      toast.success("Contact ajouté, vous pouvez en saisir un autre.");
+      toast.success(
+        t(
+          "toast_contact_added_more",
+          "Contact ajouté, vous pouvez en saisir un autre.",
+        ),
+      );
     }
   };
 
   const onSubmitAll = async (clientData) => {
     if (contacts.length === 0)
-      return toast.error("Veuillez ajouter au moins un contact.");
+      return toast.error(
+        t(
+          "error_at_least_one_contact",
+          "Veuillez ajouter au moins un contact.",
+        ),
+      );
     if (!contacts.some((c) => c.isPrincipal))
-      return toast.error("Veuillez désigner un contact principal.");
+      return toast.error(
+        t(
+          "error_main_contact_required",
+          "Veuillez désigner un contact principal.",
+        ),
+      );
     try {
       setIsSubmitting(true);
       const {
@@ -185,11 +214,16 @@ export default function CreerClient() {
           contacts.indexOf(mainContact),
         );
       }
-      toast.success("Client et contacts enregistrés avec succès !");
+      toast.success(
+        t(
+          "success_client_saved",
+          "Client et contacts enregistrés avec succès !",
+        ),
+      );
       navigate("/tables/clients-table");
     } catch (error) {
       console.error(error);
-      toast.error("Erreur lors de l'enregistrement.");
+      toast.error(t("error_save_general", "Erreur lors de l'enregistrement."));
     } finally {
       setIsSubmitting(false);
     }
@@ -205,21 +239,30 @@ export default function CreerClient() {
         }}
       >
         <Stack gap={4}>
-          <MainCard title="Création d'un client">
+          <MainCard title={t("create_client_title", "Création d'un client")}>
             <Form
               onSubmit={handleSubmit(onSubmitAll, () =>
-                toast.error("Veuillez remplir les champs obligatoires."),
+                toast.error(
+                  t(
+                    "error_fill_required",
+                    "Veuillez remplir les champs obligatoires.",
+                  ),
+                ),
               )}
             >
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>
-                      Nom client <span className="text-danger">*</span>
+                      {t("client_name_label", "Nom client")}
+                      <span className="text-danger">*</span>
                     </Form.Label>
                     <Form.Control
                       {...register("nomClient", {
-                        required: "Le nom du client est requis.",
+                        required: t(
+                          "client_name_required",
+                          "Le nom du client est requis.",
+                        ),
                       })}
                       isInvalid={!!errors.nomClient}
                     />
@@ -231,16 +274,23 @@ export default function CreerClient() {
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>
-                      Type <span className="text-danger">*</span>
+                      {t("type_label", "Type")}{" "}
+                      <span className="text-danger">*</span>
                     </Form.Label>
                     <Form.Select {...register("typeClient")}>
-                      <option value="PARTICULIER">Particulier</option>
-                      <option value="ENTREPRISE">Entreprise</option>
+                      <option value="PARTICULIER">
+                        {t("type_individual", "Particulier")}
+                      </option>
+                      <option value="ENTREPRISE">
+                        {t("type_company", "Entreprise")}
+                      </option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
               </Row>
-              <h5 className="mt-4 mb-3">Contacts associés</h5>
+              <h5 className="mt-4 mb-3">
+                {t("associated_contacts", "Contacts associés")}
+              </h5>
               <Row className="g-3">
                 {contacts.map((c, idx) => (
                   <Col key={idx} xs={12} sm={6} md={4} lg={3}>
@@ -259,8 +309,8 @@ export default function CreerClient() {
                           }}
                         >
                           <span className="badge rounded-pill bg-primary shadow-sm px-3">
-                            <i className="ti ti-star-filled me-1" /> Contact
-                            Principal
+                            <i className="ti ti-star-filled me-1" />
+                            {t("main_contact_badge", "Contact Principal")}
                           </span>
                         </div>
                       ) : (
@@ -296,7 +346,8 @@ export default function CreerClient() {
                           {c.prenomContact} {c.nomContact}
                         </h6>
                         <p className="text-muted small mb-3">
-                          {c.posteContact || "Poste non défini"}
+                          {c.posteContact ||
+                            t("post_not_defined", "Poste non défini")}
                         </p>
                         <Button
                           variant={
@@ -305,7 +356,8 @@ export default function CreerClient() {
                           size="sm"
                           onClick={() => handleOpenEdit(idx)}
                         >
-                          <i className="ti ti-edit me-1" /> Modifier
+                          <i className="ti ti-edit me-1" />
+                          {t("btn_modify", "Modifier")}
                         </Button>
                       </div>
                     </MainCard>
@@ -341,10 +393,10 @@ export default function CreerClient() {
                   {isSubmitting ? (
                     <>
                       <span className="spinner-border spinner-border-sm me-2" />
-                      Enregistrement en cours...
+                      {t("saving_in_progress", "Enregistrement en cours...")}
                     </>
                   ) : (
-                    "Enregistrer la fiche client"
+                    t("btn_save_client_sheet", "Enregistrer la fiche client")
                   )}
                 </Button>
               </div>
@@ -362,8 +414,8 @@ export default function CreerClient() {
         <Modal.Header closeButton>
           <Modal.Title>
             {editingIndex !== null
-              ? "Modifier les coordonnées du contact"
-              : "Ajouter un nouveau contact"}
+              ? t("modal_edit_contact", "Modifier les coordonnées du contact")
+              : t("modal_add_contact", "Ajouter un nouveau contact")}
           </Modal.Title>
         </Modal.Header>
         <Form>
@@ -372,10 +424,11 @@ export default function CreerClient() {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Nom <span className="text-danger">*</span>
+                    {t("last_name_label", "Nom")}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
-                    {...regContact("nomContact", lastNameSchema)}
+                    {...regContact("nomContact", lastNameSchema(t))}
                     isInvalid={!!errorsContact.nomContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -386,10 +439,11 @@ export default function CreerClient() {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Prénom <span className="text-danger">*</span>
+                    {t("first_name_label", "Prénom")}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
-                    {...regContact("prenomContact", firstNameSchema)}
+                    {...regContact("prenomContact", firstNameSchema(t))}
                     isInvalid={!!errorsContact.prenomContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -400,11 +454,12 @@ export default function CreerClient() {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Adresse e-mail <span className="text-danger">*</span>
+                    {t("email_label", "Adresse e-mail")}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="email"
-                    {...regContact("emailContact", emailSchema)}
+                    {...regContact("emailContact", emailSchema(t))}
                     isInvalid={!!errorsContact.emailContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -415,10 +470,11 @@ export default function CreerClient() {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Téléphone <span className="text-danger">*</span>
+                    {t("phone_label", "Téléphone")}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
-                    {...regContact("telContact", phoneSchema)}
+                    {...regContact("telContact", phoneSchema(t))}
                     isInvalid={!!errorsContact.telContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -429,11 +485,12 @@ export default function CreerClient() {
               <Col md={12}>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Adresse <span className="text-danger">*</span>
+                    {t("address_label", "Adresse")}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     {...regContact("adresseContact", {
-                      required: "L'adresse est requise.",
+                      required: t("address_required", "L'adresse est requise."),
                     })}
                     isInvalid={!!errorsContact.adresseContact}
                   />
@@ -455,15 +512,20 @@ export default function CreerClient() {
                   <Form.Check
                     type="checkbox"
                     id="isPrincipal"
-                    label="Définir en tant que contact principal"
+                    label={t(
+                      "set_as_main_contact",
+                      "Définir en tant que contact principal",
+                    )}
                     {...regContact("isPrincipal")}
                     className="fw-bold text-primary"
                   />
                   {watchContact("isPrincipal") && (
                     <Form.Text className="text-info d-block animate__animated animate__fadeIn">
                       <i className="ti ti-info-circle me-1" />
-                      Ce contact sera la référence principale sur la fiche de ce
-                      client.
+                      {t(
+                        "main_contact_info_text",
+                        "Ce contact sera la référence principale sur la fiche de ce client.",
+                      )}
                     </Form.Text>
                   )}
                 </Form.Group>
@@ -475,7 +537,7 @@ export default function CreerClient() {
               variant="secondary"
               onClick={() => setShowContactModal(false)}
             >
-              Annuler
+              {t("cancel", "Annuler")}
             </Button>
             {editingIndex === null && (
               <Button
@@ -484,7 +546,7 @@ export default function CreerClient() {
                   onSaveContact(data, "create"),
                 )}
               >
-                Ajouter
+                {t("add", "Ajouter")}
               </Button>
             )}
             <Button
@@ -494,7 +556,7 @@ export default function CreerClient() {
                 onSaveContact(data, "close"),
               )}
             >
-              Terminer
+              {t("btn_finish", "Terminer")}
             </Button>
           </Modal.Footer>
         </Form>

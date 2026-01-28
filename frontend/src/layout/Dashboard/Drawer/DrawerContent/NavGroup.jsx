@@ -2,8 +2,10 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { matchPath, useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
 import NavCollapse from "./NavCollapse";
+import { useTranslation } from "react-i18next";
 
 export default function NavGroup(props) {
+  const { t } = useTranslation();
   const {
     item,
     lastItem,
@@ -98,7 +100,7 @@ export default function NavGroup(props) {
   return (
     <Fragment>
       <li className="pc-item pc-caption" key={item.id}>
-        <label>{item.title}</label>
+        <label>{t(item.title)}</label>
       </li>
       {navCollapse}
     </Fragment>

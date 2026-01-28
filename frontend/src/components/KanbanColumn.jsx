@@ -1,5 +1,6 @@
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { Card, Button, Badge, Stack } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 export default function KanbanColumn({
   title,
@@ -9,6 +10,7 @@ export default function KanbanColumn({
   onEdit,
   isSuperUser,
 }) {
+  const { t } = useTranslation();
   const getHeaderStyle = (statusKey) => {
     switch (statusKey) {
       case "TODO":
@@ -83,7 +85,9 @@ export default function KanbanColumn({
                             bg={task.priority === "HIGH" ? "danger" : "info"}
                             style={{ fontSize: "10px" }}
                           >
-                            {task.priority === "HIGH" ? "URGENT" : "NORMAL"}
+                            {task.priority === "HIGH"
+                              ? t("kanban.priority_urgent", "URGENT")
+                              : t("kanban.priority_normal", "NORMAL")}
                           </Badge>
                         )}
                       </Stack>

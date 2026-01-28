@@ -10,6 +10,7 @@ import {
   phoneSchema,
 } from "@/utils/validationSchema";
 import MainCard from "components/MainCard";
+import { useTranslation } from "react-i18next";
 import api from "api/api";
 import Swal from "sweetalert2";
 import toast, { Toaster } from "react-hot-toast";
@@ -58,6 +59,7 @@ const AvatarPro = ({ name, size = "35px", fontSize = "14px" }) => (
 );
 
 const DetailsClient = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [client, setClient] = useState(null);
@@ -123,7 +125,12 @@ const DetailsClient = () => {
       });
       setLoading(false);
     } catch (err) {
-      toast.error("Impossible de charger les données du client");
+      toast.error(
+        t(
+          "error_load_client_data",
+          "Impossible de charger les données du client",
+        ),
+      );
       navigate("/tables/clients-table");
     }
   };
@@ -142,11 +149,16 @@ const DetailsClient = () => {
     setIsSubmitting(true);
     try {
       await api.patch(`/api/clients/${id}/`, data);
-      toast.success("Informations client mises à jour avec succès");
+      toast.success(
+        t(
+          "success_client_update",
+          "Informations client mises à jour avec succès",
+        ),
+      );
       setShowClientModal(false);
       fetchClientData();
     } catch (error) {
-      toast.error("Erreur lors de la mise à jour");
+      toast.error(t("error_client_update", "Erreur lors de la mise à jour"));
     } finally {
       setIsSubmitting(false);
     }
@@ -154,17 +166,22 @@ const DetailsClient = () => {
 
   const handleDeleteClient = () => {
     Swal.fire({
-      title: "Supprimer le client ?",
-      text: `Cette action supprimera définitivement ${client.nomClient} et l'ensemble de ses contacts.`,
+      title: t("swal_delete_client_title", "Supprimer le client ?"),
+      text: t("swal_delete_client_text", {
+        name: client.nomClient,
+        defaultValue: `Cette action supprimera définitivement ${client.nomClient}...`,
+      }),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#e74c3c",
-      confirmButtonText: "Oui, supprimer",
-      cancelButtonText: "Annuler",
+      confirmButtonText: t("swal_confirm_btn", "Oui, supprimer"),
+      cancelButtonText: t("cancel", "Annuler"),
     }).then((result) => {
       if (result.isConfirmed) {
         api.delete(`/api/clients/${id}/`).then(() => {
-          toast.success("Client supprimé avec succès");
+          toast.success(
+            t("success_client_delete", "Client supprimé avec succès"),
+          );
           navigate("/tables/clients-table");
         });
       }
@@ -197,7 +214,9 @@ const DetailsClient = () => {
         updatedContacts = updatedContacts.map((c) =>
           c.id === selectedContact.id ? { ...c, ...payload } : c,
         );
-        toast.success("Contact modifié avec succès");
+        toast.success(
+          t("success_contact_update", "Contact modifié avec succès"),
+        );
       } else {
         const res = await api.post(`/api/contacts/`, payload);
         if (data.isPrincipal) {
@@ -208,7 +227,9 @@ const DetailsClient = () => {
           isPrincipal: data.isPrincipal === true,
         };
         updatedContacts.push(newContact);
-        toast.success("Contact ajouté avec succès");
+        toast.success(
+          t("success_contact_add_success", "Contact ajouté avec succès"),
+        );
       }
       if (data.isPrincipal) {
         localStorage.setItem(
@@ -221,7 +242,12 @@ const DetailsClient = () => {
       }
       if (!updatedContacts.some((c) => c.isPrincipal)) {
         updatedContacts[0].isPrincipal = true;
-        toast.error("Au moins un contact principal doit être spécifié");
+        toast.error(
+          t(
+            "error_main_contact_required_one",
+            "Au moins un contact principal doit être spécifié",
+          ),
+        );
       }
       setClient((prev) => ({
         ...prev,
@@ -229,7 +255,7 @@ const DetailsClient = () => {
       }));
       setShowContactModal(false);
     } catch (error) {
-      toast.error("Erreur lors de l'enregistrement");
+      toast.error(t("error_save_contact", "Erreur lors de l'enregistrement"));
     } finally {
       setIsSubmitting(false);
     }
@@ -237,17 +263,22 @@ const DetailsClient = () => {
 
   const handleDeleteContact = (contact) => {
     Swal.fire({
-      title: "Supprimer ce contact ?",
-      text: `${contact.prenomContact} ${contact.nomContact} sera retiré définitivement.`,
+      title: t("swal_delete_contact_title", "Supprimer ce contact ?"),
+      text: t("swal_delete_contact_text_detail", {
+        name: `${contact.prenomContact} ${contact.nomContact}`,
+        defaultValue: `${contact.prenomContact} ${contact.nomContact} sera retiré définitivement.`,
+      }),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#e74c3c",
-      confirmButtonText: "Supprimer",
-      cancelButtonText: "Annuler",
+      confirmButtonText: t("btn_delete", "Supprimer"),
+      cancelButtonText: t("cancel", "Annuler"),
     }).then((result) => {
       if (result.isConfirmed) {
         api.delete(`/api/contacts/${contact.id}/`).then(() => {
-          toast.success("Contact supprimé avec succès");
+          toast.success(
+            t("success_contact_delete", "Contact supprimé avec succès"),
+          );
           fetchClientData();
         });
       }
@@ -271,7 +302,10 @@ const DetailsClient = () => {
       contacts: updated,
     }));
     toast.success(
-      `${updated[indexToSet].prenomContact} est désormais le contact principal`,
+      t("toast_contact_set_main", {
+        name: updated[indexToSet].prenomContact,
+        defaultValue: `${updated[indexToSet].prenomContact} est désormais le contact principal`,
+      }),
     );
   };
 
@@ -290,14 +324,14 @@ const DetailsClient = () => {
                 <div className="ms-4">
                   <h2 className="mb-1 fw-bold">{client.nomClient}</h2>
                   <span
-                    className={`badge ${client.typeClient === "ENTREPRISE" ? "bg-light-primary text-primary" : "bg-light-success text-success"}`}
+                    className={`badge ${client.typeClient === "ENTREPRISE" ? t("type_company", "Entreprise") : t("type_individual", "Particulier")}`}
                   >
                     {client.typeClient}
                   </span>
                   {mainContact && (
                     <div className="mt-2 text-muted small">
                       <i className="ti ti-user-star me-1 text-warning" />
-                      Contact principal :{" "}
+                      {t("label_main_contact_is", "Contact principal :")}
                       <strong>
                         {mainContact.prenomContact} {mainContact.nomContact}
                       </strong>
@@ -307,7 +341,8 @@ const DetailsClient = () => {
               </div>
               <div className="d-flex gap-2">
                 <Button variant="outline-info" onClick={openInteractionsGlobal}>
-                  <i className="ti ti-history me-1" /> Interactions
+                  <i className="ti ti-history me-1" />
+                  {t("btn_interactions", "Interactions")}
                 </Button>
                 <Button variant="outline-primary" onClick={openEditClientModal}>
                   <i className="ti ti-pencil" />
@@ -319,7 +354,12 @@ const DetailsClient = () => {
             </div>
             <hr className="my-4 opacity-10" />
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <h4 className="mb-0">Contacts ({contacts.length})</h4>
+              <h4 className="mb-0">
+                {t("title_contacts_count", {
+                  count: contacts.length,
+                  defaultValue: `Contacts (${contacts.length})`,
+                })}
+              </h4>
             </div>
             <Row className="g-3">
               {contacts.map((contact) => (
@@ -342,8 +382,8 @@ const DetailsClient = () => {
                         }}
                       >
                         <span className="badge rounded-pill bg-primary shadow-sm px-3">
-                          <i className="ti ti-star-filled me-1" /> Contact
-                          principal
+                          <i className="ti ti-star-filled me-1" />
+                          {t("badge_main_contact", "Contact principal")}
                         </span>
                       </div>
                     ) : (
@@ -387,7 +427,8 @@ const DetailsClient = () => {
                       {contact.prenomContact} {contact.nomContact}
                     </h6>
                     <p className="text-muted small mb-3 text-truncate">
-                      {contact.posteContact || "Aucun poste défini"}
+                      {contact.posteContact ||
+                        t("post_not_defined", "Aucun poste défini")}
                     </p>
                     <div className="bg-light p-2 rounded text-start mb-3">
                       <div className="small text-truncate mb-1">
@@ -407,7 +448,9 @@ const DetailsClient = () => {
                         onClick={() => openInteractionsForContact(contact.id)}
                       >
                         <i className="ti ti-message-dots fs-5" />
-                        <div className="small fw-bold">Interagir</div>
+                        <div className="small fw-bold">
+                          {t("btn_interact", "Interagir")}
+                        </div>
                       </Button>
 
                       <Button
@@ -417,7 +460,9 @@ const DetailsClient = () => {
                         onClick={() => openContactModal(contact)}
                       >
                         <i className="ti ti-info-circle fs-5" />
-                        <div className="small fw-bold">Détails</div>
+                        <div className="small fw-bold">
+                          {t("btn_details", "Détails")}
+                        </div>
                       </Button>
                     </div>
                   </MainCard>
@@ -437,7 +482,7 @@ const DetailsClient = () => {
                 >
                   <i className="ti ti-plus fs-1 text-success mb-2" />
                   <span className="fw-bold text-success text-uppercase small">
-                    Nouveau Contact
+                    {t("btn_new_contact", "Nouveau Contact")}
                   </span>
                 </div>
               </Col>
@@ -452,13 +497,16 @@ const DetailsClient = () => {
         backdrop="static"
       >
         <Modal.Header closeButton className="bg-light">
-          <Modal.Title>Modifier le profil client</Modal.Title>
+          <Modal.Title>
+            {t("modal_edit_client_profile", "Modifier le profil client")}
+          </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubClient(onUpdateClient)}>
           <Modal.Body className="p-4">
             <Form.Group className="mb-3">
               <Form.Label>
-                Nom client <span className="text-danger">*</span>
+                {t("client_name_label", "Nom client")}
+                <span className="text-danger">*</span>
               </Form.Label>
               <Form.Control
                 {...regClient("nomClient", {
@@ -472,20 +520,24 @@ const DetailsClient = () => {
             </Form.Group>
             <Form.Group className="mb-0">
               <Form.Label>
-                Type <span className="text-danger">*</span>
+                {t("type_label", "Type")} <span className="text-danger">*</span>
               </Form.Label>
               <Form.Select {...regClient("typeClient")}>
-                <option value="PARTICULIER">Particulier</option>
-                <option value="ENTREPRISE">Entreprise</option>
+                <option value="PARTICULIER">
+                  {t("type_individual", "Particulier")}
+                </option>
+                <option value="ENTREPRISE">
+                  {t("type_company", "Entreprise")}
+                </option>
               </Form.Select>
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="link" onClick={() => setShowClientModal(false)}>
-              Annuler
+              {t("cancel", "Annuler")}
             </Button>
             <Button variant="primary" type="submit" disabled={isSubmitting}>
-              Enregistrer les modifications
+              {t("btn_save_changes", "Enregistrer les modifications")}
             </Button>
           </Modal.Footer>
         </Form>
@@ -500,8 +552,12 @@ const DetailsClient = () => {
         <Modal.Header closeButton className="bg-light">
           <Modal.Title>
             {selectedContact
-              ? "Modifier les coordonnées du contact"
-              : "Ajouter un nouveau contact " + client.nomClient}
+              ? t("modal_edit_contact", "Modifier les coordonnées du contact")
+              : t("modal_add_contact_for_client", {
+                  name: client.nomClient,
+                  defaultValue:
+                    "Ajouter un nouveau contact " + client.nomClient,
+                })}
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubContact(onSaveContact)}>
@@ -510,10 +566,11 @@ const DetailsClient = () => {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Nom <span className="text-danger">*</span>
+                    {t("last_name_label", "Nom")}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
-                    {...regContact("nomContact", lastNameSchema)}
+                    {...regContact("nomContact", lastNameSchema(t))}
                     isInvalid={!!errorsContact.nomContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -524,10 +581,11 @@ const DetailsClient = () => {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Prénom <span className="text-danger">*</span>
+                    {t("first_name_label", "Prénom")}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
-                    {...regContact("prenomContact", firstNameSchema)}
+                    {...regContact("prenomContact", firstNameSchema(t))}
                     isInvalid={!!errorsContact.prenomContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -538,11 +596,12 @@ const DetailsClient = () => {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Adresse e-mail <span className="text-danger">*</span>
+                    {t("email_label", "Adresse e-mail")}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="email"
-                    {...regContact("emailContact", emailSchema)}
+                    {...regContact("emailContact", emailSchema(t))}
                     isInvalid={!!errorsContact.emailContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -553,10 +612,11 @@ const DetailsClient = () => {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Téléphone <span className="text-danger">*</span>
+                    {t("phone_label", "Téléphone")}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
-                    {...regContact("telContact", phoneSchema)}
+                    {...regContact("telContact", phoneSchema(t))}
                     isInvalid={!!errorsContact.telContact}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -567,7 +627,8 @@ const DetailsClient = () => {
               <Col md={12}>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    Adresse <span className="text-danger">*</span>
+                    {t("address_label", "Adresse")}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     {...regContact("adresseContact", {
@@ -593,15 +654,20 @@ const DetailsClient = () => {
                   <Form.Check
                     type="checkbox"
                     id="isPrincipal"
-                    label="Définir en tant que contact principal"
+                    label={t(
+                      "set_as_main_contact",
+                      "Définir en tant que contact principal",
+                    )}
                     {...regContact("isPrincipal")}
                     className="fw-bold text-primary"
                   />
                   {watchContact("isPrincipal") && (
                     <Form.Text className="text-info d-block animate__animated animate__fadeIn">
                       <i className="ti ti-info-circle me-1" />
-                      Ce contact sera la référence principale sur la fiche de ce
-                      client.
+                      {t(
+                        "main_contact_info_text",
+                        "Ce contact sera la référence principale sur la fiche de ce client.",
+                      )}
                     </Form.Text>
                   )}
                 </Form.Group>
@@ -610,7 +676,7 @@ const DetailsClient = () => {
           </Modal.Body>
           <Modal.Footer className="border-0">
             <Button variant="link" onClick={() => setShowContactModal(false)}>
-              Annuler
+              {t("cancel", "Annuler")}
             </Button>
             <Button
               variant="info"
@@ -618,7 +684,9 @@ const DetailsClient = () => {
               className="text-white"
               disabled={isSubmitting}
             >
-              {selectedContact ? "Mettre à jour" : "Ajouter au client"}
+              {selectedContact
+                ? t("btn_update", "Mettre à jour")
+                : t("btn_add_to_client", "Ajouter au client")}
             </Button>
           </Modal.Footer>
         </Form>

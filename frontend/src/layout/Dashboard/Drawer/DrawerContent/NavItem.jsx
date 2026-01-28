@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import { useLocation, matchPath, Link } from "react-router-dom";
 import { handlerDrawerOpen } from "api/menu";
+import { useTranslation } from "react-i18next";
 
 export default function NavItem({ item }) {
+  const { t } = useTranslation();
   const { pathname } = useLocation();
 
   const itemPath = item?.link || item?.url;
@@ -33,7 +35,7 @@ export default function NavItem({ item }) {
         onClick={handleClick}
       >
         {renderIcon()}
-        {item.title}
+        {t(item.title)}
       </Link>
     </li>
   );

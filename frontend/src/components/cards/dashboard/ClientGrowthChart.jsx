@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 import MainCard from "components/MainCard";
+import { useTranslation } from "react-i18next";
 
 export default function ClientGrowthChart({ data }) {
   const [series, setSeries] = useState([]);
   const [options, setOptions] = useState({});
+  const { t } = useTranslation();
 
   useEffect(() => {
     const categories = data ? data.map((d) => d.date) : [];
     const counts = data ? data.map((d) => d.count) : [];
-    setSeries([{ name: "Nouveaux Clients", data: counts }]);
+    setSeries([{ name: t("new_clients"), data: counts }]);
     setOptions({
       chart: { type: "area", height: 350, toolbar: { show: false } },
       dataLabels: { enabled: false },
@@ -27,11 +29,11 @@ export default function ClientGrowthChart({ data }) {
       },
       grid: { borderColor: "#f1f1f1" },
     });
-  }, [data]);
+  }, [data, t]);
 
   return (
     <MainCard
-      title="Évolution du nombre de clients"
+      title={t("client_growth_evolution")}
       content={false}
       className="h-100"
     >
