@@ -92,20 +92,14 @@ WSGI_APPLICATION = "backend.wsgi.application"
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if DATABASE_URL:
-    # Config pour la PRODUCTION (Railway)
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=DATABASE_URL, conn_max_age=600, ssl_require=False
-        )
-    }
+    DATABASES = {"default": dj_database_url.config(conn_max_age=600, ssl_require=False)}
 else:
-    # Config pour le LOCAL (ton MySQL actuel)
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
             "NAME": "nexuscrm",
             "USER": "root",
-            "PASSWORD": "admin",  # Remets ton mot de passe local ici
+            "PASSWORD": "admin",
             "HOST": "127.0.0.1",
             "PORT": "3306",
             "OPTIONS": {"init_command": "SET sql_mode='STRICT_TRANS_TABLES'"},
