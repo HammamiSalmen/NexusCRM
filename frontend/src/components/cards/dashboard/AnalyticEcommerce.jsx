@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import MainCard from "components/MainCard";
+
 export default function AnalyticEcommerce({
   title,
   count,
@@ -14,19 +15,20 @@ export default function AnalyticEcommerce({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: `var(--bs-${color}, #0d6efd)`,
+    backgroundColor: `var(--bs-${color}, #3b82f6)`,
     opacity: 0.15,
     position: "absolute",
-    right: "0",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
   };
 
   const iconStyle = {
-    position: "absolute",
-    right: "12px",
-    top: "12px",
-    zIndex: 1,
     fontSize: "24px",
-    color: `var(--bs-${color}, #0d6efd)`,
+    color: `var(--bs-${color}, #3b82f6)`,
+    position: "relative",
+    zIndex: 1,
   };
 
   return (
@@ -42,7 +44,16 @@ export default function AnalyticEcommerce({
             </h6>
             <h3 className="mb-0 fw-bold">{count}</h3>
           </div>
-          <div style={{ position: "relative", width: "50px", height: "50px" }}>
+          <div
+            className="d-flex align-items-center justify-content-center"
+            style={{
+              position: "relative",
+              width: "50px",
+              height: "50px",
+              borderRadius: "50%",
+              overflow: "hidden", // Ensure bg stays within circle
+            }}
+          >
             <div style={iconBgStyle}></div>
             <i className={`${icon}`} style={iconStyle} />
           </div>

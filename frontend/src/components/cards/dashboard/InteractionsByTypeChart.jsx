@@ -7,11 +7,11 @@ export default function InteractionsByTypeChart({ data, title, isPie }) {
   const series = isPie
     ? data.map((item) => item.count)
     : [
-        {
-          name: t("total_interactions_chart"),
-          data: data.map((item) => item.count),
-        },
-      ];
+      {
+        name: t("total_interactions_chart"),
+        data: data.map((item) => item.count),
+      },
+    ];
 
   const options = {
     chart: {
@@ -58,6 +58,9 @@ export default function InteractionsByTypeChart({ data, title, isPie }) {
         top: 0,
         bottom: 0,
       },
+    },
+    stroke: {
+      show: false,
     },
     colors: ["#5E35B1", "#03A9F4", "#00E396", "#FFB22B"],
   };

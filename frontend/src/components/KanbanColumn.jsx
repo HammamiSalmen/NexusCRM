@@ -32,7 +32,7 @@ export default function KanbanColumn({
         className={`${style.bg} ${style.color} p-2 rounded-top mb-0 d-flex justify-content-between align-items-center shadow-sm`}
       >
         <h6
-          className="mb-0 fw-bold text-uppercase"
+          className="mb-0 text-white fw-bold text-uppercase"
           style={{ letterSpacing: "1px" }}
         >
           {title}
@@ -51,6 +51,7 @@ export default function KanbanColumn({
               padding: "12px",
               borderRadius: "0 0 8px 8px",
               transition: "background-color 0.2s ease",
+              backgroundColor: "var(--bs-kanban-bg)",
             }}
             className={`kanban-dropzone ${snapshot.isDraggingOver ? "is-dragging" : ""}`}
           >

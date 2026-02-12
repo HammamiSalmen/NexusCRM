@@ -16,16 +16,14 @@ export default function AuthLoginForm({ className, link }) {
   const [serverError, setServerError] = useState("");
   const [step, setStep] = useState(1); // 1 = Credentials, 2 = OTP
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
-
   const {
     register,
     handleSubmit,
-    trigger,
+    watch,
     formState: { errors },
   } = useForm();
-
+  const currentUsername = watch("username");
   const onSubmit = async (data) => {
     setServerError("");
     setLoading(true);
@@ -93,71 +91,79 @@ export default function AuthLoginForm({ className, link }) {
           {step === 1 ? t("auth_login_title", "Connexion") : "Vérification OTP"}
         </h4>
         {serverError && <Alert variant="danger">{serverError}</Alert>}
-        <Form.Group className="mb-3">
-          <Form.Control
-            type="text"
-            placeholder={t("auth_username_placeholder", "Nom d'utilisateur")}
-            readOnly={step === 2}
-            className={step === 2 ? "bg-light" : ""}
-            {...register("username", {
-              required: t(
-                "error_username_required",
-                "Le nom d'utilisateur est requis",
-              ),
-            })}
-            isInvalid={!!errors.username}
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.username?.message}
-          </Form.Control.Feedback>
-        </Form.Group>
         {step === 1 && (
-          <Form.Group className="mb-3">
-            <InputGroup>
+          <>
+            <Form.Group className="mb-3">
               <Form.Control
-                type={showPassword ? "text" : "password"}
-                placeholder={t("auth_password_placeholder", "Mot de passe")}
-                {...register("password", {
+                type="text"
+                placeholder={t(
+                  "auth_username_placeholder",
+                  "Nom d'utilisateur",
+                )}
+                {...register("username", {
                   required: t(
-                    "error_password_req",
-                    "Le mot de passe est requis",
+                    "error_username_required",
+                    "Le nom d'utilisateur est requis",
                   ),
                 })}
-                isInvalid={!!errors.password}
+                isInvalid={!!errors.username}
               />
-              <Button onClick={() => setShowPassword(!showPassword)}>
-                <i className={showPassword ? "ti ti-eye" : "ti ti-eye-off"} />
-              </Button>
               <Form.Control.Feedback type="invalid">
-                {errors.password?.message}
+                {errors.username?.message}
               </Form.Control.Feedback>
-            </InputGroup>
-          </Form.Group>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <InputGroup>
+                <Form.Control
+                  type={showPassword ? "text" : "password"}
+                  placeholder={t("auth_password_placeholder", "Mot de passe")}
+                  {...register("password", {
+                    required: t(
+                      "error_password_req",
+                      "Le mot de passe est requis",
+                    ),
+                  })}
+                  isInvalid={!!errors.password}
+                />
+                <Button
+                  onClick={() => setShowPassword(!showPassword)}
+                  variant="primary"
+                >
+                  <i className={showPassword ? "ti ti-eye" : "ti ti-eye-off"} />
+                </Button>
+                <Form.Control.Feedback type="invalid">
+                  {errors.password?.message}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+          </>
         )}
         {step === 2 && (
-          <Form.Group className="mb-3 animate__animated animate__fadeIn">
-            <Form.Label>
-              {t("auth_otp_label", "Code de vérification")}
-            </Form.Label>
-            <Form.Control
-              type="text"
-              placeholder={t(
-                "auth_otp_placeholder",
-                "Entrez le code à 6 chiffres",
-              )}
-              maxLength={6}
-              style={{
-                letterSpacing: "1px",
-              }}
-              {...register("otp", {
-                required: t("error_otp_required", "Le code est requis"),
-              })}
-              isInvalid={!!errors.otp}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.otp?.message}
-            </Form.Control.Feedback>
-          </Form.Group>
+          <div className="animate__animated animate__fadeIn">
+            <Alert variant="info" className="text-center small mb-4">
+              Nous avons envoyé un code de vérification à l'adresse associée au
+              compte <strong>{currentUsername}</strong>. Pensez à vérifier vos
+              courriers indésirables (spams).
+            </Alert>
+            <Form.Group className="mb-3 text-center">
+              <Form.Label>
+                {t("auth_otp_label", "Code de vérification")}
+              </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder={t("auth_otp_placeholder", "Code à 6 chiffres")}
+                maxLength={6}
+                className="text-center"
+                {...register("otp", {
+                  required: t("error_otp_required", "Le code est requis"),
+                })}
+                isInvalid={!!errors.otp}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.otp?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </div>
         )}
         <div className="text-center mt-4">
           <Button
