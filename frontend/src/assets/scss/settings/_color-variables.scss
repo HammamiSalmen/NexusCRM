@@ -1,0 +1,205 @@
+// =======================================
+//   List of variables for Preset color
+// =======================================
+// theme color
+$brand-color1: linear-gradient(-135deg, #1e40af 0%, #3b82f6 100%);
+$brand-color2: linear-gradient(-135deg, #475569 0%, #64748b 100%);
+$brand-color3: linear-gradient(207.92deg, #0ea5e9 11.42%, #38bdf8 106.55%);
+
+// Gray color
+$white: #ffffff;
+$gray-100: #f8fafc;
+$gray-200: #f1f5f9;
+$gray-300: #e2e8f0;
+$gray-400: #cbd5e1;
+$gray-500: #94a3b8;
+$gray-600: #64748b;
+$gray-700: #475569;
+$gray-800: #334155;
+$gray-900: #1e293b;
+$black: #0f172a;
+
+$blue: #1d4ed8; // Deep Royal Blue
+$indigo: #4338ca;
+$purple: #7e22ce;
+$pink: #be185d;
+$red: #dc2626;
+$orange: #c2410c;
+$yellow: #b45309;
+$green: #15803d;
+$teal: #0f766e;
+$cyan: #0e7490;
+
+// fusv-disablex
+$blue-100: tint-color($blue, 80%);
+$blue-200: tint-color($blue, 60%);
+$blue-300: tint-color($blue, 40%);
+$blue-400: tint-color($blue, 20%);
+$blue-500: $blue;
+$blue-600: shade-color($blue, 20%);
+$blue-700: shade-color($blue, 40%);
+$blue-800: shade-color($blue, 60%);
+$blue-900: shade-color($blue, 80%);
+
+$indigo-100: tint-color($indigo, 80%);
+$indigo-200: tint-color($indigo, 60%);
+$indigo-300: tint-color($indigo, 40%);
+$indigo-400: tint-color($indigo, 20%);
+$indigo-500: $indigo;
+$indigo-600: shade-color($indigo, 20%);
+$indigo-700: shade-color($indigo, 40%);
+$indigo-800: shade-color($indigo, 60%);
+$indigo-900: shade-color($indigo, 80%);
+
+$purple-100: tint-color($purple, 80%);
+$purple-200: tint-color($purple, 60%);
+$purple-300: tint-color($purple, 40%);
+$purple-400: tint-color($purple, 20%);
+$purple-500: $purple;
+$purple-600: shade-color($purple, 20%);
+$purple-700: shade-color($purple, 40%);
+$purple-800: shade-color($purple, 60%);
+$purple-900: shade-color($purple, 80%);
+
+$pink-100: tint-color($pink, 80%);
+$pink-200: tint-color($pink, 60%);
+$pink-300: tint-color($pink, 40%);
+$pink-400: tint-color($pink, 20%);
+$pink-500: $pink;
+$pink-600: shade-color($pink, 20%);
+$pink-700: shade-color($pink, 40%);
+$pink-800: shade-color($pink, 60%);
+$pink-900: shade-color($pink, 80%);
+
+$red-100: tint-color($red, 80%);
+$red-200: tint-color($red, 60%);
+$red-300: tint-color($red, 40%);
+$red-400: tint-color($red, 20%);
+$red-500: $red;
+$red-600: shade-color($red, 20%);
+$red-700: shade-color($red, 40%);
+$red-800: shade-color($red, 60%);
+$red-900: shade-color($red, 80%);
+
+$orange-100: tint-color($orange, 80%);
+$orange-200: tint-color($orange, 60%);
+$orange-300: tint-color($orange, 40%);
+$orange-400: tint-color($orange, 20%);
+$orange-500: $orange;
+$orange-600: shade-color($orange, 20%);
+$orange-700: shade-color($orange, 40%);
+$orange-800: shade-color($orange, 60%);
+$orange-900: shade-color($orange, 80%);
+
+$yellow-100: tint-color($yellow, 80%);
+$yellow-200: tint-color($yellow, 60%);
+$yellow-300: tint-color($yellow, 40%);
+$yellow-400: tint-color($yellow, 20%);
+$yellow-500: $yellow;
+$yellow-600: shade-color($yellow, 20%);
+$yellow-700: shade-color($yellow, 40%);
+$yellow-800: shade-color($yellow, 60%);
+$yellow-900: shade-color($yellow, 80%);
+
+$green-100: tint-color($green, 80%);
+$green-200: tint-color($green, 60%);
+$green-300: tint-color($green, 40%);
+$green-400: tint-color($green, 20%);
+$green-500: $green;
+$green-600: shade-color($green, 20%);
+$green-700: shade-color($green, 40%);
+$green-800: shade-color($green, 60%);
+$green-900: shade-color($green, 80%);
+
+$teal-100: tint-color($teal, 80%);
+$teal-200: tint-color($teal, 60%);
+$teal-300: tint-color($teal, 40%);
+$teal-400: tint-color($teal, 20%);
+$teal-500: $teal;
+$teal-600: shade-color($teal, 20%);
+$teal-700: shade-color($teal, 40%);
+$teal-800: shade-color($teal, 60%);
+$teal-900: shade-color($teal, 80%);
+
+$cyan-100: tint-color($cyan, 80%);
+$cyan-200: tint-color($cyan, 60%);
+$cyan-300: tint-color($cyan, 40%);
+$cyan-400: tint-color($cyan, 20%);
+$cyan-500: $cyan;
+$cyan-600: shade-color($cyan, 20%);
+$cyan-700: shade-color($cyan, 40%);
+$cyan-800: shade-color($cyan, 60%);
+$cyan-900: shade-color($cyan, 80%);
+
+/* ======================================
+   Datta Able – Dark Theme (clean)
+====================================== */
+
+[data-pc-theme='dark'] {
+    /* Body */
+    --bs-body-bg: #0f172a; // Slate 900
+    --bs-body-bg-rgb: 15, 23, 42;
+    --bs-body-color: #e2e8f0; // Slate 200
+    --bs-body-color-rgb: 226, 232, 240;
+
+    /* Text */
+    --bs-heading-color: #f8fafc; // Slate 50
+    --bs-secondary-color: #94a3b8; // Slate 400
+    --bs-tertiary-color: #64748b; // Slate 500
+
+    /* Borders */
+    --bs-border-color: #334155; // Slate 700
+    --bs-border-color-translucent: rgba(51, 65, 85, 0.5);
+
+    /* Cards */
+    --pc-card-box-shadow: none;
+    --bs-card-bg: #1e293b; // Slate 800
+    --bs-card-border-color: #334155;
+
+    /* Sidebar */
+    --pc-sidebar-background: #1e293b; // Slate 800
+    --pc-sidebar-color: #cbd5e1; // Slate 300
+    --pc-sidebar-active-color: #3b82f6; // Blue 500
+    --pc-sidebar-active-background: rgba(59, 130, 246, 0.15);
+    --pc-sidebar-main-active-color: #ffffff;
+    --pc-sidebar-caption-color: #94a3b8;
+    --pc-sidebar-shadow: none;
+
+    /* Header */
+    --pc-header-background: #0f172a; // Slate 900
+    --pc-header-color: #e2e8f0;
+    --pc-header-shadow: none;
+
+    /* Tables */
+    --bs-table-bg: #1e293b;
+    --bs-table-striped-bg: #1e293b;
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+    --bs-table-color: #e2e8f0;
+    --bs-table-border-color: #334155;
+
+    /* Dropdown */
+    --bs-dropdown-bg: #1e293b;
+    --bs-dropdown-link-color: #e2e8f0;
+    --bs-dropdown-link-hover-bg: #334155;
+    --bs-dropdown-border-color: #334155;
+
+    /* Forms */
+    --bs-input-bg: #0f172a;
+    --bs-input-color: #e2e8f0;
+    --bs-input-border-color: #334155;
+    --bs-input-placeholder-color: #64748b;
+    --bs-form-label-color: #e2e8f0; /* Added for visible labels */
+
+    /* Chart Overrides */
+    --bs-chart-grid-color: #334155;
+    --bs-chart-text-color: #e2e8f0;
+    
+    /* Kanban */
+    --bs-kanban-bg: #1e293b;
+    --bs-kanban-item-bg: #0f172a;
+    --bs-kanban-text-color: #e2e8f0;
+
+    /* Primary color (unchanged) */
+    --bs-primary: #3b82f6;
+    --bs-primary-rgb: 59, 130, 246;
+}

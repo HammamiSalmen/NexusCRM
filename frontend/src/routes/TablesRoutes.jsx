@@ -1,0 +1,48 @@
+import { lazy } from "react";
+// import DashboardLayout from "layout/Dashboard";
+import Loadable from "components/Loadable";
+import AdminRoute from "components/AdminRoute";
+
+const ClientsTable = Loadable(lazy(() => import("views/table/ClientsTable")));
+const CreerClient = Loadable(
+  lazy(() => import("@/sections/clients/CreerClient")),
+);
+const DetailsClient = Loadable(
+  lazy(() => import("sections/clients/DetailsClient")),
+);
+const EmployesTable = Loadable(lazy(() => import("views/table/EmployesTable")));
+const CreerEmploye = Loadable(
+  lazy(() => import("@/sections/employes/CreerEmploye")),
+);
+const DetailsEmploye = Loadable(
+  lazy(() => import("sections/employes/DetailsEmploye")),
+);
+
+const TablesRoutes = {
+  path: "tables",
+  children: [
+    {
+      path: "clients-table",
+      element: <ClientsTable />,
+      // children: [{ path: "basic-table", element: <BootstrapTableBasic /> }],
+    },
+    {
+      path: "creer-client",
+      element: <CreerClient />,
+    },
+    {
+      path: "details-client/:id",
+      element: <DetailsClient />,
+    },
+    {
+      element: <AdminRoute />,
+      children: [
+        { path: "employes-table", element: <EmployesTable /> },
+        { path: "creer-employe", element: <CreerEmploye /> },
+        { path: "details-employe/:id", element: <DetailsEmploye /> },
+      ],
+    },
+  ],
+};
+
+export default TablesRoutes;
