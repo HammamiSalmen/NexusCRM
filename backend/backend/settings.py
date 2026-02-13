@@ -90,13 +90,28 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default="mysql://root:admin@127.0.0.1:3306/nexuscrm",
-        conn_max_age=600,
-        ssl_require=False,
-    )
-}
+if os.getenv("MYSQLHOST"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.getenv("MYSQLDATABASE"),
+            "USER": os.getenv("MYSQLUSER"),
+            "PASSWORD": os.getenv("MYSQLPASSWORD"),
+            "HOST": os.getenv("MYSQLHOST"),
+            "PORT": os.getenv("MYSQLPORT"),
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": "nexuscrm",
+            "USER": "root",
+            "PASSWORD": "admin",
+            "HOST": "127.0.0.1",
+            "PORT": "3306",
+        }
+    }
 
 ALLOWED_HOSTS = ["*.up.railway.app"]
 
