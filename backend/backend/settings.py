@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from django.utils.translation import gettext_lazy as _
 import dj_database_url
 import os
+import sys
 
 load_dotenv()
 
@@ -94,6 +95,17 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL:
     DATABASES = {"default": dj_database_url.config(conn_max_age=600, ssl_require=False)}
 else:
+    # AFFICHER L'ERREUR DANS LES LOGS RAILWAY
+    print("CRITICAL ERROR: DATABASE_URL not found in environment variables!")
+    print(f"Current Environment Keys: {list(os.environ.keys())}")
+
+    # Si on n'est pas en mode DEBUG (donc en prod), on arrête tout pour ne pas utiliser SQLite/Localhost par erreur
+    if not DEBUG:
+        print("Stopping execution because DATABASE_URL is missing in production.")
+        # On laisse le fallback local UNIQUEMENT si tu es sur ton PC (DEBUG=True)
+        # Mais comme tu as mis DEBUG=False dans ton fichier, cela va crasher volontairement
+        # pour te forcer à régler la variable.
+
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
