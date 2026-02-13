@@ -11,10 +11,10 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-hwn8+)one1u99^#%wtisic4&$#vsa@yr&(-yt(%t2)(a6%q(-9"
+# SECRET_KEY = "django-insecure-hwn8+)one1u99^#%wtisic4&$#vsa@yr&(-yt(%t2)(a6%q(-9"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
 USE_I18N = True
 USE_L10N = True
@@ -29,8 +29,6 @@ LANGUAGES = [
 LOCALE_PATHS = [
     BASE_DIR / "locale/",
 ]
-
-ALLOWED_HOSTS = ["*"]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -90,33 +88,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "backend.wsgi.application"
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
 
-if DATABASE_URL:
-    DATABASES = {"default": dj_database_url.config(conn_max_age=600, ssl_require=False)}
-else:
-    # AFFICHER L'ERREUR DANS LES LOGS RAILWAY
-    print("CRITICAL ERROR: DATABASE_URL not found in environment variables!")
-    print(f"Current Environment Keys: {list(os.environ.keys())}")
+DATABASES = {
+    "default": dj_database_url.config(
+        default="mysql://root:admin@127.0.0.1:3306/nexuscrm",
+        conn_max_age=600,
+        ssl_require=False,
+    )
+}
 
-    # Si on n'est pas en mode DEBUG (donc en prod), on arrête tout pour ne pas utiliser SQLite/Localhost par erreur
-    if not DEBUG:
-        print("Stopping execution because DATABASE_URL is missing in production.")
-        # On laisse le fallback local UNIQUEMENT si tu es sur ton PC (DEBUG=True)
-        # Mais comme tu as mis DEBUG=False dans ton fichier, cela va crasher volontairement
-        # pour te forcer à régler la variable.
+ALLOWED_HOSTS = ["*.up.railway.app"]
 
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": "nexuscrm",
-            "USER": "root",
-            "PASSWORD": "admin",
-            "HOST": "127.0.0.1",
-            "PORT": "3306",
-            "OPTIONS": {"init_command": "SET sql_mode='STRICT_TRANS_TABLES'"},
-        }
-    }
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
