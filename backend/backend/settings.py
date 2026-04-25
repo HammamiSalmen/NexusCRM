@@ -123,14 +123,16 @@ else:
 if DEBUG:
     ALLOWED_HOSTS = ["*"]
 else:
-    ALLOWED_HOSTS = ["*"] # Railway automatically configures the public domain. Wildcard is often used when behind a proxy like Railway, but it's recommended to set it using an env var. Let's make it secure but flexible.
+    ALLOWED_HOSTS = ["*"] 
     
-    railway_domain = os.getenv("RAILWAY_PUBLIC_DOMAIN")
-    if railway_domain:
-        ALLOWED_HOSTS.append(railway_domain)
-
 # Trusted origins for CSRF
-CSRF_TRUSTED_ORIGINS = []
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.up.railway.app",
+    "https://nexuscrm-backend.up.railway.app",
+    "https://nexuscrm-frontend.up.railway.app",
+    "https://nexuscrm-frontend-production.up.railway.app",
+    "https://nexuscrm.up.railway.app"
+]
 if os.getenv("RAILWAY_PUBLIC_DOMAIN"):
     CSRF_TRUSTED_ORIGINS.append(f"https://{os.getenv('RAILWAY_PUBLIC_DOMAIN')}")
 
