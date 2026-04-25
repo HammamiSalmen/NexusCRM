@@ -59,6 +59,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -113,9 +114,22 @@ else:
         }
     }
 
-ALLOWED_HOSTS = ["*.up.railway.app"]
+if DEBUG:
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = ["*"] # Railway automatically configures the public domain. Wildcard is often used when behind a proxy like Railway, but it's recommended to set it using an env var. Let's make it secure but flexible.
+    
+    railway_domain = os.getenv("RAILWAY_PUBLIC_DOMAIN")
+    if railway_domain:
+        ALLOWED_HOSTS.append(railway_domain)
+
+# Trusted origins for CSRF
+CSRF_TRUSTED_ORIGINS = []
+if os.getenv("RAILWAY_PUBLIC_DOMAIN"):
+    CSRF_TRUSTED_ORIGINS.append(f"https://{os.getenv('RAILWAY_PUBLIC_DOMAIN')}")
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
