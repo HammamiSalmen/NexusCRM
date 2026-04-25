@@ -92,29 +92,13 @@ WSGI_APPLICATION = "backend.wsgi.application"
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
 
 # Database Configuration
-if os.getenv("MYSQL_URL") or os.getenv("DATABASE_URL"):
-    # Railway automatically provides MYSQL_URL when linking a MySQL database.
-    db_url = os.getenv("MYSQL_URL") or os.getenv("DATABASE_URL")
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=db_url,
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
-    # Fix for MySQL 8 on some PaaS
-    DATABASES["default"]["OPTIONS"] = {
-        "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
-        "charset": "utf8mb4",
-    }
-elif os.getenv("MYSQLHOST"):
-    # Fallback to manual environment variables if URL is missing
+if os.getenv("MYSQLHOST"):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
-            "NAME": os.getenv("MYSQLDATABASE"),
-            "USER": os.getenv("MYSQLUSER"),
-            "PASSWORD": os.getenv("MYSQLPASSWORD"),
+            "NAME": os.getenv("MYSQLDATABASE", "railway"),
+            "USER": os.getenv("MYSQLUSER", "root"),
+            "PASSWORD": os.getenv("MYSQLPASSWORD", ""),
             "HOST": os.getenv("MYSQLHOST"),
             "PORT": os.getenv("MYSQLPORT", "3306"),
             "OPTIONS": {
