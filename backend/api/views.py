@@ -31,52 +31,58 @@ class LoginStepOneView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
-
-        user = authenticate(username=username, password=password)
-        if user is None:
-            return Response(
-                {"detail": _("Identifiants incorrects.")},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
-
-        if not user.is_active:
-            return Response(
-                {"detail": _("Compte désactivé.")},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-
-        otp = f"{random.randint(100000, 999999)}"
-
-        email_otp, created = EmailOTP.objects.get_or_create(user=user)
-        email_otp.otp_code = otp
-        email_otp.otp_created_at = timezone.now()
-        email_otp.attempts = 0
-        email_otp.save()
-
         try:
-            send_mail(
-                subject=_("Votre code de connexion NexusCRM"),
-                message=(
-                    f"Bonjour {user.first_name},\n\n"
-                    f"Votre code de vérification est : {otp}\n\n"
-                    "Ce code expire dans 5 minutes."
-                ),
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
-                fail_silently=False,
-            )
-        except Exception:
-            return Response(
-                {"detail": _("Erreur lors de l'envoi de l'email.")},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+            username = request.data.get("username")
+            password = request.data.get("password")
 
-        return Response(
-            {"detail": _("Code envoyé par email."), "username": username},
-            status=status.HTTP_200_OK,
-        )
+            user = authenticate(username=username, password=password)
+            if user is None:
+                return Response(
+                    {"detail": _("Identifiants incorrects.")},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
+            if not user.is_active:
+                return Response(
+                    {"detail": _("Compte désactivé.")},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+
+            otp = f"{random.randint(100000, 999999)}"
+
+            email_otp, created = EmailOTP.objects.get_or_create(user=user)
+            email_otp.otp_code = otp
+            email_otp.otp_created_at = timezone.now()
+            email_otp.attempts = 0
+            email_otp.save()
+
+            try:
+                send_mail(
+                    subject=_("Votre code de connexion NexusCRM"),
+                    message=(
+                        f"Bonjour {user.first_name},\n\n"
+                        f"Votre code de vérification est : {otp}\n\n"
+                        "Ce code expire dans 5 minutes."
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[user.email],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                return Response(
+                    {"detail": f"Erreur lors de l'envoi de l'email: {str(e)}"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+
+            return Response(
+                {"detail": _("Code envoyé par email."), "username": username},
+                status=status.HTTP_200_OK,
+            )
+        except Exception as e:
+            return Response(
+                {"detail": f"Crash critique du serveur: {str(e)}"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class LoginStepTwoView(APIView):
