@@ -1,10 +1,19 @@
 # NexusCRM
 
 A modern, full-stack Customer Relationship Management (CRM) platform designed to streamline client workflows, employee supervision, and task tracking.
+<p align="center">
+  <img src="assets/logo.png" alt="NexusCRM Logo" width="380" />
+</p>
 
 ## Overview
 
 **NexusCRM** centralizes business interactions, client pipelines, and internal team tasks into one unified dashboard. Built with security and scalability in mind, it simplifies customer lifecycle tracking while providing fine-grained access control across team roles.
+
+## Preview
+
+| Analytics & CRM Dashboard | Authentication Portal |
+| :---: | :---: |
+| ![NexusCRM Dashboard](assets/dashboard.png) | ![NexusCRM Login Screen](assets/login.png) |
 
 ## Key Features
 
